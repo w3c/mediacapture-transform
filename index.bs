@@ -1,0 +1,135 @@
+<pre class='metadata'>
+Title: MediaStreamTrack Insertable Media Processing using Streams
+Shortname: mediacapture-insertable-streams
+Level: None
+Status: ED
+Group: webrtc
+Repository: alvestrand/mediacapture-insertable-streams
+URL: https://alvestrand.github.io/mediacapture-insertable-streams/
+Editor: Harald Alvestrand, Google https://google.com, hta@google.com
+Editor: Guido Urdaneta, Google https://google.com, guidou@google.com
+Abstract: This API defines an API surface for manipulating the bits on
+Abstract: {{MediaStreamTrack}}s carrying raw data.
+Abstract: NOT AN ADOPTED WORKING GROUP DOCUMENT.
+Markup Shorthands: css no, markdown yes
+</pre>
+<pre class=biblio>
+{
+  "WEB-CODECS": {
+     "href":
+     "https://github.com/WICG/web-codecs/blob/master/explainer.md",
+     "title": "Web Codecs explainer"
+   }
+}
+</pre>
+<pre class=link-defaults>
+spec:streams; type:interface; text:ReadableStream
+</pre>
+
+# Introduction # {#introduction}
+
+The [[WEBRTC-NV-USE-CASES]] document describes several functions that
+can only be achieved by access to media (requirements N20-N22),
+including, but not limited to:
+* Funny Hats
+* Machine Learning
+* Virtual Reality Gaming
+
+These use cases further require that processing can be done in worker
+threads (requirement N23-N24).
+
+This specification gives an interface inspired by [[WEB-CODECS]] to
+provide access to such functionality.
+
+This specification provides access to raw media,
+which is the output of a media source such as a camera, microphone, screen capture,
+or the decoder part of a codec and the input to the
+decoder part of a codec. The processed media can be consumed by any destination
+that can take a MediaStreamTrack, including HTML &lt;video&gt; and &lt;audio&gt; tags,
+RTCPeerConnection, canvas or MediaRecorder.
+
+# Terminology # {#terminology}
+
+# Specification # {#specification}
+
+This specification shows the IDL extensions for [[MEDIACAPTURE-STREAMS]]
+
+It defines some new objects that inherit the {{MediaStreamTrack}} interface, and
+can be constructed from a {{MediaStreamTrack}}.
+
+The first part - Breakout Box Phase Two - specifies a track tht can be created from
+a MediaStreamTrack, and offers a ReadableStream and a WritableStream; the client is expected to connect
+a TransformStream (or equivalent) between the two, and let it do the media processing.
+
+<pre class="idl">
+interface ProcessingMediaStreamTrack : MediaStreamTrack {
+    constructor(MediaStreamTrack source);
+    attribute ReadableStream readable;  // Stream of {{VideoFrame}}
+    attribute WritableStream writable;  // Stream of VideoFrame
+};
+</pre>
+
+The second part - Breakout Box Phase Three - specifies two elements: One is a track sink that is
+capable of exposing the unencoded frames from the track to a ReadableStream, and exposes a control
+channel for signals going in the oppposite direction. The other one is the inverse of that: It takes
+video frames as input, and emits control signals that result from subsequent processing.
+
+<pre class="idl">
+
+interface TrackProcessor : MediaStreamTrack {
+    constructor(MediaStreamTrack source);
+    attribute ReadableStream readable;  // Stream of VideoFrame
+    attribute WritableStream<ControlSignal> writable;
+};
+
+interface TrackGenerator : MediaStreamTrack {
+    attribute WritableStream<VideoFrame> readable;
+    attribute ReadableStream<ControlSignals> writable;
+};
+
+dictionary ControlSignal {
+  required ControlSignalName name;
+  long width;
+  long height;
+  double frameRate;
+  PixelFormat pixelFormat;
+};
+
+enum ControlSignalName {
+  "stop",
+  "mute",
+  "unmute",
+  "configure",
+};
+
+</pre>
+
+
+## Extension operation ## {#operation}
+
+
+### Stream creation ### {#stream-creation}
+
+
+### Stream processing ### {#stream-processing}
+
+### Stream control ### {#stream-control}
+
+The control signal set is platform-defined, but is intended to be extensible. By default, a
+TrackProcessor coupled with a TrackGenerator should be able to pass the signals unchanged
+to the other side.
+
+All signals are ignorable; the downstream objects will do whatever makes sense with frames
+sent on the stream, no matter what the signals indicate.
+
+The "stop" and "mute" signals both indicate that frames should no longer be sent. "stop" indicates that the
+MediaStreamTrack has stopped, and that no frames will ever be required again.
+
+THe "configure" signal has semantics equivalent to ApplyConstraints on the MediaStreamTrack, with all
+constraints set to "ideal": It indicates that more efficient downstream processing will be achieved if
+subsequently generated frames conform to the size and rate constrains given.
+
+# Examples # {#examples}
+
+--coming
+
