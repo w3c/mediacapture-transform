@@ -44,7 +44,39 @@ The following are the IDL modifications proposed by this API.
 Future iterations may add additional operations following a similar pattern.
 
 <pre>
-// Coming
+interface ProcessingMediaStreamTrack : MediaStreamTrack {
+    constructor(MediaStreamTrack source);
+    attribute ReadableStream readable;  // Stream of VideoFrame
+    attribute WritableStream writable;  // Stream of VideoFrame
+};
+
+// Breakout Box Stage Three
+
+interface TrackProcessor : MediaStreamTrack {
+    constructor(MediaStreamTrack source);
+    attribute ReadableStream readable;  // Stream of VideoFrame
+    attribute WritableStream writable;
+};
+
+interface TrackGenerator : MediaStreamTrack {
+    attribute WritableStream readable;
+    attribute ReadableStream writable;
+};
+
+dictionary ControlSignal {
+  required ControlSignalName name;
+  long width;
+  long height;
+  double frameRate;
+  PixelFormat pixelFormat;
+};
+
+enum ControlSignalName {
+  "stop",
+  "mute",
+  "unmute",
+  "configure",
+};
 </pre>
 
 ## Design considerations ##
