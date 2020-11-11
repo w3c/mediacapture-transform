@@ -14,7 +14,7 @@ We need an API for processing media that:
 ## Approach
 
 This document builds on concepts previously proposed by
-[Insertable Streams](https://github.com/w3c/webrtc-insertable-streams/), and applies them to the
+[Insertable Streams](https://w3c.github.io/webrtc-insertable-streams/), and applies them to the
 MediaStreamTrack API in order to build an API that is:
 
 * Familiar to existing MediaStreamTrack users
@@ -44,23 +44,25 @@ The following are the IDL modifications proposed by this API.
 Future iterations may add additional operations following a similar pattern.
 
 <pre>
+// Breakout Box Stage Two
+
 interface ProcessingMediaStreamTrack : MediaStreamTrack {
     constructor(MediaStreamTrack source);
-    attribute ReadableStream readable;  // Stream of VideoFrame
-    attribute WritableStream writable;  // Stream of VideoFrame
+    attribute ReadableStream readable;  // Stream of VideoFrame or AudioFrame
+    attribute WritableStream writable;  // Stream of VideoFrame or AudioFrame
 };
 
 // Breakout Box Stage Three
 
 interface TrackProcessor : MediaStreamTrack {
     constructor(MediaStreamTrack source);
-    attribute ReadableStream readable;  // Stream of VideoFrame
-    attribute WritableStream writable;
+    attribute ReadableStream readable;  // Stream of VideoFrame or AudioFrame
+    attribute WritableStream writable;  // Stream of ControlSignal
 };
 
 interface TrackGenerator : MediaStreamTrack {
-    attribute WritableStream readable;
-    attribute ReadableStream writable;
+    attribute WritableStream writable;  // Stream of VideoFrame or AudioFrame
+    attribute ReadableStream readable;  // Stream of ControlSignal
 };
 
 dictionary ControlSignal {
@@ -80,8 +82,6 @@ enum ControlSignalName {
 </pre>
 
 ## Design considerations ##
-
-(Explanation of the Three Stages of the Breakout Box belong here)
 
 This design is built upon the Streams API. This is a natural interface
 for stuff that can be considered a "sequence of objects", and has an ecosystem
