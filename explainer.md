@@ -1,4 +1,4 @@
-# Explainer - WebRTC Insertable Streams
+# Explainer - Insertable Streams for Media Tracks
 
 ## Problem to be solved
 
