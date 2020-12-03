@@ -35,16 +35,16 @@ The use cases include:
 * Background removal
 * Voice processing
 
-## Breakout Box Phases
+## Breakout Box Properties
 
-We can see the Breakout Box as having three phases:
-* Phase one: Closed, with no media or control access
-* Phase two: Half-open, with only media being processed in JS
-* Phase three: Fully open, with both media and signals being processed in JS.
+The Breakout Box conceptually splits the MediaStreamTrack into two components:
+* The TrackProcessor, which consumes a MediaStreamTrack's source and generates a stream of
+media frames (VideoFrame or AudioFrame)
+* The TrackGenerator, which consumes a stream of media frames and exposes a MediaStreamTrack
+interface, so that it can be used anywhere a MediaStreamTrack is currently attched.
 
-At stage three, there
-is no longer any connection between the stream generator and stream consumer that doesn't pass
-through Javascript; one can then freely interconnect the streams in whatever fashion one
+There is no connection between the stream generator and stream consumer that doesn't pass
+through Javascript; one can freely interconnect the streams in whatever fashion one
 sees fit.
 
 ## Code Examples
@@ -52,13 +52,15 @@ sees fit.
 Example of processing media before transmitting to a PeerConnection in Phase Two:
 <pre>
 originalTrack = navigator.getUserMedia(...)
-myProcessor = new TransformStream(....)
-processingTrack = new ProcessingMediaStreamTrack(originalTrack);
-processingTrack.readable.pipeThrough(myProcessor).pipeTo(processingTrack.writable);
-pc.addtrack(processingTrack);
-</pre>
+myProcessingElement = new TransformStream(....)
+myTrackProcessor = new TrackProcessor(originalTrack);
+myTrackGenerator = new TrackGenerator();
 
-Example of processing media 
+myTrackProcessor.readable.pipeThrough(myProcessingElement).pipeTo(myTrackGenerator.writable);
+myTrackGenerator.readable.pipeTo(myTrackProcessor.writable);
+
+pc.addtrack(myTrackGenerator);
+</pre>
 
 ## API
 
@@ -66,13 +68,6 @@ The following are the IDL modifications proposed by this API.
 Future iterations may add additional operations following a similar pattern.
 
 <pre>
-// Breakout Box Stage Two
-
-interface ProcessingMediaStreamTrack : MediaStreamTrack {
-    constructor(MediaStreamTrack source);
-    attribute ReadableStream readable;  // Stream of VideoFrame or AudioFrame
-    attribute WritableStream writable;  // Stream of VideoFrame or AudioFrame
-};
 
 // Breakout Box Stage Three
 
@@ -157,7 +152,7 @@ and implementation effort.
 
 Another path would involve specifying a worklet API, similar to the AudioWorklet,
 and specifying new APIs for connecting encoders and decoders to such worklets.
-This also seemed to involve a significantly larger set of new interfaces, with a
+This also seems to involve a significantly larger set of new interfaces, with a
 correspondingly larger implementation effort, and would offer less flexibility
 in how the processing elements could be implemented.
 
