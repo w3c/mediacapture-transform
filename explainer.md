@@ -1,4 +1,4 @@
-# Explainer - Insertable Streams for Media Tracks
+# Explainer - Insertable Streams for MediaStreamTracks
 
 ## Problem to be solved
 
@@ -35,8 +35,30 @@ The use cases include:
 * Background removal
 * Voice processing
 
+## Breakout Box Phases
+
+We can see the Breakout Box as having three phases:
+* Phase one: Closed, with no media or control access
+* Phase two: Half-open, with only media being processed in JS
+* Phase three: Fully open, with both media and signals being processed in JS.
+
+At stage three, there
+is no longer any connection between the stream generator and stream consumer that doesn't pass
+through Javascript; one can then freely interconnect the streams in whatever fashion one
+sees fit.
 
 ## Code Examples
+
+Example of processing media before transmitting to a PeerConnection in Phase Two:
+<pre>
+originalTrack = navigator.getUserMedia(...)
+myProcessor = new TransformStream(....)
+processingTrack = new ProcessingMediaStreamTrack(originalTrack);
+processingTrack.readable.pipeThrough(myProcessor).pipeTo(processingTrack.writable);
+pc.addtrack(processingTrack);
+</pre>
+
+Example of processing media 
 
 ## API
 
@@ -81,6 +103,17 @@ enum ControlSignalName {
 };
 </pre>
 
+Note that despite using the same names for the streams defined, the meaning is the opposite
+to the same attributes in a TransformStream; these are interfaces you plug a TransformStream
+into, not interfaces you use to transform something.
+
+<b>Alternative approach</b>: use function calls for createWritable and createReadable that return
+the created streams
+.
+This would give clearer semantics in the case where the stream is passed away to a worker; it
+would then be natural that the stream (which has been neutered in the original scope) is no
+longer available on the object
+
 ## Design considerations ##
 
 This design is built upon the Streams API. This is a natural interface
@@ -102,7 +135,8 @@ There are some challenges with the Streams interface:
   real-time environment. This can be mitigated at the sender by not queueing,
   preferring to discard frames or not generating them.
 * How to interface to congestion control signals, which travel in the
-  opposite direction from the streams flow.
+  opposite direction from the streams flow. This is addressed in phase three
+  by defining explicit access to feedback signals.
 * How to integrate error signalling and recovery, given that most of the
   time, breaking the pipeline is not an appropriate action.
   
