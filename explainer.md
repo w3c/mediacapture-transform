@@ -41,10 +41,10 @@ The Breakout Box conceptually splits the MediaStreamTrack into two components:
 * The TrackProcessor, which consumes a MediaStreamTrack's source and generates a stream of
 media frames (VideoFrame or AudioFrame)
 * The TrackGenerator, which consumes a stream of media frames and exposes a MediaStreamTrack
-interface, so that it can be used anywhere a MediaStreamTrack is currently attched.
+interface, so that it can be used anywhere a MediaStreamTrack is currently attached.
 
 There is no connection between the stream generator and stream consumer that doesn't pass
-through Javascript; one can freely interconnect the streams in whatever fashion one
+through JavaScript; one can freely interconnect the streams in whatever fashion one
 sees fit.
 
 ## Code Examples
@@ -59,7 +59,7 @@ myTrackGenerator = new TrackGenerator();
 myTrackProcessor.readable.pipeThrough(myProcessingElement).pipeTo(myTrackGenerator.writable);
 myTrackGenerator.readable.pipeTo(myTrackProcessor.writable);
 
-pc.addtrack(myTrackGenerator);
+pc.addTrack(myTrackGenerator);
 </pre>
 
 ## API
@@ -103,8 +103,7 @@ to the same attributes in a TransformStream; these are interfaces you plug a Tra
 into, not interfaces you use to transform something.
 
 <b>Alternative approach</b>: use function calls for createWritable and createReadable that return
-the created streams
-.
+the created streams.
 This would give clearer semantics in the case where the stream is passed away to a worker; it
 would then be natural that the stream (which has been neutered in the original scope) is no
 longer available on the object
