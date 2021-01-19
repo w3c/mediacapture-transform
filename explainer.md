@@ -1,4 +1,4 @@
-# Explainer - Insertable Streams for Media Tracks
+# Explainer - Insertable Streams for MediaStreamTracks
 
 ## Problem to be solved
 
@@ -35,8 +35,32 @@ The use cases include:
 * Background removal
 * Voice processing
 
+## Breakout Box Properties
+
+The Breakout Box conceptually splits the MediaStreamTrack into two components:
+* The TrackProcessor, which consumes a MediaStreamTrack's source and generates a stream of
+media frames (VideoFrame or AudioFrame)
+* The TrackGenerator, which consumes a stream of media frames and exposes a MediaStreamTrack
+interface, so that it can be used anywhere a MediaStreamTrack is currently attached.
+
+There is no connection between the stream generator and stream consumer that doesn't pass
+through JavaScript; one can freely interconnect the streams in whatever fashion one
+sees fit.
 
 ## Code Examples
+
+Example of processing media before transmitting to a PeerConnection in Phase Two:
+<pre>
+originalTrack = navigator.getUserMedia(...)
+myProcessingElement = new TransformStream(....)
+myTrackProcessor = new TrackProcessor(originalTrack);
+myTrackGenerator = new TrackGenerator();
+
+myTrackProcessor.readable.pipeThrough(myProcessingElement).pipeTo(myTrackGenerator.writable);
+myTrackGenerator.readable.pipeTo(myTrackProcessor.writable);
+
+pc.addTrack(myTrackGenerator);
+</pre>
 
 ## API
 
@@ -44,13 +68,6 @@ The following are the IDL modifications proposed by this API.
 Future iterations may add additional operations following a similar pattern.
 
 <pre>
-// Breakout Box Stage Two
-
-interface ProcessingMediaStreamTrack : MediaStreamTrack {
-    constructor(MediaStreamTrack source);
-    attribute ReadableStream readable;  // Stream of VideoFrame or AudioFrame
-    attribute WritableStream writable;  // Stream of VideoFrame or AudioFrame
-};
 
 // Breakout Box Stage Three
 
@@ -81,6 +98,16 @@ enum ControlSignalName {
 };
 </pre>
 
+Note that despite using the same names for the streams defined, the meaning is the opposite
+to the same attributes in a TransformStream; these are interfaces you plug a TransformStream
+into, not interfaces you use to transform something.
+
+<b>Alternative approach</b>: use function calls for createWritable and createReadable that return
+the created streams.
+This would give clearer semantics in the case where the stream is passed away to a worker; it
+would then be natural that the stream (which has been neutered in the original scope) is no
+longer available on the object
+
 ## Design considerations ##
 
 This design is built upon the Streams API. This is a natural interface
@@ -102,7 +129,8 @@ There are some challenges with the Streams interface:
   real-time environment. This can be mitigated at the sender by not queueing,
   preferring to discard frames or not generating them.
 * How to interface to congestion control signals, which travel in the
-  opposite direction from the streams flow.
+  opposite direction from the streams flow. This is addressed in phase three
+  by defining explicit access to feedback signals.
 * How to integrate error signalling and recovery, given that most of the
   time, breaking the pipeline is not an appropriate action.
   
@@ -123,7 +151,7 @@ and implementation effort.
 
 Another path would involve specifying a worklet API, similar to the AudioWorklet,
 and specifying new APIs for connecting encoders and decoders to such worklets.
-This also seemed to involve a significantly larger set of new interfaces, with a
+This also seems to involve a significantly larger set of new interfaces, with a
 correspondingly larger implementation effort, and would offer less flexibility
 in how the processing elements could be implemented.
 

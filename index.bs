@@ -57,19 +57,7 @@ This specification shows the IDL extensions for [[MEDIACAPTURE-STREAMS]]
 It defines some new objects that inherit the {{MediaStreamTrack}} interface, and
 can be constructed from a {{MediaStreamTrack}}.
 
-The first part - Breakout Box Phase Two - specifies a track tht can be created from
-a MediaStreamTrack, and offers a ReadableStream and a WritableStream; the client is expected to connect
-a TransformStream (or equivalent) between the two, and let it do the media processing.
-
-<pre class="idl">
-interface ProcessingMediaStreamTrack : MediaStreamTrack {
-    constructor(MediaStreamTrack source);
-    attribute ReadableStream readable;  // Stream of {{VideoFrame}}
-    attribute WritableStream writable;  // Stream of VideoFrame
-};
-</pre>
-
-The second part - Breakout Box Phase Three - specifies two elements: One is a track sink that is
+The API consists of two elements: One is a track sink that is
 capable of exposing the unencoded frames from the track to a ReadableStream, and exposes a control
 channel for signals going in the oppposite direction. The other one is the inverse of that: It takes
 video frames as input, and emits control signals that result from subsequent processing.

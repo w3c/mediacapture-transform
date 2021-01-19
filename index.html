@@ -6,13 +6,12 @@
   <meta content="UD" name="w3c-status">
   <link href="https://www.w3.org/StyleSheets/TR/2016/W3C-UD" rel="stylesheet">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="Bikeshed version 8804d24d, updated Tue Sep 1 16:57:28 2020 +0200" name="generator">
+  <meta content="Bikeshed version 4e8dd937, updated Fri Nov 13 16:49:31 2020 -0800" name="generator">
   <link href="https://w3c.github.io/mediacapture-insertable-streams/" rel="canonical">
-  <meta content="ed1869fa0c76d21ce98c3d61f62b0e622f692903" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
-    color: #005a9c;
+    color: var(--a-normal-text);
     font-size: inherit;
     font-family: inherit;
 }
@@ -71,6 +70,115 @@ pre .property::before, pre .property::after {
 [data-link-type=biblio] {
     white-space: pre;
 }</style>
+<style>/* style-colors */
+
+/* Any --*-text not paired with a --*-bg is assumed to have a transparent bg */
+:root {
+    color-scheme: light dark;
+
+    --text: black;
+    --bg: white;
+
+    --unofficial-watermark: url(https://www.w3.org/StyleSheets/TR/2016/logos/UD-watermark);
+
+    --logo-bg: #1a5e9a;
+    --logo-active-bg: #c00;
+    --logo-text: white;
+
+    --tocnav-normal-text: #707070;
+    --tocnav-normal-bg: var(--bg);
+    --tocnav-hover-text: var(--tocnav-normal-text);
+    --tocnav-hover-bg: #f8f8f8;
+    --tocnav-active-text: #c00;
+    --tocnav-active-bg: var(--tocnav-normal-bg);
+
+    --tocsidebar-text: var(--text);
+    --tocsidebar-bg: #f7f8f9;
+    --tocsidebar-shadow: rgba(0,0,0,.1);
+    --tocsidebar-heading-text: hsla(203,20%,40%,.7);
+
+    --toclink-text: var(--text);
+    --toclink-underline: #3980b5;
+    --toclink-visited-text: var(--toclink-text);
+    --toclink-visited-underline: #054572;
+
+    --heading-text: #005a9c;
+
+    --hr-text: var(--text);
+
+    --algo-border: #def;
+
+    --del-text: red;
+    --del-bg: transparent;
+    --ins-text: #080;
+    --ins-bg: transparent;
+
+    --a-normal-text: #034575;
+    --a-normal-underline: #707070;
+    --a-visited-text: var(--a-normal-text);
+    --a-visited-underline: #bbb;
+    --a-hover-bg: rgba(75%, 75%, 75%, .25);
+    --a-active-text: #c00;
+    --a-active-underline: #c00;
+
+    --blockquote-border: silver;
+    --blockquote-bg: transparent;
+    --blockquote-text: currentcolor;
+
+    --issue-border: #e05252;
+    --issue-bg: #fbe9e9;
+    --issue-text: var(--text);
+    --issueheading-text: #831616;
+
+    --example-border: #e0cb52;
+    --example-bg: #fcfaee;
+    --example-text: var(--text);
+    --exampleheading-text: #574b0f;
+
+    --note-border: #52e052;
+    --note-bg: #e9fbe9;
+    --note-text: var(--text);
+    --noteheading-text: hsl(120, 70%, 30%);
+    --notesummary-underline: silver;
+
+    --assertion-border: #aaa;
+    --assertion-bg: #eee;
+    --assertion-text: black;
+
+    --advisement-border: orange;
+    --advisement-bg: #fec;
+    --advisement-text: var(--text);
+    --advisementheading-text: #b35f00;
+
+    --warning-border: red;
+    --warning-bg: hsla(40,100%,50%,0.95);
+    --warning-text: var(--text);
+
+    --amendment-border: #330099;
+    --amendment-bg: #F5F0FF;
+    --amendment-text: var(--text);
+    --amendmentheading-text: #220066;
+
+    --def-border: #8ccbf2;
+    --def-bg: #def;
+    --def-text: var(--text);
+    --defrow-border: #bbd7e9;
+
+    --datacell-border: silver;
+
+    --indexinfo-text: #707070;
+
+    --indextable-hover-text: black;
+    --indextable-hover-bg: #f7f8f9;
+
+    --outdatedspec-bg: rgba(0, 0, 0, .5);
+    --outdatedspec-text: black;
+    --outdated-bg: maroon;
+    --outdated-text: white;
+    --outdated-shadow: red;
+
+    --editedrec-bg: darkorange;
+}</style>
 <style>/* style-counters */
 
 body {
@@ -102,6 +210,10 @@ figcaption:not(.no-marker)::before {
 }</style>
 <style>/* style-dfn-panel */
 
+:root {
+    --dfnpanel-bg: #ddd;
+    --dfnpanel-text: var(--text);
+}
 .dfn-panel {
     position: absolute;
     z-index: 35;
@@ -113,14 +225,14 @@ figcaption:not(.no-marker)::before {
     overflow: auto;
     padding: 0.5em 0.75em;
     font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
-    background: #DDDDDD;
-    color: black;
+    background: var(--dfnpanel-bg);
+    color: var(--dfnpanel-text);
     border: outset 0.2em;
 }
 .dfn-panel:not(.on) { display: none; }
 .dfn-panel * { margin: 0; padding: 0; text-indent: 0; }
 .dfn-panel > b { display: block; }
-.dfn-panel a { color: black; }
+.dfn-panel a { color: var(--dfnpanel-text); }
 .dfn-panel a:not(:hover) { text-decoration: none !important; border-bottom: none !important; }
 .dfn-panel > b + b { margin-top: 0.25em; }
 .dfn-panel ul { padding: 0; }
@@ -149,6 +261,11 @@ figcaption:not(.no-marker)::before {
 }</style>
 <style>/* style-selflinks */
 
+:root {
+    --selflink-text: white;
+    --selflink-bg: gray;
+    --selflink-hover-text: black;
+}
 .heading, .issue, .note, .example, li, dt {
     position: relative;
 }
@@ -178,8 +295,8 @@ dfn > a.self-link {
     opacity: 0;
     width: 1.5em;
     height: 1.5em;
-    background: gray;
-    color: white;
+    background: var(--selflink-bg);
+    color: var(--selflink-text);
     font-style: normal;
     transition: opacity .2s, background-color .2s, color .2s;
 }
@@ -187,17 +304,23 @@ dfn:hover > a.self-link {
     opacity: 1;
 }
 dfn > a.self-link:hover {
-    color: black;
+    color: var(--selflink-hover-text);
 }
 
 a.self-link::before            { content: "¶"; }
 .heading > a.self-link::before { content: "§"; }
-dfn > a.self-link::before      { content: "#"; }</style>
+dfn > a.self-link::before      { content: "#"; }
+</style>
 <style>/* style-syntax-highlighting */
-pre.idl.highlight { color: #708090; }
-.highlight:not(.idl) { background: hsl(24, 20%, 95%); }
+
+            pre.idl.highlight {
+                background: var(--borderedblock-bg, var(--def-bg));
+            }
+            
 code.highlight { padding: .1em; border-radius: .3em; }
 pre.highlight, pre > code.highlight { display: block; padding: 1em; margin: .5em 0; overflow: auto; border-radius: 0; }
+
+.highlight:not(.idl) { background: rgba(0, 0, 0, .03); }
 c-[a] { color: #990055 } /* Keyword.Declaration */
 c-[b] { color: #990055 } /* Keyword.Type */
 c-[c] { color: #708090 } /* Comment */
@@ -251,11 +374,201 @@ c-[vg] { color: #0077aa } /* Name.Variable.Global */
 c-[vi] { color: #0077aa } /* Name.Variable.Instance */
 c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 </style>
+<style>/* style-darkmode */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #ddd;
+        --bg: black;
+
+        --unofficial-watermark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cg fill='%23100808' transform='translate(200 200) rotate(-45) translate(-200 -200)' stroke='%23100808' stroke-width='3'%3E%3Ctext x='50%25' y='220' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EUNOFFICIAL%3C/text%3E%3Ctext x='50%25' y='305' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EDRAFT%3C/text%3E%3C/g%3E%3C/svg%3E");
+
+        --logo-bg: #1a5e9a;
+        --logo-active-bg: #c00;
+        --logo-text: white;
+
+        --tocnav-normal-text: #999;
+        --tocnav-normal-bg: var(--bg);
+        --tocnav-hover-text: var(--tocnav-normal-text);
+        --tocnav-hover-bg: #080808;
+        --tocnav-active-text: #f44;
+        --tocnav-active-bg: var(--tocnav-normal-bg);
+
+        --tocsidebar-text: var(--text);
+        --tocsidebar-bg: #080808;
+        --tocsidebar-shadow: rgba(255,255,255,.1);
+        --tocsidebar-heading-text: hsla(203,20%,40%,.7);
+
+        --toclink-text: var(--text);
+        --toclink-underline: #6af;
+        --toclink-visited-text: var(--toclink-text);
+        --toclink-visited-underline: #054572;
+
+        --heading-text: #8af;
+
+        --hr-text: var(--text);
+
+        --algo-border: #456;
+
+        --del-text: #f44;
+        --del-bg: transparent;
+        --ins-text: #4a4;
+        --ins-bg: transparent;
+
+        --a-normal-text: #6af;
+        --a-normal-underline: #555;
+        --a-visited-text: var(--a-normal-text);
+        --a-visited-underline: var(--a-normal-underline);
+        --a-hover-bg: rgba(25%, 25%, 25%, .2);
+        --a-active-text: #f44;
+        --a-active-underline: var(--a-active-text);
+
+        --borderedblock-bg: rgba(255, 255, 255, .05);
+
+        --blockquote-border: silver;
+        --blockquote-bg: var(--borderedblock-bg);
+        --blockquote-text: currentcolor;
+
+        --issue-border: #e05252;
+        --issue-bg: var(--borderedblock-bg);
+        --issue-text: var(--text);
+        --issueheading-text: hsl(0deg, 70%, 70%);
+
+        --example-border: hsl(50deg, 90%, 60%);
+        --example-bg: var(--borderedblock-bg);
+        --example-text: var(--text);
+        --exampleheading-text: hsl(50deg, 70%, 70%);
+
+        --note-border: hsl(120deg, 100%, 35%);
+        --note-bg: var(--borderedblock-bg);
+        --note-text: var(--text);
+        --noteheading-text: hsl(120, 70%, 70%);
+        --notesummary-underline: silver;
+
+        --assertion-border: #444;
+        --assertion-bg: var(--borderedblock-bg);
+        --assertion-text: var(--text);
+
+        --advisement-border: orange;
+        --advisement-bg: #222218;
+        --advisement-text: var(--text);
+        --advisementheading-text: #f84;
+
+        --warning-border: red;
+        --warning-bg: hsla(40,100%,20%,0.95);
+        --warning-text: var(--text);
+
+        --amendment-border: #330099;
+        --amendment-bg: #080010;
+        --amendment-text: var(--text);
+        --amendmentheading-text: #cc00ff;
+
+        --def-border: #8ccbf2;
+        --def-bg: #080818;
+        --def-text: var(--text);
+        --defrow-border: #136;
+
+        --datacell-border: silver;
+
+        --indexinfo-text: #aaa;
+
+        --indextable-hover-text: var(--text);
+        --indextable-hover-bg: #181818;
+
+        --outdatedspec-bg: rgba(255, 255, 255, .5);
+        --outdatedspec-text: black;
+        --outdated-bg: maroon;
+        --outdated-text: white;
+        --outdated-shadow: red;
+
+        --editedrec-bg: darkorange;
+    }
+    /* In case a transparent-bg image doesn't expect to be on a dark bg,
+       which is quite common in practice... */
+    img { background: white; }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --selflink-text: black;
+        --selflink-bg: silver;
+        --selflink-hover-text: white;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    .highlight:not(.idl) { background: rgba(255, 255, 255, .05); }
+
+    c-[a] { color: #d33682 } /* Keyword.Declaration */
+    c-[b] { color: #d33682 } /* Keyword.Type */
+    c-[c] { color: #2aa198 } /* Comment */
+    c-[d] { color: #2aa198 } /* Comment.Multiline */
+    c-[e] { color: #268bd2 } /* Name.Attribute */
+    c-[f] { color: #b58900 } /* Name.Tag */
+    c-[g] { color: #cb4b16 } /* Name.Variable */
+    c-[k] { color: #d33682 } /* Keyword */
+    c-[l] { color: #657b83 } /* Literal */
+    c-[m] { color: #657b83 } /* Literal.Number */
+    c-[n] { color: #268bd2 } /* Name */
+    c-[o] { color: #657b83 } /* Operator */
+    c-[p] { color: #657b83 } /* Punctuation */
+    c-[s] { color: #6c71c4 } /* Literal.String */
+    c-[t] { color: #6c71c4 } /* Literal.String.Single */
+    c-[u] { color: #6c71c4 } /* Literal.String.Double */
+    c-[ch] { color: #2aa198 } /* Comment.Hashbang */
+    c-[cp] { color: #2aa198 } /* Comment.Preproc */
+    c-[cpf] { color: #2aa198 } /* Comment.PreprocFile */
+    c-[c1] { color: #2aa198 } /* Comment.Single */
+    c-[cs] { color: #2aa198 } /* Comment.Special */
+    c-[kc] { color: #d33682 } /* Keyword.Constant */
+    c-[kn] { color: #d33682 } /* Keyword.Namespace */
+    c-[kp] { color: #d33682 } /* Keyword.Pseudo */
+    c-[kr] { color: #d33682 } /* Keyword.Reserved */
+    c-[ld] { color: #657b83 } /* Literal.Date */
+    c-[nc] { color: #268bd2 } /* Name.Class */
+    c-[no] { color: #268bd2 } /* Name.Constant */
+    c-[nd] { color: #268bd2 } /* Name.Decorator */
+    c-[ni] { color: #268bd2 } /* Name.Entity */
+    c-[ne] { color: #268bd2 } /* Name.Exception */
+    c-[nf] { color: #268bd2 } /* Name.Function */
+    c-[nl] { color: #268bd2 } /* Name.Label */
+    c-[nn] { color: #268bd2 } /* Name.Namespace */
+    c-[py] { color: #268bd2 } /* Name.Property */
+    c-[ow] { color: #657b83 } /* Operator.Word */
+    c-[mb] { color: #657b83 } /* Literal.Number.Bin */
+    c-[mf] { color: #657b83 } /* Literal.Number.Float */
+    c-[mh] { color: #657b83 } /* Literal.Number.Hex */
+    c-[mi] { color: #657b83 } /* Literal.Number.Integer */
+    c-[mo] { color: #657b83 } /* Literal.Number.Oct */
+    c-[sa] { color: #6c71c4 } /* Literal.String.Affix */
+    c-[sb] { color: #6c71c4 } /* Literal.String.Backtick */
+    c-[sc] { color: #6c71c4 } /* Literal.String.Char */
+    c-[dl] { color: #6c71c4 } /* Literal.String.Delimiter */
+    c-[sd] { color: #6c71c4 } /* Literal.String.Doc */
+    c-[se] { color: #6c71c4 } /* Literal.String.Escape */
+    c-[sh] { color: #6c71c4 } /* Literal.String.Heredoc */
+    c-[si] { color: #6c71c4 } /* Literal.String.Interpol */
+    c-[sx] { color: #6c71c4 } /* Literal.String.Other */
+    c-[sr] { color: #6c71c4 } /* Literal.String.Regex */
+    c-[ss] { color: #6c71c4 } /* Literal.String.Symbol */
+    c-[fm] { color: #268bd2 } /* Name.Function.Magic */
+    c-[vc] { color: #cb4b16 } /* Name.Variable.Class */
+    c-[vg] { color: #cb4b16 } /* Name.Variable.Global */
+    c-[vi] { color: #cb4b16 } /* Name.Variable.Instance */
+    c-[vm] { color: #cb4b16 } /* Name.Variable.Magic */
+    c-[il] { color: #657b83 } /* Literal.Number.Integer.Long */
+}
+</style>
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">MediaStreamTrack Insertable Media Processing using Streams</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Unofficial Proposal Draft, <time class="dt-updated" datetime="2020-11-03">3 November 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Unofficial Proposal Draft, <time class="dt-updated" datetime="2020-12-03">3 December 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -275,7 +588,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   </div>
   <div class="p-summary" data-fill-with="abstract">
    <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
-   <p>This API defines an API surface for manipulating the bits on <code class="idl"><a data-link-type="idl">MediaStreamTrack</a></code>s carrying raw data.
+   <p>This API defines an API surface for manipulating the bits on <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack">MediaStreamTrack</a></code>s carrying raw data.
 NOT AN ADOPTED WORKING GROUP DOCUMENT.</p>
   </div>
   <h2 class="no-num no-toc no-ref heading settled" id="sotd"><span class="content">Status of this document</span></h2>
@@ -300,7 +613,12 @@ NOT AN ADOPTED WORKING GROUP DOCUMENT.</p>
        </ol>
      </ol>
     <li><a href="#examples"><span class="secno">4</span> <span class="content">Examples</span></a>
-    <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
+    <li>
+     <a href="#w3c-conformance"><span class="secno"></span> <span class="content">Conformance</span></a>
+     <ol class="toc">
+      <li><a href="#w3c-conventions"><span class="secno"></span> <span class="content">Document conventions</span></a>
+      <li><a href="#w3c-conformant-algorithms"><span class="secno"></span> <span class="content">Conformant Algorithms</span></a>
+     </ol>
     <li>
      <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
      <ol class="toc">
@@ -342,38 +660,29 @@ RTCPeerConnection, canvas or MediaRecorder.</p>
    <h2 class="heading settled" data-level="2" id="terminology"><span class="secno">2. </span><span class="content">Terminology</span><a class="self-link" href="#terminology"></a></h2>
    <h2 class="heading settled" data-level="3" id="specification"><span class="secno">3. </span><span class="content">Specification</span><a class="self-link" href="#specification"></a></h2>
    <p>This specification shows the IDL extensions for <a data-link-type="biblio" href="#biblio-mediacapture-streams">[MEDIACAPTURE-STREAMS]</a></p>
-   <p>It defines some new objects that inherit the <code class="idl"><a data-link-type="idl">MediaStreamTrack</a></code> interface, and
-can be constructed from a <code class="idl"><a data-link-type="idl">MediaStreamTrack</a></code>.</p>
-   <p>The first part - Breakout Box Phase Two - specifies a track tht can be created from
-a MediaStreamTrack, and offers a ReadableStream and a WritableStream; the client is expected to connect
-a TransformStream (or equivalent) between the two, and let it do the media processing.</p>
-<pre class="idl highlight def"><c- b>interface</c-> <dfn class="idl-code" data-dfn-type="interface" data-export id="processingmediastreamtrack"><code><c- g>ProcessingMediaStreamTrack</c-></code><a class="self-link" href="#processingmediastreamtrack"></a></dfn> : <a class="n" data-link-type="idl-name"><c- n>MediaStreamTrack</c-></a> {
-    <dfn class="idl-code" data-dfn-for="ProcessingMediaStreamTrack" data-dfn-type="constructor" data-export data-lt="ProcessingMediaStreamTrack(source)|constructor(source)" id="dom-processingmediastreamtrack-processingmediastreamtrack"><code><c- g>constructor</c-></code><a class="self-link" href="#dom-processingmediastreamtrack-processingmediastreamtrack"></a></dfn>(<a class="n" data-link-type="idl-name"><c- n>MediaStreamTrack</c-></a> <dfn class="idl-code" data-dfn-for="ProcessingMediaStreamTrack/ProcessingMediaStreamTrack(source), ProcessingMediaStreamTrack/constructor(source)" data-dfn-type="argument" data-export id="dom-processingmediastreamtrack-processingmediastreamtrack-source-source"><code><c- g>source</c-></code><a class="self-link" href="#dom-processingmediastreamtrack-processingmediastreamtrack-source-source"></a></dfn>);
-    <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#rs-class" id="ref-for-rs-class"><c- n>ReadableStream</c-></a> <dfn class="idl-code" data-dfn-for="ProcessingMediaStreamTrack" data-dfn-type="attribute" data-export data-type="ReadableStream" id="dom-processingmediastreamtrack-readable"><code><c- g>readable</c-></code><a class="self-link" href="#dom-processingmediastreamtrack-readable"></a></dfn>;  // Stream of {{VideoFrame}}
-    <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#ws-class" id="ref-for-ws-class"><c- n>WritableStream</c-></a> <dfn class="idl-code" data-dfn-for="ProcessingMediaStreamTrack" data-dfn-type="attribute" data-export data-type="WritableStream" id="dom-processingmediastreamtrack-writable"><code><c- g>writable</c-></code><a class="self-link" href="#dom-processingmediastreamtrack-writable"></a></dfn>;  // Stream of VideoFrame
-};
-</pre>
-   <p>The second part - Breakout Box Phase Three - specifies two elements: One is a track sink that is
+   <p>It defines some new objects that inherit the <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack①">MediaStreamTrack</a></code> interface, and
+can be constructed from a <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack②">MediaStreamTrack</a></code>.</p>
+   <p>The API consists of two elements: One is a track sink that is
 capable of exposing the unencoded frames from the track to a ReadableStream, and exposes a control
 channel for signals going in the oppposite direction. The other one is the inverse of that: It takes
 video frames as input, and emits control signals that result from subsequent processing.</p>
-<pre class="idl highlight def"><c- b>interface</c-> <dfn class="idl-code" data-dfn-type="interface" data-export id="trackprocessor"><code><c- g>TrackProcessor</c-></code><a class="self-link" href="#trackprocessor"></a></dfn> : <a class="n" data-link-type="idl-name"><c- n>MediaStreamTrack</c-></a> {
-    <dfn class="idl-code" data-dfn-for="TrackProcessor" data-dfn-type="constructor" data-export data-lt="TrackProcessor(source)|constructor(source)" id="dom-trackprocessor-trackprocessor"><code><c- g>constructor</c-></code><a class="self-link" href="#dom-trackprocessor-trackprocessor"></a></dfn>(<a class="n" data-link-type="idl-name"><c- n>MediaStreamTrack</c-></a> <dfn class="idl-code" data-dfn-for="TrackProcessor/TrackProcessor(source), TrackProcessor/constructor(source)" data-dfn-type="argument" data-export id="dom-trackprocessor-trackprocessor-source-source"><code><c- g>source</c-></code><a class="self-link" href="#dom-trackprocessor-trackprocessor-source-source"></a></dfn>);
-    <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#rs-class" id="ref-for-rs-class①"><c- n>ReadableStream</c-></a> <dfn class="idl-code" data-dfn-for="TrackProcessor" data-dfn-type="attribute" data-export data-type="ReadableStream" id="dom-trackprocessor-readable"><code><c- g>readable</c-></code><a class="self-link" href="#dom-trackprocessor-readable"></a></dfn>;  // Stream of VideoFrame
-    <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#ws-class" id="ref-for-ws-class①"><c- n>WritableStream</c-></a> <dfn class="idl-code" data-dfn-for="TrackProcessor" data-dfn-type="attribute" data-export data-type="WritableStream" id="dom-trackprocessor-writable"><code><c- g>writable</c-></code><a class="self-link" href="#dom-trackprocessor-writable"></a></dfn>;
+<pre class="idl highlight def"><c- b>interface</c-> <dfn class="idl-code" data-dfn-type="interface" data-export id="trackprocessor"><code><c- g>TrackProcessor</c-></code><a class="self-link" href="#trackprocessor"></a></dfn> : <a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack③"><c- n>MediaStreamTrack</c-></a> {
+    <dfn class="idl-code" data-dfn-for="TrackProcessor" data-dfn-type="constructor" data-export data-lt="TrackProcessor(source)|constructor(source)" id="dom-trackprocessor-trackprocessor"><code><c- g>constructor</c-></code><a class="self-link" href="#dom-trackprocessor-trackprocessor"></a></dfn>(<a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack④"><c- n>MediaStreamTrack</c-></a> <dfn class="idl-code" data-dfn-for="TrackProcessor/TrackProcessor(source), TrackProcessor/constructor(source)" data-dfn-type="argument" data-export id="dom-trackprocessor-trackprocessor-source-source"><code><c- g>source</c-></code><a class="self-link" href="#dom-trackprocessor-trackprocessor-source-source"></a></dfn>);
+    <c- b>attribute</c-> <a data-link-type="idl-name" href="https://streams.spec.whatwg.org/#readablestream" id="ref-for-readablestream"><c- n>ReadableStream</c-></a> <dfn class="idl-code" data-dfn-for="TrackProcessor" data-dfn-type="attribute" data-export data-type="ReadableStream" id="dom-trackprocessor-readable"><code><c- g>readable</c-></code><a class="self-link" href="#dom-trackprocessor-readable"></a></dfn>;  // Stream of VideoFrame
+    <c- b>attribute</c-> <a data-link-type="idl-name" href="https://streams.spec.whatwg.org/#writablestream" id="ref-for-writablestream"><c- n>WritableStream</c-></a> <dfn class="idl-code" data-dfn-for="TrackProcessor" data-dfn-type="attribute" data-export data-type="WritableStream" id="dom-trackprocessor-writable"><code><c- g>writable</c-></code><a class="self-link" href="#dom-trackprocessor-writable"></a></dfn>;
 };
 
-<c- b>interface</c-> <dfn class="idl-code" data-dfn-type="interface" data-export id="trackgenerator"><code><c- g>TrackGenerator</c-></code><a class="self-link" href="#trackgenerator"></a></dfn> : <a class="n" data-link-type="idl-name"><c- n>MediaStreamTrack</c-></a> {
-    <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#ws-class" id="ref-for-ws-class②"><c- n>WritableStream</c-></a> <dfn class="idl-code" data-dfn-for="TrackGenerator" data-dfn-type="attribute" data-export data-type="WritableStream" id="dom-trackgenerator-readable"><code><c- g>readable</c-></code><a class="self-link" href="#dom-trackgenerator-readable"></a></dfn>;
-    <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#rs-class" id="ref-for-rs-class②"><c- n>ReadableStream</c-></a> <dfn class="idl-code" data-dfn-for="TrackGenerator" data-dfn-type="attribute" data-export data-type="ReadableStream" id="dom-trackgenerator-writable"><code><c- g>writable</c-></code><a class="self-link" href="#dom-trackgenerator-writable"></a></dfn>;
+<c- b>interface</c-> <dfn class="idl-code" data-dfn-type="interface" data-export id="trackgenerator"><code><c- g>TrackGenerator</c-></code><a class="self-link" href="#trackgenerator"></a></dfn> : <a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack⑤"><c- n>MediaStreamTrack</c-></a> {
+    <c- b>attribute</c-> <a data-link-type="idl-name" href="https://streams.spec.whatwg.org/#writablestream" id="ref-for-writablestream①"><c- n>WritableStream</c-></a> <dfn class="idl-code" data-dfn-for="TrackGenerator" data-dfn-type="attribute" data-export data-type="WritableStream" id="dom-trackgenerator-readable"><code><c- g>readable</c-></code><a class="self-link" href="#dom-trackgenerator-readable"></a></dfn>;
+    <c- b>attribute</c-> <a data-link-type="idl-name" href="https://streams.spec.whatwg.org/#readablestream" id="ref-for-readablestream①"><c- n>ReadableStream</c-></a> <dfn class="idl-code" data-dfn-for="TrackGenerator" data-dfn-type="attribute" data-export data-type="ReadableStream" id="dom-trackgenerator-writable"><code><c- g>writable</c-></code><a class="self-link" href="#dom-trackgenerator-writable"></a></dfn>;
 };
 
 <c- b>dictionary</c-> <dfn class="idl-code" data-dfn-type="dictionary" data-export id="dictdef-controlsignal"><code><c- g>ControlSignal</c-></code><a class="self-link" href="#dictdef-controlsignal"></a></dfn> {
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="#enumdef-controlsignalname" id="ref-for-enumdef-controlsignalname"><c- n>ControlSignalName</c-></a> <dfn class="idl-code" data-dfn-for="ControlSignal" data-dfn-type="dict-member" data-export data-type="ControlSignalName " id="dom-controlsignal-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-controlsignal-name"></a></dfn>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="#enumdef-controlsignalname" id="ref-for-enumdef-controlsignalname"><c- n>ControlSignalName</c-></a> <dfn class="idl-code" data-dfn-for="ControlSignal" data-dfn-type="dict-member" data-export data-type="ControlSignalName " id="dom-controlsignal-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-controlsignal-name"></a></dfn>;
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-long" id="ref-for-idl-long"><c- b>long</c-></a> <dfn class="idl-code" data-dfn-for="ControlSignal" data-dfn-type="dict-member" data-export data-type="long " id="dom-controlsignal-width"><code><c- g>width</c-></code><a class="self-link" href="#dom-controlsignal-width"></a></dfn>;
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-long" id="ref-for-idl-long①"><c- b>long</c-></a> <dfn class="idl-code" data-dfn-for="ControlSignal" data-dfn-type="dict-member" data-export data-type="long " id="dom-controlsignal-height"><code><c- g>height</c-></code><a class="self-link" href="#dom-controlsignal-height"></a></dfn>;
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double"><c- b>double</c-></a> <dfn class="idl-code" data-dfn-for="ControlSignal" data-dfn-type="dict-member" data-export data-type="double " id="dom-controlsignal-framerate"><code><c- g>frameRate</c-></code><a class="self-link" href="#dom-controlsignal-framerate"></a></dfn>;
-  <a class="n" data-link-type="idl-name"><c- n>PixelFormat</c-></a> <dfn class="idl-code" data-dfn-for="ControlSignal" data-dfn-type="dict-member" data-export data-type="PixelFormat " id="dom-controlsignal-pixelformat"><code><c- g>pixelFormat</c-></code><a class="self-link" href="#dom-controlsignal-pixelformat"></a></dfn>;
+  <a data-link-type="idl-name"><c- n>PixelFormat</c-></a> <dfn class="idl-code" data-dfn-for="ControlSignal" data-dfn-type="dict-member" data-export data-type="PixelFormat " id="dom-controlsignal-pixelformat"><code><c- g>pixelFormat</c-></code><a class="self-link" href="#dom-controlsignal-pixelformat"></a></dfn>;
 };
 
 <c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-controlsignalname"><code><c- g>ControlSignalName</c-></code></dfn> {
@@ -402,161 +711,52 @@ subsequently generated frames conform to the size and rate constrains given.</p>
    <p>--coming</p>
   </main>
   <div data-fill-with="conformance">
-   <h2 class="no-ref no-num heading settled" id="conformance"><span class="content"> Conformance</span><a class="self-link" href="#conformance"></a></h2>
-   <p> Conformance requirements are expressed with a combination of descriptive assertions and RFC 2119 terminology.
-            The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL”
-            in the normative parts of this document
-            are to be interpreted as described in RFC 2119.
-            However, for readability,
-            these words do not appear in all uppercase letters in this specification. </p>
-   <p> All of the text of this specification is normative
-            except sections explicitly marked as non-normative, examples, and notes. <a data-link-type="biblio" href="#biblio-rfc2119">[RFC2119]</a> </p>
-   <p> Examples in this specification are introduced with the words “for example”
-            or are set apart from the normative text with <code>class="example"</code>, like this: </p>
-   <div class="example" id="example-example"><a class="self-link" href="#example-example"></a> This is an example of an informative example. </div>
-   <p> Informative notes begin with the word “Note”
-            and are set apart from the normative text with <code>class="note"</code>, like this: </p>
-   <p class="note" role="note"> Note, this is an informative note. </p>
+   <h2 class="no-ref no-num heading settled" id="w3c-conformance"><span class="content">Conformance</span><a class="self-link" href="#w3c-conformance"></a></h2>
+   <h3 class="no-ref no-num heading settled" id="w3c-conventions"><span class="content">Document conventions</span><a class="self-link" href="#w3c-conventions"></a></h3>
+   <p>Conformance requirements are expressed
+    with a combination of descriptive assertions
+    and RFC 2119 terminology.
+    The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL”
+    in the normative parts of this document
+    are to be interpreted as described in RFC 2119.
+    However, for readability,
+    these words do not appear in all uppercase letters in this specification. </p>
+   <p>All of the text of this specification is normative
+    except sections explicitly marked as non-normative, examples, and notes. <a data-link-type="biblio" href="#biblio-rfc2119">[RFC2119]</a> </p>
+   <p>Examples in this specification are introduced with the words “for example”
+    or are set apart from the normative text
+    with <code>class="example"</code>,
+    like this: </p>
+   <div class="example" id="w3c-example">
+    <a class="self-link" href="#w3c-example"></a> 
+    <p>This is an example of an informative example. </p>
+   </div>
+   <p>Informative notes begin with the word “Note”
+    and are set apart from the normative text
+    with <code>class="note"</code>,
+    like this: </p>
+   <p class="note" role="note">Note, this is an informative note. </p>
+   <h3 class="no-ref no-num heading settled" id="w3c-conformant-algorithms"><span class="content">Conformant Algorithms</span><a class="self-link" href="#w3c-conformant-algorithms"></a></h3>
+   <p>Requirements phrased in the imperative as part of algorithms
+    (such as "strip any leading space characters"
+    or "return false and abort these steps")
+    are to be interpreted with the meaning of the key word
+    ("must", "should", "may", etc)
+    used in introducing the algorithm. </p>
+   <p>Conformance requirements phrased as algorithms or specific steps
+    can be implemented in any manner,
+    so long as the end result is equivalent.
+    In particular, the algorithms defined in this specification
+    are intended to be easy to understand
+    and are not intended to be performant.
+    Implementers are encouraged to optimize. </p>
   </div>
-<script>
-(function() {
-  "use strict";
-  var collapseSidebarText = '<span aria-hidden="true">←</span> '
-                          + '<span>Collapse Sidebar</span>';
-  var expandSidebarText   = '<span aria-hidden="true">→</span> '
-                          + '<span>Pop Out Sidebar</span>';
-  var tocJumpText         = '<span aria-hidden="true">↑</span> '
-                          + '<span>Jump to Table of Contents</span>';
-
-  var sidebarMedia = window.matchMedia('screen and (min-width: 78em)');
-  var autoToggle   = function(e){ toggleSidebar(e.matches) };
-  if(sidebarMedia.addListener) {
-    sidebarMedia.addListener(autoToggle);
-  }
-
-  function toggleSidebar(on) {
-    if (on == undefined) {
-      on = !document.body.classList.contains('toc-sidebar');
-    }
-
-    /* Don’t scroll to compensate for the ToC if we’re above it already. */
-    var headY = 0;
-    var head = document.querySelector('.head');
-    if (head) {
-      // terrible approx of "top of ToC"
-      headY += head.offsetTop + head.offsetHeight;
-    }
-    var skipScroll = window.scrollY < headY;
-
-    var toggle = document.getElementById('toc-toggle');
-    var tocNav = document.getElementById('toc');
-    if (on) {
-      var tocHeight = tocNav.offsetHeight;
-      document.body.classList.add('toc-sidebar');
-      document.body.classList.remove('toc-inline');
-      toggle.innerHTML = collapseSidebarText;
-      if (!skipScroll) {
-        window.scrollBy(0, 0 - tocHeight);
-      }
-      tocNav.focus();
-      sidebarMedia.addListener(autoToggle); // auto-collapse when out of room
-    }
-    else {
-      document.body.classList.add('toc-inline');
-      document.body.classList.remove('toc-sidebar');
-      toggle.innerHTML = expandSidebarText;
-      if (!skipScroll) {
-        window.scrollBy(0, tocNav.offsetHeight);
-      }
-      if (toggle.matches(':hover')) {
-        /* Unfocus button when not using keyboard navigation,
-           because I don’t know where else to send the focus. */
-        toggle.blur();
-      }
-    }
-  }
-
-  function createSidebarToggle() {
-    /* Create the sidebar toggle in JS; it shouldn’t exist when JS is off. */
-    var toggle = document.createElement('a');
-      /* This should probably be a button, but appearance isn’t standards-track.*/
-    toggle.id = 'toc-toggle';
-    toggle.class = 'toc-toggle';
-    toggle.href = '#toc';
-    toggle.innerHTML = collapseSidebarText;
-
-    sidebarMedia.addListener(autoToggle);
-    var toggler = function(e) {
-      e.preventDefault();
-      sidebarMedia.removeListener(autoToggle); // persist explicit off states
-      toggleSidebar();
-      return false;
-    }
-    toggle.addEventListener('click', toggler, false);
-
-
-    /* Get <nav id=toc-nav>, or make it if we don’t have one. */
-    var tocNav = document.getElementById('toc-nav');
-    if (!tocNav) {
-      tocNav = document.createElement('p');
-      tocNav.id = 'toc-nav';
-      /* Prepend for better keyboard navigation */
-      document.body.insertBefore(tocNav, document.body.firstChild);
-    }
-    /* While we’re at it, make sure we have a Jump to Toc link. */
-    var tocJump = document.getElementById('toc-jump');
-    if (!tocJump) {
-      tocJump = document.createElement('a');
-      tocJump.id = 'toc-jump';
-      tocJump.href = '#toc';
-      tocJump.innerHTML = tocJumpText;
-      tocNav.appendChild(tocJump);
-    }
-
-    tocNav.appendChild(toggle);
-  }
-
-  var toc = document.getElementById('toc');
-  if (toc) {
-    createSidebarToggle();
-    toggleSidebar(sidebarMedia.matches);
-
-    /* If the sidebar has been manually opened and is currently overlaying the text
-       (window too small for the MQ to add the margin to body),
-       then auto-close the sidebar once you click on something in there. */
-    toc.addEventListener('click', function(e) {
-      if(e.target.tagName.toLowerCase() == "a" && document.body.classList.contains('toc-sidebar') && !sidebarMedia.matches) {
-        toggleSidebar(false);
-      }
-    }, false);
-  }
-  else {
-    console.warn("Can’t find Table of Contents. Please use <nav id='toc'> around the ToC.");
-  }
-
-  /* Wrap tables in case they overflow */
-  var tables = document.querySelectorAll(':not(.overlarge) > table.data, :not(.overlarge) > table.index');
-  var numTables = tables.length;
-  for (var i = 0; i < numTables; i++) {
-    var table = tables[i];
-    var wrapper = document.createElement('div');
-    wrapper.className = 'overlarge';
-    table.parentNode.insertBefore(wrapper, table);
-    wrapper.appendChild(table);
-  }
-
-})();
-</script>
+<script src="https://www.w3.org/scripts/TR/2016/fixup.js"></script>
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
    <li><a href="#dom-controlsignalname-configure">"configure"</a><span>, in §3</span>
-   <li>
-    constructor(source)
-    <ul>
-     <li><a href="#dom-processingmediastreamtrack-processingmediastreamtrack">constructor for ProcessingMediaStreamTrack</a><span>, in §3</span>
-     <li><a href="#dom-trackprocessor-trackprocessor">constructor for TrackProcessor</a><span>, in §3</span>
-    </ul>
+   <li><a href="#dom-trackprocessor-trackprocessor">constructor(source)</a><span>, in §3</span>
    <li><a href="#dictdef-controlsignal">ControlSignal</a><span>, in §3</span>
    <li><a href="#enumdef-controlsignalname">ControlSignalName</a><span>, in §3</span>
    <li><a href="#dom-controlsignal-framerate">frameRate</a><span>, in §3</span>
@@ -564,12 +764,9 @@ subsequently generated frames conform to the size and rate constrains given.</p>
    <li><a href="#dom-controlsignalname-mute">"mute"</a><span>, in §3</span>
    <li><a href="#dom-controlsignal-name">name</a><span>, in §3</span>
    <li><a href="#dom-controlsignal-pixelformat">pixelFormat</a><span>, in §3</span>
-   <li><a href="#processingmediastreamtrack">ProcessingMediaStreamTrack</a><span>, in §3</span>
-   <li><a href="#dom-processingmediastreamtrack-processingmediastreamtrack">ProcessingMediaStreamTrack(source)</a><span>, in §3</span>
    <li>
     readable
     <ul>
-     <li><a href="#dom-processingmediastreamtrack-readable">attribute for ProcessingMediaStreamTrack</a><span>, in §3</span>
      <li><a href="#dom-trackgenerator-readable">attribute for TrackGenerator</a><span>, in §3</span>
      <li><a href="#dom-trackprocessor-readable">attribute for TrackProcessor</a><span>, in §3</span>
     </ul>
@@ -582,21 +779,27 @@ subsequently generated frames conform to the size and rate constrains given.</p>
    <li>
     writable
     <ul>
-     <li><a href="#dom-processingmediastreamtrack-writable">attribute for ProcessingMediaStreamTrack</a><span>, in §3</span>
      <li><a href="#dom-trackgenerator-writable">attribute for TrackGenerator</a><span>, in §3</span>
      <li><a href="#dom-trackprocessor-writable">attribute for TrackProcessor</a><span>, in §3</span>
     </ul>
   </ul>
-  <aside class="dfn-panel" data-for="term-for-rs-class">
-   <a href="https://streams.spec.whatwg.org/#rs-class">https://streams.spec.whatwg.org/#rs-class</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-dom-mediastreamtrack">
+   <a href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack">https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-rs-class">3. Specification</a> <a href="#ref-for-rs-class①">(2)</a> <a href="#ref-for-rs-class②">(3)</a>
+    <li><a href="#ref-for-dom-mediastreamtrack">Unnumbered Section</a>
+    <li><a href="#ref-for-dom-mediastreamtrack①">3. Specification</a> <a href="#ref-for-dom-mediastreamtrack②">(2)</a> <a href="#ref-for-dom-mediastreamtrack③">(3)</a> <a href="#ref-for-dom-mediastreamtrack④">(4)</a> <a href="#ref-for-dom-mediastreamtrack⑤">(5)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-ws-class">
-   <a href="https://streams.spec.whatwg.org/#ws-class">https://streams.spec.whatwg.org/#ws-class</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-readablestream">
+   <a href="https://streams.spec.whatwg.org/#readablestream">https://streams.spec.whatwg.org/#readablestream</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-ws-class">3. Specification</a> <a href="#ref-for-ws-class①">(2)</a> <a href="#ref-for-ws-class②">(3)</a>
+    <li><a href="#ref-for-readablestream">3. Specification</a> <a href="#ref-for-readablestream①">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-writablestream">
+   <a href="https://streams.spec.whatwg.org/#writablestream">https://streams.spec.whatwg.org/#writablestream</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-writablestream">3. Specification</a> <a href="#ref-for-writablestream①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-double">
@@ -614,21 +817,28 @@ subsequently generated frames conform to the size and rate constrains given.</p>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="index">
    <li>
+    <a data-link-type="biblio">[MEDIACAPTURE-STREAMS]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="term-for-dom-mediastreamtrack">MediaStreamTrack</span>
+    </ul>
+   <li>
     <a data-link-type="biblio">[STREAMS]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-rs-class" style="color:initial">ReadableStream</span>
-     <li><span class="dfn-paneled" id="term-for-ws-class" style="color:initial">WritableStream</span>
+     <li><span class="dfn-paneled" id="term-for-readablestream">ReadableStream</span>
+     <li><span class="dfn-paneled" id="term-for-writablestream">WritableStream</span>
     </ul>
    <li>
     <a data-link-type="biblio">[WebIDL]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-idl-double" style="color:initial">double</span>
-     <li><span class="dfn-paneled" id="term-for-idl-long" style="color:initial">long</span>
+     <li><span class="dfn-paneled" id="term-for-idl-double">double</span>
+     <li><span class="dfn-paneled" id="term-for-idl-long">long</span>
     </ul>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
+   <dt id="biblio-mediacapture-streams">[MEDIACAPTURE-STREAMS]
+   <dd>Cullen Jennings; et al. <a href="https://www.w3.org/TR/mediacapture-streams/">Media Capture and Streams</a>. 4 November 2020. CR. URL: <a href="https://www.w3.org/TR/mediacapture-streams/">https://www.w3.org/TR/mediacapture-streams/</a>
    <dt id="biblio-rfc2119">[RFC2119]
    <dd>S. Bradner. <a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
    <dt id="biblio-streams">[STREAMS]
@@ -638,37 +848,29 @@ subsequently generated frames conform to the size and rate constrains given.</p>
   </dl>
   <h3 class="no-num no-ref heading settled" id="informative"><span class="content">Informative References</span><a class="self-link" href="#informative"></a></h3>
   <dl>
-   <dt id="biblio-mediacapture-streams">[MEDIACAPTURE-STREAMS]
-   <dd>Daniel Burnett; et al. <a href="https://www.w3.org/TR/mediacapture-streams/">Media Capture and Streams</a>. 3 October 2017. CR. URL: <a href="https://www.w3.org/TR/mediacapture-streams/">https://www.w3.org/TR/mediacapture-streams/</a>
    <dt id="biblio-web-codecs">[WEB-CODECS]
    <dd><a href="https://github.com/WICG/web-codecs/blob/master/explainer.md">Web Codecs explainer</a>. URL: <a href="https://github.com/WICG/web-codecs/blob/master/explainer.md">https://github.com/WICG/web-codecs/blob/master/explainer.md</a>
    <dt id="biblio-webrtc-nv-use-cases">[WEBRTC-NV-USE-CASES]
    <dd>Bernard Aboba. <a href="https://www.w3.org/TR/webrtc-nv-use-cases/">WebRTC Next Version Use Cases</a>. 11 December 2018. WD. URL: <a href="https://www.w3.org/TR/webrtc-nv-use-cases/">https://www.w3.org/TR/webrtc-nv-use-cases/</a>
   </dl>
   <h2 class="no-num no-ref heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
-<pre class="idl highlight def"><c- b>interface</c-> <a href="#processingmediastreamtrack"><code><c- g>ProcessingMediaStreamTrack</c-></code></a> : <a class="n" data-link-type="idl-name"><c- n>MediaStreamTrack</c-></a> {
-    <a href="#dom-processingmediastreamtrack-processingmediastreamtrack"><code><c- g>constructor</c-></code></a>(<a class="n" data-link-type="idl-name"><c- n>MediaStreamTrack</c-></a> <a href="#dom-processingmediastreamtrack-processingmediastreamtrack-source-source"><code><c- g>source</c-></code></a>);
-    <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#rs-class"><c- n>ReadableStream</c-></a> <a data-type="ReadableStream" href="#dom-processingmediastreamtrack-readable"><code><c- g>readable</c-></code></a>;  // Stream of {{VideoFrame}}
-    <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#ws-class"><c- n>WritableStream</c-></a> <a data-type="WritableStream" href="#dom-processingmediastreamtrack-writable"><code><c- g>writable</c-></code></a>;  // Stream of VideoFrame
+<pre class="idl highlight def"><c- b>interface</c-> <a href="#trackprocessor"><code><c- g>TrackProcessor</c-></code></a> : <a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack"><c- n>MediaStreamTrack</c-></a> {
+    <a href="#dom-trackprocessor-trackprocessor"><code><c- g>constructor</c-></code></a>(<a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack"><c- n>MediaStreamTrack</c-></a> <a href="#dom-trackprocessor-trackprocessor-source-source"><code><c- g>source</c-></code></a>);
+    <c- b>attribute</c-> <a data-link-type="idl-name" href="https://streams.spec.whatwg.org/#readablestream"><c- n>ReadableStream</c-></a> <a data-type="ReadableStream" href="#dom-trackprocessor-readable"><code><c- g>readable</c-></code></a>;  // Stream of VideoFrame
+    <c- b>attribute</c-> <a data-link-type="idl-name" href="https://streams.spec.whatwg.org/#writablestream"><c- n>WritableStream</c-></a> <a data-type="WritableStream" href="#dom-trackprocessor-writable"><code><c- g>writable</c-></code></a>;
 };
 
-<c- b>interface</c-> <a href="#trackprocessor"><code><c- g>TrackProcessor</c-></code></a> : <a class="n" data-link-type="idl-name"><c- n>MediaStreamTrack</c-></a> {
-    <a href="#dom-trackprocessor-trackprocessor"><code><c- g>constructor</c-></code></a>(<a class="n" data-link-type="idl-name"><c- n>MediaStreamTrack</c-></a> <a href="#dom-trackprocessor-trackprocessor-source-source"><code><c- g>source</c-></code></a>);
-    <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#rs-class"><c- n>ReadableStream</c-></a> <a data-type="ReadableStream" href="#dom-trackprocessor-readable"><code><c- g>readable</c-></code></a>;  // Stream of VideoFrame
-    <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#ws-class"><c- n>WritableStream</c-></a> <a data-type="WritableStream" href="#dom-trackprocessor-writable"><code><c- g>writable</c-></code></a>;
-};
-
-<c- b>interface</c-> <a href="#trackgenerator"><code><c- g>TrackGenerator</c-></code></a> : <a class="n" data-link-type="idl-name"><c- n>MediaStreamTrack</c-></a> {
-    <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#ws-class"><c- n>WritableStream</c-></a> <a data-type="WritableStream" href="#dom-trackgenerator-readable"><code><c- g>readable</c-></code></a>;
-    <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#rs-class"><c- n>ReadableStream</c-></a> <a data-type="ReadableStream" href="#dom-trackgenerator-writable"><code><c- g>writable</c-></code></a>;
+<c- b>interface</c-> <a href="#trackgenerator"><code><c- g>TrackGenerator</c-></code></a> : <a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack"><c- n>MediaStreamTrack</c-></a> {
+    <c- b>attribute</c-> <a data-link-type="idl-name" href="https://streams.spec.whatwg.org/#writablestream"><c- n>WritableStream</c-></a> <a data-type="WritableStream" href="#dom-trackgenerator-readable"><code><c- g>readable</c-></code></a>;
+    <c- b>attribute</c-> <a data-link-type="idl-name" href="https://streams.spec.whatwg.org/#readablestream"><c- n>ReadableStream</c-></a> <a data-type="ReadableStream" href="#dom-trackgenerator-writable"><code><c- g>writable</c-></code></a>;
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-controlsignal"><code><c- g>ControlSignal</c-></code></a> {
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="#enumdef-controlsignalname"><c- n>ControlSignalName</c-></a> <a data-type="ControlSignalName " href="#dom-controlsignal-name"><code><c- g>name</c-></code></a>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="#enumdef-controlsignalname"><c- n>ControlSignalName</c-></a> <a data-type="ControlSignalName " href="#dom-controlsignal-name"><code><c- g>name</c-></code></a>;
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-long"><c- b>long</c-></a> <a data-type="long " href="#dom-controlsignal-width"><code><c- g>width</c-></code></a>;
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-long"><c- b>long</c-></a> <a data-type="long " href="#dom-controlsignal-height"><code><c- g>height</c-></code></a>;
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double"><c- b>double</c-></a> <a data-type="double " href="#dom-controlsignal-framerate"><code><c- g>frameRate</c-></code></a>;
-  <a class="n" data-link-type="idl-name"><c- n>PixelFormat</c-></a> <a data-type="PixelFormat " href="#dom-controlsignal-pixelformat"><code><c- g>pixelFormat</c-></code></a>;
+  <a data-link-type="idl-name"><c- n>PixelFormat</c-></a> <a data-type="PixelFormat " href="#dom-controlsignal-pixelformat"><code><c- g>pixelFormat</c-></code></a>;
 };
 
 <c- b>enum</c-> <a href="#enumdef-controlsignalname"><code><c- g>ControlSignalName</c-></code></a> {
