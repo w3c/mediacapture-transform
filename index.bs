@@ -15,15 +15,12 @@ Markup Shorthands: css no, markdown yes
 </pre>
 <pre class=biblio>
 {
-  "WEB-CODECS": {
+  "WEBCODECS": {
      "href":
-     "https://github.com/WICG/web-codecs/blob/master/explainer.md",
-     "title": "Web Codecs explainer"
+     "https://wicg.github.io/web-codecs/",
+     "title": "WebCodecs"
    }
 }
-</pre>
-<pre class=link-defaults>
-spec:streams; type:interface; text:ReadableStream
 </pre>
 
 # Introduction # {#introduction}
@@ -38,7 +35,7 @@ including, but not limited to:
 These use cases further require that processing can be done in worker
 threads (requirement N23-N24).
 
-This specification gives an interface inspired by [[WEB-CODECS]] to
+This specification gives an interface inspired by [[WEBCODECS]] to
 provide access to such functionality.
 
 This specification provides access to raw media,
@@ -56,14 +53,12 @@ This specification shows the IDL extensions for [[MEDIACAPTURE-STREAMS]].
 It defines some new objects that inherit the {{MediaStreamTrack}} interface, and
 can be constructed from a {{MediaStreamTrack}}.
 
-The API consists of two elements: One is a track sink that is
+The API consists of two elements. One is a track sink that is
 capable of exposing the unencoded frames from the track to a ReadableStream, and exposes a control
-channel for signals going in the oppposite direction. The other one is the inverse of that: It takes
+channel for signals going in the oppposite direction. The other one is the inverse of that: it takes
 video frames as input, and emits control signals that result from subsequent processing.
 
-
-## Extension operation ## {#operation}
-
+<!-- ## Extension operation ## {#operation} -->
 
 ## MediaStreamTrackProcessor interface ## {#track-processor}
 
@@ -77,16 +72,6 @@ interface MediaStreamTrackProcessor {
 dictionary MediaStreamTrackProcessorInit {
   required MediaStreamTrack track;
 }
-
-dictionary MediaStreamTrackProcessorSignal {
-  required MediaStreamProcessorSignalType signalType;
-  [EnforceRange] unsigned long long fps;
-}
-
-enum MediaStreamTrackProcessorSignalType {
-  "request-frame"
-  "set-min-fps",
-};
 </pre>
 
 ### Internal slots
@@ -99,45 +84,26 @@ enum MediaStreamTrackProcessorSignalType {
 <dfn constructor for=MediaStreamTrackProcessor title="MediaStreamTrackProcessor(init)">
   MediaStreamTrackProcessor(init)
 </dfn>
-1. If |init.track| is not a valid {{MediaStreamTrack}}, throw a {{TypeError}}.
+1. If {{init.}}{{MediaStreamTrackProcessorInit/track}} is not a valid {{MediaStreamTrack}},
+   throw a {{TypeError}}.
 2. Let |p| be a new {{MediaStreamTrackProcessor}} object.
-3. Assign |init.track| to the {{MediaStreamTrackProcessor/[[track]]}} internal slot of |p|.
+3. Assign {{init.}}{{MediaStreamTrackProcessorInit/track}} to the {{MediaStreamTrackProcessor/[track]}}
+   internal slot of |p|.
 4. Return |p|.
 
 ### Attributes
 <dl>
 <dt><dfn attribute for=MediaStreamTrackProcessor>readable</dfn></dt>
-<dd>ReadableStream that allows reading the frames flowing through the {{MediaStreamTrack}} stored
-in the {{MediaStreamTrackProcessor/[[track]]}} internal slot. If {{[[track]]}} is a video track,
-|readable| will produce {{VideoFrame}} objects. If {{[[track]]}} is an audio track, |readable|
-will produce {{AudioFrame}} objects.</dd>
+<dd>Allows reading the frames flowing through the {{MediaStreamTrack}} stored
+in the {{MediaStreamTrackProcessor/[track]}} internal slot. If {{MediaStreamTrackProcessor/[track]}}
+is a video track, chunks read from {{MediaStreamTrackProcessor/readable}} will be {{VideoFrame}}
+objects. If {{MediaStreamTrackProcessor/[track]}} is an audio track, chunks read from
+{{MediaStreamTrackProcessor/readable}} will produce {{AudioFrame}} objects.</dd>
 <dt><dfn attribute for=MediaStreamTrackProcessor>writableControl</dfn></dt>
-<dd>WritableStream that allows sending control signals to {{[[track]]}}. Control signals are
-objects of type {{MediaStreamTrackProcessorSignal}}.
+<dd>Allows sending control signals to {{MediaStreamTrackProcessor/[track]}}.
+Control signals are objects of type {{MediaStreamTrackSignal}}.
 </dd>
 </dl>
-
-### Stream control ### {#stream-control-processor}
-In the MediaStream model, media flows from sources to sinks, with the track as an
-intermediary that allows connecting various sinks to a given source. Apart from media,
-there is also control data that flows in the opposite direction (i.e., from sinks to
-a source via the track).
-A {{MediaStreamTrackProcessor}} is a sink that exposes the media flow from a track as
-a ReadableStream via its |readable| field. As a sink, it also allows sending control
-signals to its track and source via its |writableControl| field. Control signals must
-be {{MediaStreamTrackProcessorSignal}} objects.
-
-The {{MediaStreamTrackProcessorSignal}} dictionary has the following fields:
-* |signalType|, which specifies the action to be requested to the track or source. The
-  possible values are defined by the {{MediaStreamTrackProcessorSignalType}} enum and are
-  the following:
-    * "request-frame", tells the source to produce a new frame.
-    * "set-min-fps", tells the source to maintain a minimum frame rate.
-* |fps| a numeric attribute representing a frame rate in frames per second, used together
-  with "set-min-fps" control signals.
-
-This set of control signals is intended to be extensible, so it is possible that new signal types
-and parameters may be added in the future.
 
 
 ## MediaStreamTrackGenerator interface ## {#track-generator}
@@ -155,86 +121,133 @@ dictionary MediaStreamTrackGeneratorInit {
   MediaStreamTrack signalTarget;
   MediaStreamTrackGeneratorKind kind;
 }
-
-enum MediaStreamTrackKind {
-  "audio",
-  "video"
-};
-
-enum MediaStreamTrackGeneratorSignalType {
-  "frame-requested",
-};
-
-dictionary MediaStreamTrackGeneratorSignal {
-  required MediaStreamTrackGeneratorSignalType signal;
-}
 </pre>
 
 ### Internal slots
 <dl>
-<dt><dfn attribute for=MediaStreamTrackProcessor>[[signalTarget]]</dfn></dt>
-<dd>(Optional) track to which the {{MediaStreamTrackProcessor}} will automatically forward control signals.</dd>
-<dt><dfn attribute for=MediaStreamTrackProcessor>[[kind]]</dfn></dt>
-<dd>Kind of media data for this {{MediaStreamTrackProcessor}}. Must be a valid {{MediaStreamTrackKind}}
-  (i.e., "audio"  or "video").</dd>
+<dt><dfn attribute for=MediaStreamTrackGenerator>[[signalTarget]]</dfn></dt>
+<dd>(Optional) track to which the {{MediaStreamTrackGenerator}} will automatically forward control signals.</dd>
+<dt><dfn attribute for=MediaStreamTrackGenerator>[[kind]]</dfn></dt>
+<dd>Kind of media data for this {{MediaStreamTrackGenerator}}. Must be a valid {{MediaStreamTrackKind}}
+  (i.e., `"audio"`  or `"video"`).</dd>
 </dl>
 
 ### Constructor
-<dfn constructor for=MediaStreamTrackProcessor title="MediaStreamTrackProcessor(init)">
-  MediaStreamTrackProcessor(init)
+<dfn constructor for=MediaStreamTrackGenerator title="MediaStreamTrackGenerator(init)">
+  MediaStreamTrackGenerator(init)
 </dfn>
-1. If |init.signalTarget| is not a valid {{MediaStreamTrack}}, and |init.kind| is not a
-   valid {{MediaStreamTrackKind}} throw a {{TypeError}}.
-2. If |init.signalTarget| is a valid {{MediaStreamTrack}}, and |init.kind| is a
-   valid {{MediaStreamTrackKind}}, and |init.signalTarget.kind| does not match |kind|,
+1. If {{init.}}{{MediaStreamTrackGeneratorInit/signalTarget}} is not empty and is not a valid {{MediaStreamTrack}},
+   or {{init.}}{{MediaStreamTrackGenerator/[kind]}} is not empty and it is not `"audio"` or `"video"`,
    throw a {{TypeError}}.
+2. If neither {{init.}}{{MediaStreamTrackGeneratorInit/signalTarget}} nor
+   and {{init.}}{{MediaStreamTrackGenerator/[kind]}} are empty, and
+   {{init.}}{{MediaStreamTrackGeneratorInit/signalTarget}}{{.}}{{MediaStreamTrack/kind}}
+   does not match {{init.}}{{MediaStreamTrackGeneratorInit/kind}}, throw a {{TypeError}}.
 3. Let |g| be a new {{MediaStreamTrackGenerator}} object.
-4. If |init.signalTarget| is a valid {{MediaStreamTrack}}, assign |init.signalTarget|
-   to the {{MediaStreamTrackGenerator/[[signalTarget]]}} internal slot of |g| and
-   |init.signalTarget.kind| to the {{MediaStreamTrackGenerator/[[kind]]}} internal slot of
-   |g|.
-5. If |init.kind| is a valid {{MediaStreamTrackKind}} and the
-   {{MediaStreamTrackGenerator/[[kind]]}} internal slot of |g| is empty, assign |init.kind|
-   to the {{MediaStreamTrackGenerator/[[kind]]}}.
-6. Return |g|.
+4. If {{init.}}{{MediaStreamTrackGeneratorInit/signalTarget}} is not empty,
+   assign {{init.}}{{MediaStreamTrackGeneratorInit/signalTarget}}
+   to the {{MediaStreamTrackGenerator/[signalTarget]}} internal slot of |g| and
+   initialize the {{MediaStreamTrack/kind}} field of |g| (inherited from {{MediaStreamTrack}})
+   with {{init.}}{{MediaStreamTrackGeneratorInit/signalTarget}}{{.}}{{MediaStreamTrack/kind}}.
+   Otherwise, initialize the {{MediaStreamTrack/kind}} field of |g| with
+   {{init.}}{{MediaStreamTrackGenerator/[kind]}}.
+5. Return |g|.
 
 ### Attributes
 <dl>
 <dt><dfn attribute for=MediaStreamTrackGenerator>writable</dfn></dt>
-<dd>WritableStream that allows writing media frames the {{MediaStreamTrackGenerator}}, which is
-itself a {{MediaStreamTrack}}. If {{[[track]]}} is "audio", the stream will accept
-`AudioFrame` objects and fail with any other type. If {{[[track]]}} is "video", the stream
- will accept `VideoFrame` objects and fail with any other type.</dd>
+<dd>Allows writing media frames the {{MediaStreamTrackGenerator}}, which is
+itself a {{MediaStreamTrack}}. If the {{MediaStreamTrackGenerator/[kind]}} attribute is `"audio"`,
+the stream will accept {{AudioFrame}} objects and fail with any other type. If
+{{MediaStreamTrackGenerator/[kind]}} is `"video"`, the stream will accept {{VideoFrame}} objects
+and fail with any other type. When a frame is written to {{MediaStreamTrackGenerator/writable}},
+its `close()` method is automatically invoked, so that its internal resources are no longer
+referenced from the Web.
+</dd>
 <dt><dfn attribute for=MediaStreamTrackProcessor>readableControl</dfn></dt>
-<dd>ReadableStream that allows reading control signals sent from any sinks connected to the
-{{MediaStreamTrackGenerator}}. Control signals are objects of type {{MediaStreamTrackGeneratorSignal}}.
+<dd>Allows reading control signals sent from any sinks connected to the
+{{MediaStreamTrackGenerator}}. Control signals are objects of type {{MediaStreamTrackSignal}}.
 </dd>
 </dl>
 
-### Stream control ### {#stream-control-generator}
-A {{MediaStreamTrackGenerator}} is a track for which a custom source can be implemented
-by writing media frames to its |writable| field. Implementing a custom source also implies
-receiving receiving control signals sent by sinks. This ability is provided by the
-|readableControl| field. Control signals exposed in this field are
-{{MediaStreamTrackGeneratorSignal}} objects.
+## Stream control ## {#stream-control}
+<pre class="idl">
+dictionary MediaStreamTrackSignal {
+  required MediaStreamSignalType signalType;
+  [EnforceRange] unsigned long long fps;
+}
 
-The {{MediaStreamTrackGeneratorSignal}} dictionary has a single |signalType| field and the only
-value this field can have is "request-frame", which signals the custom source a request from
-sinks to produce a new frame. Signals are merely hints and sources can ignore them.
+enum MediaStreamTrackSignalType {
+  "request-frame"
+  "set-min-fps",
+}
+</pre>
+In the MediaStream model, apart from media, which flows from sources to sinks, there are also
+control signals that flow in the opposite direction (i.e., from sinks to sources via the track).
+A {{MediaStreamTrackProcessor}} is a sink and it allows sending control
+signals to its track and source via its {{MediaStreamTrackProcessor/writableControl}} field.
+A {{MediaStreamTrackGenerator}} is a track for which a custom source can be implemented
+by writing media frames to its {{MediaStreamTrackProcessor/writable}} field. Such a source can
+receive control signals sent by sinks via its {{MediaStreamTrackProcessor/readableControl}} field.
+Note that control signals are just hints that a sink can send to its track (or the source
+backing it). There is no obligation for a source or track to react to them.
+
+Control signals are represented as {{MediaStreamTrackSignal}} objects.
+The {{MediaStreamTrackSignal}} dictionary has the following fields:
+* {{MediaStreamTrackSignal/signalType}}, which specifies the action to be requested to
+  the track or source. The possible values are defined by the {{MediaStreamTrackSignalType}}
+  enum and are the following:
+    * `"request-frame"`, tells the source to produce a new frame.
+    * `"set-min-fps"`, tells the source or track to maintain a
+      minimum frame rate.
+* {{MediaStreamTrackSignal/fps}} a numeric attribute representing a frame rate in frames per
+  second, used together with `"set-min-fps"` control signals.
 
 This set of control signals is intended to be extensible, so it is possible that new signal types
-and extra parameters fields may be added in the future.
+and parameters may be added in the future. Note also that this set of control signals is
+not intended to cover all possible signaling that may occur between platform sinks and
+tracks/sources. A user agent implementation is free to implement any internal signaling between
+specific types of sinks and specific types of sources, and it would not make sense to expose all
+such specific signaling to generic Web platform objects like track generators and processors,
+as they can be considered implementation details that may differ significantly across browsers.
 
+### Implicit signaling
+A common use case for processors and generators is to connect the media flow from
+a pre-existing platform track (e.g., camera, screen capture) to pre-existing platform sinks
+(e.g., peer connection, media element) with a transformation in between, in a chain like this:
 
-## Stream processing ## {#stream-processing}
+Platform Track -> Processor -> Transform -> Generator -> Platform Sinks
 
-
-
+Absent the Breakout Box elements, the platform sinks would normally send the signals directly
+to the platform track (and its source). Arguably, in many cases the source of the platform track
+can still be considered the source for the platform sinks and it would be desirable to keep
+the original platform signaling even with the Processor -> Transform -> Generator chain between
+them. This can be achieved by assigning the platform track to the
+{{MediaStreamTrackGeneratorInit/signalTarget}} field in
+{{MediaStreamTrackGeneratorInit}}. Note that such a connection between the platform track and the
+generator includes all possible internal signaling coming from the platform sinks and not just
+the generic signals exposed as {{MediaStreamTrackSignal}} objects via the
+{{MediaStreamTrackGenerator/readableControl}} and
+{{MediaStreamTrackProcessor/writableControl}} fields. Just connecting explicit signals from
+a generator to a processor (e.g., with a call like
+`generator.readableControl.pipeTo(processor.writableControl`) forwards only
+the Web Platform-exposed signals, but ignores any internal custom signals as there is no
+way for the platform sinks to know what the upstream source is.
 
 
 # Examples # {#examples}
+TODO
 
 # Security considerations # {#security-considerations}
 
---coming
+The security of this API relies on existing mechanisms in the Web platform.
+For example, data from cross-origin resources cannot be accessed due to existing restrictions
+to access such resources (e.g., it is not possible to access the pixels of a cross-origin
+image or video element). Data from cameras, microphones or the screen is subject to user
+authorization.
+The media data this API exposes is already available through other APIs (e.g., media elements +
+canvas + canvas capture). In addition to the media data, this API exposes some control signals
+such as requests for new frames. These signals are intended as hints and do not pose a
+significant security risk.
+
 
