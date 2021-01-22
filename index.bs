@@ -19,7 +19,11 @@ Markup Shorthands: css no, markdown yes
      "href":
      "https://wicg.github.io/web-codecs/",
      "title": "WebCodecs"
-   }
+   },
+  "MEDIACAPTURE-SCREEN-SHARE": {
+    "href": "https://w3c.github.io/mediacapture-screen-share/",
+    "title": "Screen Capture"
+  }
 }
 </pre>
 
@@ -66,7 +70,7 @@ video frames as input, and emits control signals that result from subsequent pro
 interface MediaStreamTrackProcessor {
     constructor(MediaStreamTrackProcessorInit init);
     attribute ReadableStream readable;  // VideoFrame or AudioFrame
-    attribute WritableStream writableControl;  // MediaStreamProcessorSignal
+    attribute WritableStream writableControl;  // MediaStreamTrackSignal
 };
 
 dictionary MediaStreamTrackProcessorInit {
@@ -161,8 +165,8 @@ itself a {{MediaStreamTrack}}. If the {{MediaStreamTrackGenerator/[kind]}} attri
 the stream will accept {{AudioFrame}} objects and fail with any other type. If
 {{MediaStreamTrackGenerator/[kind]}} is `"video"`, the stream will accept {{VideoFrame}} objects
 and fail with any other type. When a frame is written to {{MediaStreamTrackGenerator/writable}},
-its `close()` method is automatically invoked, so that its internal resources are no longer
-referenced from the Web.
+the frame's `close()` method is automatically invoked, so that its internal resources are no longer
+accessible from JavaScript.
 </dd>
 <dt><dfn attribute for=MediaStreamTrackProcessor>readableControl</dfn></dt>
 <dd>Allows reading control signals sent from any sinks connected to the
@@ -174,12 +178,12 @@ referenced from the Web.
 <pre class="idl">
 dictionary MediaStreamTrackSignal {
   required MediaStreamSignalType signalType;
-  [EnforceRange] unsigned long long fps;
+  double frameRate;
 }
 
 enum MediaStreamTrackSignalType {
   "request-frame"
-  "set-min-fps",
+  "set-min-frame-rate",
 }
 </pre>
 In the MediaStream model, apart from media, which flows from sources to sinks, there are also
@@ -198,10 +202,10 @@ The {{MediaStreamTrackSignal}} dictionary has the following fields:
   the track or source. The possible values are defined by the {{MediaStreamTrackSignalType}}
   enum and are the following:
     * `"request-frame"`, tells the source to produce a new frame.
-    * `"set-min-fps"`, tells the source or track to maintain a
+    * `"set-min-frame-rate"`, tells the source or track to maintain a
       minimum frame rate.
 * {{MediaStreamTrackSignal/fps}} a numeric attribute representing a frame rate in frames per
-  second, used together with `"set-min-fps"` control signals.
+  second, used together with `"set-min-frame-rate"` control signals.
 
 This set of control signals is intended to be extensible, so it is possible that new signal types
 and parameters may be added in the future. Note also that this set of control signals is
@@ -210,6 +214,9 @@ tracks/sources. A user agent implementation is free to implement any internal si
 specific types of sinks and specific types of sources, and it would not make sense to expose all
 such specific signaling to generic Web platform objects like track generators and processors,
 as they can be considered implementation details that may differ significantly across browsers.
+It is, however, a requirement of this specification that it is possible to operate a
+MediaStreamTrackGenerator connected to a MediaStreamTrackProcessor using only the
+Web Platform-exposed signals and without connecting any implicit signalling.
 
 ### Implicit signaling
 A common use case for processors and generators is to connect the media flow from
@@ -236,15 +243,45 @@ way for the platform sinks to know what the upstream source is.
 
 
 # Examples # {#examples}
-TODO
+Consider a face recognition function `detectFace(videoFrame)` that returns a face position
+(in some format), and a manipulation function `blurBackground(videoFrame, facePosition)` that
+returns a new VideoFrame similar to the given `videoFrame`, but with the non-face parts blurred.
+
+<pre class="example">
+let stream = await getUserMedia({video:true});
+let videoTrack = stream.getVideoTracks()[0];
+let trackProcessor = new TrackProcessor(videoTrack);
+let trackGenerator = new TrackGenerator();
+let transformer = new TransformStream({
+   async transform(videoFrame, controller) {
+      let facePosition = detectFace(videoFrame);
+      let newFrame = blurBackground(videoFrame.data, facePosition);
+      videoFrame.close();
+      controller.enqueue(newFrame);
+  }
+});
+
+// After this, trackGenerator can be assigned to any sink such as a
+// peer connection, or media element.
+trackProcessor.readable
+    .pipeThrough(transformer)
+    .pipeTo(trackGenerator.writable);
+
+// Forward Web-exposed signals to the original videoTrack.
+trackGenerator.readableControl.pipeTo(trackProcessor.writableControl);
+</pre>
 
 # Security considerations # {#security-considerations}
 
 The security of this API relies on existing mechanisms in the Web platform.
-For example, data from cross-origin resources cannot be accessed due to existing restrictions
-to access such resources (e.g., it is not possible to access the pixels of a cross-origin
-image or video element). Data from cameras, microphones or the screen is subject to user
-authorization.
+As data is exposed using the {{VideoFrame}} and {{AudioFrame}} interfaces,
+the rules of those interfaces to deal with origin-tained data apply.
+For example, data from cross-origin resources cannot be accessed due to existing
+restrictions to access such resources (e.g., it is not possible to access the pixels of
+a cross-origin image or video element).
+In addition to this, access to media data from cameras, microphones or the screen is subject
+to user authorization as specified in [[MEDIACAPTURE-STREAMS]] and [[MEDIACAPTURE-SCREEN-SHARE]].
+
 The media data this API exposes is already available through other APIs (e.g., media elements +
 canvas + canvas capture). In addition to the media data, this API exposes some control signals
 such as requests for new frames. These signals are intended as hints and do not pose a
