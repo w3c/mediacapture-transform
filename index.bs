@@ -204,7 +204,7 @@ The {{MediaStreamTrackSignal}} dictionary has the following fields:
     * `"request-frame"`, tells the source to produce a new frame.
     * `"set-min-frame-rate"`, tells the source or track to maintain a
       minimum frame rate.
-* {{MediaStreamTrackSignal/fps}} a numeric attribute representing a frame rate in frames per
+* {{MediaStreamTrackSignal/frameRate}} a numeric attribute representing a frame rate in frames per
   second, used together with `"set-min-frame-rate"` control signals.
 
 This set of control signals is intended to be extensible, so it is possible that new signal types
