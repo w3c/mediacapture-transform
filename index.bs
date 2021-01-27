@@ -271,7 +271,7 @@ trackProcessor.readable
 trackGenerator.readableControl.pipeTo(trackProcessor.writableControl);
 </pre>
 
-# Security considerations # {#security-considerations}
+# Security and Privacy considerations # {#security-considerations}
 
 The security of this API relies on existing mechanisms in the Web platform.
 As data is exposed using the {{VideoFrame}} and {{AudioFrame}} interfaces,
