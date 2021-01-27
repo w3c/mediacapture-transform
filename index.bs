@@ -115,7 +115,7 @@ Control signals are objects of type {{MediaStreamTrackSignal}}.
 interface MediaStreamTrackGenerator : MediaStreamTrack {
     constructor(MediaStreamTrackGeneratorInit init)
     attribute WritableStream writable;  // VideoFrame or AudioFrame
-    attribute ReadableStream readableControl;  // MediaStreamGeneratorSignal
+    attribute ReadableStream readableControl;  // MediaStreamTrackSignal
 };
 
 dictionary MediaStreamTrackGeneratorInit {
