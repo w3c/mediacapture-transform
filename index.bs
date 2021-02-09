@@ -165,7 +165,7 @@ itself a {{MediaStreamTrack}}. If the {{MediaStreamTrackGenerator/[kind]}} attri
 the stream will accept {{AudioFrame}} objects and fail with any other type. If
 {{MediaStreamTrackGenerator/[kind]}} is `"video"`, the stream will accept {{VideoFrame}} objects
 and fail with any other type. When a frame is written to {{MediaStreamTrackGenerator/writable}},
-the frame's `close()` method is automatically invoked, so that its internal resources are no longer
+the frame's `destroy()` method is automatically invoked, so that its internal resources are no longer
 accessible from JavaScript.
 </dd>
 <dt><dfn attribute for=MediaStreamTrackProcessor>readableControl</dfn></dt>
@@ -256,7 +256,7 @@ let transformer = new TransformStream({
    async transform(videoFrame, controller) {
       let facePosition = detectFace(videoFrame);
       let newFrame = blurBackground(videoFrame.data, facePosition);
-      videoFrame.close();
+      videoFrame.destroy();
       controller.enqueue(newFrame);
   }
 });
