@@ -84,7 +84,7 @@ dictionary MediaStreamTrackProcessorInit {
 <dt><dfn attribute for=MediaStreamTrackProcessor>[[track]]</dfn></dt>
 <dd>Track whose raw data is to be exposed by the {{MediaStreamTrackProcessor}}.</dd>
 <dt><dfn attribute for=MediaStreamTrackProcessor>[[maxBufferSize]]</dfn></dt>
-<dd>Maximum number of media frames buffered by the {{MediaStreamTrackProcessor}}.</dd>
+<dd>The maximum number of media frames buffered by the {{MediaStreamTrackProcessor}}.</dd>
 </dl>
 
 ### Constructor
