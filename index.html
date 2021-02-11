@@ -568,7 +568,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">MediaStreamTrack Insertable Media Processing using Streams</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Unofficial Proposal Draft, <time class="dt-updated" datetime="2021-01-27">27 January 2021</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Unofficial Proposal Draft, <time class="dt-updated" datetime="2021-02-11">11 February 2021</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -688,12 +688,15 @@ video frames as input, and emits control signals that result from subsequent pro
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-mediastreamtrackprocessorinit"><code><c- g>MediaStreamTrackProcessorInit</c-></code></dfn> {
   <c- b>required</c-> <a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack③"><c- n>MediaStreamTrack</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackProcessorInit" data-dfn-type="dict-member" data-export data-type="MediaStreamTrack " id="dom-mediastreamtrackprocessorinit-track"><code><c- g>track</c-></code></dfn>;
-}
+  [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#EnforceRange" id="ref-for-EnforceRange"><c- g>EnforceRange</c-></a>] <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-short" id="ref-for-idl-unsigned-short"><c- b>unsigned</c-> <c- b>short</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackProcessorInit" data-dfn-type="dict-member" data-export data-type="unsigned short " id="dom-mediastreamtrackprocessorinit-maxbuffersize"><code><c- g>maxBufferSize</c-></code></dfn>;
+};
 </pre>
    <h4 class="heading settled" data-level="3.1.1" id="internal-slots"><span class="secno">3.1.1. </span><span class="content">Internal slots</span><a class="self-link" href="#internal-slots"></a></h4>
    <dl>
     <dt><dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackProcessor" data-dfn-type="attribute" data-export id="dom-mediastreamtrackprocessor-track"><code><span>[track]</span></code></dfn>, <span></span>
     <dd>Track whose raw data is to be exposed by the <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor">MediaStreamTrackProcessor</a></code>.
+    <dt><dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackProcessor" data-dfn-type="attribute" data-export id="dom-mediastreamtrackprocessor-maxbuffersize"><code><span>[maxBufferSize]</span></code></dfn>, <span></span>
+    <dd>Maximum number of media frames buffered by the <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①">MediaStreamTrackProcessor</a></code>.
    </dl>
    <h4 class="heading settled" data-level="3.1.2" id="constructor"><span class="secno">3.1.2. </span><span class="content">Constructor</span><a class="self-link" href="#constructor"></a></h4>
     <dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackProcessor" data-dfn-type="constructor" data-export data-lt="MediaStreamTrackProcessor(init)|constructor(init)" id="dom-mediastreamtrackprocessor-mediastreamtrackprocessor" title="MediaStreamTrackProcessor(init)"><code> MediaStreamTrackProcessor(init) </code></dfn> 
@@ -702,9 +705,11 @@ video frames as input, and emits control signals that result from subsequent pro
      <p>If <code class="idl"><a data-link-type="idl">init.</a></code><code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessorinit-track" id="ref-for-dom-mediastreamtrackprocessorinit-track">track</a></code> is not a valid <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack④">MediaStreamTrack</a></code>,
    throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror">TypeError</a></code>.</p>
     <li data-md>
-     <p>Let <var>p</var> be a new <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①">MediaStreamTrackProcessor</a></code> object.</p>
+     <p>Let <var>p</var> be a new <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor②">MediaStreamTrackProcessor</a></code> object.</p>
     <li data-md>
      <p>Assign <code class="idl"><a data-link-type="idl">init.</a></code><code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessorinit-track" id="ref-for-dom-mediastreamtrackprocessorinit-track①">track</a></code> to the <code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-track" id="ref-for-dom-mediastreamtrackprocessor-track">[track]</a></code> internal slot of <var>p</var>.</p>
+    <li data-md>
+     <p>Assign <code class="idl"><a data-link-type="idl">init.</a></code><code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessorinit-maxbuffersize" id="ref-for-dom-mediastreamtrackprocessorinit-maxbuffersize">maxBufferSize</a></code> to the <code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-maxbuffersize" id="ref-for-dom-mediastreamtrackprocessor-maxbuffersize">[maxBufferSize]</a></code> internal slot of <var>p</var>.</p>
     <li data-md>
      <p>Return <var>p</var>.</p>
    </ol>
@@ -713,8 +718,12 @@ video frames as input, and emits control signals that result from subsequent pro
     <dt><dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackProcessor" data-dfn-type="attribute" data-export id="dom-mediastreamtrackprocessor-readable"><code>readable</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://streams.spec.whatwg.org/#readablestream" id="ref-for-readablestream①">ReadableStream</a></span>
     <dd>Allows reading the frames flowing through the <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack⑤">MediaStreamTrack</a></code> stored
 in the <code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-track" id="ref-for-dom-mediastreamtrackprocessor-track①">[track]</a></code> internal slot. If <code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-track" id="ref-for-dom-mediastreamtrackprocessor-track②">[track]</a></code> is a video track, chunks read from <code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-readable" id="ref-for-dom-mediastreamtrackprocessor-readable①">readable</a></code> will be <code class="idl"><a data-link-type="idl">VideoFrame</a></code> objects. If <code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-track" id="ref-for-dom-mediastreamtrackprocessor-track③">[track]</a></code> is an audio track, chunks read from <code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-readable" id="ref-for-dom-mediastreamtrackprocessor-readable②">readable</a></code> will produce <code class="idl"><a data-link-type="idl">AudioFrame</a></code> objects.
+If media frames are not read from <code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-readable" id="ref-for-dom-mediastreamtrackprocessor-readable③">readable</a></code> quickly enough,
+the <code class="idl"><a data-link-type="idl">MedeiaStreamTrackProcessor</a></code> will internally buffer up to <code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-maxbuffersize" id="ref-for-dom-mediastreamtrackprocessor-maxbuffersize①">[maxBufferSize]</a></code> of the frames produced by <code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-track" id="ref-for-dom-mediastreamtrackprocessor-track④">[track]</a></code>. If the internal buffer
+is full, each time <code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-track" id="ref-for-dom-mediastreamtrackprocessor-track⑤">[track]</a></code> produces a new frame, the oldest frame
+in the buffer MUST be dropped and the new frame MUST be added to the buffer. 
     <dt><dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackProcessor" data-dfn-type="attribute" data-export id="dom-mediastreamtrackprocessor-writablecontrol"><code>writableControl</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://streams.spec.whatwg.org/#writablestream" id="ref-for-writablestream①">WritableStream</a></span>
-    <dd>Allows sending control signals to <code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-track" id="ref-for-dom-mediastreamtrackprocessor-track④">[track]</a></code>.
+    <dd>Allows sending control signals to <code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-track" id="ref-for-dom-mediastreamtrackprocessor-track⑥">[track]</a></code>.
 Control signals are objects of type <code class="idl"><a data-link-type="idl" href="#dictdef-mediastreamtracksignal" id="ref-for-dictdef-mediastreamtracksignal">MediaStreamTrackSignal</a></code>. 
    </dl>
    <h3 class="heading settled" data-level="3.2" id="track-generator"><span class="secno">3.2. </span><span class="content">MediaStreamTrackGenerator interface</span><a class="self-link" href="#track-generator"></a></h3>
@@ -785,7 +794,7 @@ enum MediaStreamTrackSignalType {
 </pre>
    <p>In the MediaStream model, apart from media, which flows from sources to sinks, there are also
 control signals that flow in the opposite direction (i.e., from sinks to sources via the track).
-A <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor②">MediaStreamTrackProcessor</a></code> is a sink and it allows sending control
+A <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor③">MediaStreamTrackProcessor</a></code> is a sink and it allows sending control
 signals to its track and source via its <code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-writablecontrol" id="ref-for-dom-mediastreamtrackprocessor-writablecontrol①">writableControl</a></code> field.
 A <code class="idl"><a data-link-type="idl" href="#mediastreamtrackgenerator" id="ref-for-mediastreamtrackgenerator⑤">MediaStreamTrackGenerator</a></code> is a track for which a custom source can be implemented
 by writing media frames to its <code class="idl"><a data-link-type="idl">writable</a></code> field. Such a source can
@@ -928,6 +937,8 @@ significant security risk.</p>
    <li><a href="#dom-mediastreamtracksignal-framerate">frameRate</a><span>, in §3.3</span>
    <li><a href="#dom-mediastreamtrackgenerator-kind">[kind]</a><span>, in §3.2.1</span>
    <li><a href="#dom-mediastreamtrackgeneratorinit-kind">kind</a><span>, in §3.2</span>
+   <li><a href="#dom-mediastreamtrackprocessor-maxbuffersize">[maxBufferSize]</a><span>, in §3.1.1</span>
+   <li><a href="#dom-mediastreamtrackprocessorinit-maxbuffersize">maxBufferSize</a><span>, in §3.1</span>
    <li><a href="#mediastreamtrackgenerator">MediaStreamTrackGenerator</a><span>, in §3.2</span>
    <li><a href="#dom-mediastreamtrackgenerator-mediastreamtrackgenerator">MediaStreamTrackGenerator(init)</a><span>, in §3.2.2</span>
    <li><a href="#dictdef-mediastreamtrackgeneratorinit">MediaStreamTrackGeneratorInit</a><span>, in §3.2</span>
@@ -984,6 +995,12 @@ significant security risk.</p>
     <li><a href="#ref-for-writablestream①">3.1.3. Attributes</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-EnforceRange">
+   <a href="https://heycam.github.io/webidl/#EnforceRange">https://heycam.github.io/webidl/#EnforceRange</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-EnforceRange">3.1. MediaStreamTrackProcessor interface</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-exceptiondef-typeerror">
    <a href="https://heycam.github.io/webidl/#exceptiondef-typeerror">https://heycam.github.io/webidl/#exceptiondef-typeerror</a><b>Referenced in:</b>
    <ul>
@@ -995,6 +1012,12 @@ significant security risk.</p>
    <a href="https://heycam.github.io/webidl/#idl-double">https://heycam.github.io/webidl/#idl-double</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-idl-double">3.3. Stream control</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-idl-unsigned-short">
+   <a href="https://heycam.github.io/webidl/#idl-unsigned-short">https://heycam.github.io/webidl/#idl-unsigned-short</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-idl-unsigned-short">3.1. MediaStreamTrackProcessor interface</a>
    </ul>
   </aside>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
@@ -1014,15 +1037,17 @@ significant security risk.</p>
    <li>
     <a data-link-type="biblio">[WebIDL]</a> defines the following terms:
     <ul>
+     <li><span class="dfn-paneled" id="term-for-EnforceRange">EnforceRange</span>
      <li><span class="dfn-paneled" id="term-for-exceptiondef-typeerror">TypeError</span>
      <li><span class="dfn-paneled" id="term-for-idl-double">double</span>
+     <li><span class="dfn-paneled" id="term-for-idl-unsigned-short">unsigned short</span>
     </ul>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
    <dt id="biblio-mediacapture-streams">[MEDIACAPTURE-STREAMS]
-   <dd>Cullen Jennings; et al. <a href="https://www.w3.org/TR/mediacapture-streams/">Media Capture and Streams</a>. 21 January 2021. CR. URL: <a href="https://www.w3.org/TR/mediacapture-streams/">https://www.w3.org/TR/mediacapture-streams/</a>
+   <dd>Cullen Jennings; et al. <a href="https://www.w3.org/TR/mediacapture-streams/">Media Capture and Streams</a>. 28 January 2021. CR. URL: <a href="https://www.w3.org/TR/mediacapture-streams/">https://www.w3.org/TR/mediacapture-streams/</a>
    <dt id="biblio-rfc2119">[RFC2119]
    <dd>S. Bradner. <a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
    <dt id="biblio-streams">[STREAMS]
@@ -1048,7 +1073,8 @@ significant security risk.</p>
 
 <c- b>dictionary</c-> <a href="#dictdef-mediastreamtrackprocessorinit"><code><c- g>MediaStreamTrackProcessorInit</c-></code></a> {
   <c- b>required</c-> <a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack"><c- n>MediaStreamTrack</c-></a> <a data-type="MediaStreamTrack " href="#dom-mediastreamtrackprocessorinit-track"><code><c- g>track</c-></code></a>;
-}
+  [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#EnforceRange"><c- g>EnforceRange</c-></a>] <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-short"><c- b>unsigned</c-> <c- b>short</c-></a> <a data-type="unsigned short " href="#dom-mediastreamtrackprocessorinit-maxbuffersize"><code><c- g>maxBufferSize</c-></code></a>;
+};
 
 <c- b>interface</c-> <a href="#mediastreamtrackgenerator"><code><c- g>MediaStreamTrackGenerator</c-></code></a> : <a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack"><c- n>MediaStreamTrack</c-></a> {
     <a class="idl-code" data-link-type="constructor" href="#dom-mediastreamtrackgenerator-mediastreamtrackgenerator"><c- g>constructor</c-></a>(<a data-link-type="idl-name" href="#dictdef-mediastreamtrackgeneratorinit"><c- n>MediaStreamTrackGeneratorInit</c-></a> <a href="#dom-mediastreamtrackgenerator-mediastreamtrackgenerator-init-init"><code><c- g>init</c-></code></a>)
@@ -1078,9 +1104,9 @@ enum MediaStreamTrackSignalType {
   <aside class="dfn-panel" data-for="mediastreamtrackprocessor">
    <b><a href="#mediastreamtrackprocessor">#mediastreamtrackprocessor</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-mediastreamtrackprocessor">3.1.1. Internal slots</a>
-    <li><a href="#ref-for-mediastreamtrackprocessor①">3.1.2. Constructor</a>
-    <li><a href="#ref-for-mediastreamtrackprocessor②">3.3. Stream control</a>
+    <li><a href="#ref-for-mediastreamtrackprocessor">3.1.1. Internal slots</a> <a href="#ref-for-mediastreamtrackprocessor①">(2)</a>
+    <li><a href="#ref-for-mediastreamtrackprocessor②">3.1.2. Constructor</a>
+    <li><a href="#ref-for-mediastreamtrackprocessor③">3.3. Stream control</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dictdef-mediastreamtrackprocessorinit">
@@ -1095,11 +1121,24 @@ enum MediaStreamTrackSignalType {
     <li><a href="#ref-for-dom-mediastreamtrackprocessorinit-track">3.1.2. Constructor</a> <a href="#ref-for-dom-mediastreamtrackprocessorinit-track①">(2)</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="dom-mediastreamtrackprocessorinit-maxbuffersize">
+   <b><a href="#dom-mediastreamtrackprocessorinit-maxbuffersize">#dom-mediastreamtrackprocessorinit-maxbuffersize</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-mediastreamtrackprocessorinit-maxbuffersize">3.1.2. Constructor</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="dom-mediastreamtrackprocessor-track">
    <b><a href="#dom-mediastreamtrackprocessor-track">#dom-mediastreamtrackprocessor-track</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-mediastreamtrackprocessor-track">3.1.2. Constructor</a>
-    <li><a href="#ref-for-dom-mediastreamtrackprocessor-track①">3.1.3. Attributes</a> <a href="#ref-for-dom-mediastreamtrackprocessor-track②">(2)</a> <a href="#ref-for-dom-mediastreamtrackprocessor-track③">(3)</a> <a href="#ref-for-dom-mediastreamtrackprocessor-track④">(4)</a>
+    <li><a href="#ref-for-dom-mediastreamtrackprocessor-track①">3.1.3. Attributes</a> <a href="#ref-for-dom-mediastreamtrackprocessor-track②">(2)</a> <a href="#ref-for-dom-mediastreamtrackprocessor-track③">(3)</a> <a href="#ref-for-dom-mediastreamtrackprocessor-track④">(4)</a> <a href="#ref-for-dom-mediastreamtrackprocessor-track⑤">(5)</a> <a href="#ref-for-dom-mediastreamtrackprocessor-track⑥">(6)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-mediastreamtrackprocessor-maxbuffersize">
+   <b><a href="#dom-mediastreamtrackprocessor-maxbuffersize">#dom-mediastreamtrackprocessor-maxbuffersize</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-mediastreamtrackprocessor-maxbuffersize">3.1.2. Constructor</a>
+    <li><a href="#ref-for-dom-mediastreamtrackprocessor-maxbuffersize①">3.1.3. Attributes</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-mediastreamtrackprocessor-mediastreamtrackprocessor">
@@ -1112,7 +1151,7 @@ enum MediaStreamTrackSignalType {
    <b><a href="#dom-mediastreamtrackprocessor-readable">#dom-mediastreamtrackprocessor-readable</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-mediastreamtrackprocessor-readable">3.1. MediaStreamTrackProcessor interface</a>
-    <li><a href="#ref-for-dom-mediastreamtrackprocessor-readable①">3.1.3. Attributes</a> <a href="#ref-for-dom-mediastreamtrackprocessor-readable②">(2)</a>
+    <li><a href="#ref-for-dom-mediastreamtrackprocessor-readable①">3.1.3. Attributes</a> <a href="#ref-for-dom-mediastreamtrackprocessor-readable②">(2)</a> <a href="#ref-for-dom-mediastreamtrackprocessor-readable③">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-mediastreamtrackprocessor-writablecontrol">
