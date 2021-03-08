@@ -210,8 +210,8 @@ control signals that flow in the opposite direction (i.e., from sinks to sources
 A {{MediaStreamTrackProcessor}} is a sink and it allows sending control
 signals to its track and source via its {{MediaStreamTrackProcessor/writableControl}} field.
 A {{MediaStreamTrackGenerator}} is a track for which a custom source can be implemented
-by writing media frames to its {{MediaStreamTrackProcessor/writable}} field. Such a source can
-receive control signals sent by sinks via its {{MediaStreamTrackProcessor/readableControl}} field.
+by writing media frames to its {{MediaStreamTrackGenerator/writable}} field. Such a source can
+receive control signals sent by sinks via its {{MediaStreamTrackGenerator/readableControl}} field.
 Note that control signals are just hints that a sink can send to its track (or the source
 backing it). There is no obligation for a source or track to react to them.
 
