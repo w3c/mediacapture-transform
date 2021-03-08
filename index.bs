@@ -183,7 +183,7 @@ and fail with any other type. When a frame is written to {{MediaStreamTrackGener
 the frame's `close()` method is automatically invoked, so that its internal resources are no longer
 accessible from JavaScript.
 </dd>
-<dt><dfn attribute for=MediaStreamTrackProcessor>readableControl</dfn></dt>
+<dt><dfn attribute for=MediaStreamTrackGenerator>readableControl</dfn></dt>
 <dd>Allows reading control signals sent from any sinks connected to the
 {{MediaStreamTrackGenerator}}. Control signals are objects of type {{MediaStreamTrackSignal}}.
 </dd>
