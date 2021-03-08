@@ -139,7 +139,7 @@ dictionary MediaStreamTrackGeneratorInit {
   // MediaStreamTrackGenerator's constructor will raise an exception.
   MediaStreamTrack signalTarget;
   MediaStreamTrackGeneratorKind kind;
-}
+};
 </pre>
 
 ### Internal slots
@@ -194,12 +194,12 @@ accessible from JavaScript.
 dictionary MediaStreamTrackSignal {
   required MediaStreamSignalType signalType;
   double frameRate;
-}
+};
 
 enum MediaStreamTrackSignalType {
-  "request-frame"
-  "set-min-frame-rate",
-}
+  "request-frame",
+  "set-min-frame-rate"
+};
 </pre>
 In the MediaStream model, apart from media, which flows from sources to sinks, there are also
 control signals that flow in the opposite direction (i.e., from sinks to sources via the track).
