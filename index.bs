@@ -92,12 +92,12 @@ dictionary MediaStreamTrackProcessorInit {
   MediaStreamTrackProcessor(init)
 </dfn>
 1. If {{init}}.{{MediaStreamTrackProcessorInit/track}} is not a valid {{MediaStreamTrack}},
-   throw a {{TypeError}}.
+    throw a {{TypeError}}.
 2. Let |processor| be a new {{MediaStreamTrackProcessor}} object.
 3. Assign {{init}}.{{MediaStreamTrackProcessorInit/track}} to the {{MediaStreamTrackProcessor/[track]}}
-   internal slot of |processor|.
+    internal slot of |processor|.
 3. Assign {{init}}.{{MediaStreamTrackProcessorInit/maxBufferSize}} to the {{MediaStreamTrackProcessor/[maxBufferSize]}}
-   internal slot of |processor|.
+    internal slot of |processor|.
 4. Return |processor|.
 
 ### Attributes
@@ -128,7 +128,7 @@ Control signals are objects of type {{MediaStreamTrackSignal}}.
 ## MediaStreamTrackGenerator interface ## {#track-generator}
 <pre class="idl">
 interface MediaStreamTrackGenerator : MediaStreamTrack {
-    constructor(MediaStreamTrackGeneratorInit init)
+    constructor(MediaStreamTrackGeneratorInit init);
     attribute WritableStream writable;  // VideoFrame or AudioFrame
     attribute ReadableStream readableControl;  // MediaStreamTrackSignal
 };
@@ -156,20 +156,20 @@ dictionary MediaStreamTrackGeneratorInit {
   MediaStreamTrackGenerator(init)
 </dfn>
 1. If {{init}}.{{MediaStreamTrackGeneratorInit/signalTarget}} is not empty and is not a valid {{MediaStreamTrack}},
-   or {{init}}.{{MediaStreamTrackGenerator/[kind]}} is not empty and it is not `"audio"` or `"video"`,
-   throw a {{TypeError}}.
+    or {{init}}.{{MediaStreamTrackGenerator/[kind]}} is not empty and it is not `"audio"` or `"video"`,
+    throw a {{TypeError}}.
 2. If neither {{init}}.{{MediaStreamTrackGeneratorInit/signalTarget}} nor
-   and {{init}}.{{MediaStreamTrackGenerator/[kind]}} are empty, and
-   {{init}}.{{MediaStreamTrackGeneratorInit/signalTarget}}{{.}}{{MediaStreamTrack/kind}}
-   does not match {{init}}.{{MediaStreamTrackGeneratorInit/kind}}, throw a {{TypeError}}.
+    and {{init}}.{{MediaStreamTrackGenerator/[kind]}} are empty, and
+    {{init}}.{{MediaStreamTrackGeneratorInit/signalTarget}}{{.}}{{MediaStreamTrack/kind}}
+    does not match {{init}}.{{MediaStreamTrackGeneratorInit/kind}}, throw a {{TypeError}}.
 3. Let |g| be a new {{MediaStreamTrackGenerator}} object.
 4. If {{init}}.{{MediaStreamTrackGeneratorInit/signalTarget}} is not empty,
-   assign {{init}}.{{MediaStreamTrackGeneratorInit/signalTarget}}
-   to the {{MediaStreamTrackGenerator/[signalTarget]}} internal slot of |g| and
-   initialize the {{MediaStreamTrack/kind}} field of |g| (inherited from {{MediaStreamTrack}})
-   with {{init}}.{{MediaStreamTrackGeneratorInit/signalTarget}}{{.}}{{MediaStreamTrack/kind}}.
-   Otherwise, initialize the {{MediaStreamTrack/kind}} field of |g| with
-   {{init}}.{{MediaStreamTrackGenerator/[kind]}}.
+    assign {{init}}.{{MediaStreamTrackGeneratorInit/signalTarget}}
+    to the {{MediaStreamTrackGenerator/[signalTarget]}} internal slot of |g| and
+    initialize the {{MediaStreamTrack/kind}} field of |g| (inherited from {{MediaStreamTrack}})
+    with {{init}}.{{MediaStreamTrackGeneratorInit/signalTarget}}{{.}}{{MediaStreamTrack/kind}}.
+    Otherwise, initialize the {{MediaStreamTrack/kind}} field of |g| with
+    {{init}}.{{MediaStreamTrackGenerator/[kind]}}.
 5. Return |g|.
 
 ### Attributes
@@ -214,13 +214,13 @@ backing it). There is no obligation for a source or track to react to them.
 Control signals are represented as {{MediaStreamTrackSignal}} objects.
 The {{MediaStreamTrackSignal}} dictionary has the following fields:
 * {{MediaStreamTrackSignal/signalType}}, which specifies the action to be requested to
-  the track or source. The possible values are defined by the {{MediaStreamTrackSignalType}}
-  enum and are the following:
+    the track or source. The possible values are defined by the {{MediaStreamTrackSignalType}}
+    enum and are the following:
     * `"request-frame"`, tells the source to produce a new frame.
     * `"set-min-frame-rate"`, tells the source or track to maintain a
-      minimum frame rate.
+        minimum frame rate.
 * {{MediaStreamTrackSignal/frameRate}} a numeric attribute representing a frame rate in frames per
-  second, used together with `"set-min-frame-rate"` control signals.
+    second, used together with `"set-min-frame-rate"` control signals.
 
 This set of control signals is intended to be extensible, so it is possible that new signal types
 and parameters may be added in the future. Note also that this set of control signals is
