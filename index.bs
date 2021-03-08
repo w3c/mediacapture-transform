@@ -13,6 +13,10 @@ Abstract: {{MediaStreamTrack}}s carrying raw data.
 Abstract: NOT AN ADOPTED WORKING GROUP DOCUMENT.
 Markup Shorthands: css no, markdown yes
 </pre>
+<pre class=anchors>
+url: https://wicg.github.io/web-codecs/#videoframe; text: VideoFrame; type: interface; spec: WEBCODECS
+url: https://wicg.github.io/web-codecs/#audioframe; text: AudioFrame; type: interface; spec: WEBCODECS
+</pre>
 <pre class=biblio>
 {
   "WEBCODECS": {
