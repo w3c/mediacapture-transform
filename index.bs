@@ -196,7 +196,7 @@ accessible from JavaScript.
 ## Stream control ## {#stream-control}
 <pre class="idl">
 dictionary MediaStreamTrackSignal {
-  required MediaStreamSignalType signalType;
+  required MediaStreamTrackSignalType signalType;
   double frameRate;
 };
 
