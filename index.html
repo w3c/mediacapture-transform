@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version c5fd42b86, updated Mon Apr 5 16:27:33 2021 -0700" name="generator">
   <link href="https://w3c.github.io/mediacapture-insertable-streams/" rel="canonical">
-  <meta content="5d2810c166741bb9fd49bc73642a809e1c00af2f" name="document-revision">
+  <meta content="368f99bf59bb0e4d40c318e60ccd8c8647aca7ff" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -788,12 +788,10 @@ accessible from JavaScript.
    <h3 class="heading settled" data-level="3.3" id="stream-control"><span class="secno">3.3. </span><span class="content">Stream control</span><a class="self-link" href="#stream-control"></a></h3>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-mediastreamtracksignal"><code><c- g>MediaStreamTrackSignal</c-></code></dfn> {
   <c- b>required</c-> <a data-link-type="idl-name" href="#enumdef-mediastreamtracksignaltype" id="ref-for-enumdef-mediastreamtracksignaltype"><c- n>MediaStreamTrackSignalType</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackSignal" data-dfn-type="dict-member" data-export data-type="MediaStreamTrackSignalType " id="dom-mediastreamtracksignal-signaltype"><code><c- g>signalType</c-></code></dfn>;
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double"><c- b>double</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackSignal" data-dfn-type="dict-member" data-export data-type="double " id="dom-mediastreamtracksignal-framerate"><code><c- g>frameRate</c-></code></dfn>;
 };
 
 <c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-mediastreamtracksignaltype"><code><c- g>MediaStreamTrackSignalType</c-></code></dfn> {
   <dfn class="idl-code" data-dfn-for="MediaStreamTrackSignalType" data-dfn-type="enum-value" data-export id="dom-mediastreamtracksignaltype-request-frame"><code><c- s>"request-frame"</c-></code><a class="self-link" href="#dom-mediastreamtracksignaltype-request-frame"></a></dfn>,
-  <dfn class="idl-code" data-dfn-for="MediaStreamTrackSignalType" data-dfn-type="enum-value" data-export id="dom-mediastreamtracksignaltype-set-min-frame-rate"><code><c- s>"set-min-frame-rate"</c-></code><a class="self-link" href="#dom-mediastreamtracksignaltype-set-min-frame-rate"></a></dfn>
 };
 </pre>
    <p>In the MediaStream model, apart from media, which flows from sources to sinks, there are also
@@ -814,13 +812,7 @@ the track or source. The possible values are defined by the <code class="idl"><a
      <ul>
       <li data-md>
        <p><code>"request-frame"</code>, tells the source to produce a new frame.</p>
-      <li data-md>
-       <p><code>"set-min-frame-rate"</code>, tells the source or track to maintain a
-minimum frame rate.</p>
      </ul>
-    <li data-md>
-     <p><code class="idl"><a data-link-type="idl" href="#dom-mediastreamtracksignal-framerate" id="ref-for-dom-mediastreamtracksignal-framerate">frameRate</a></code> a numeric attribute representing a frame rate in frames per
-second, used together with <code>"set-min-frame-rate"</code> control signals.</p>
    </ul>
    <p>This set of control signals is intended to be extensible, so it is possible that new signal types
 and parameters may be added in the future. Note also that this set of control signals is
@@ -938,7 +930,6 @@ significant security risk.</p>
      <li><a href="#dom-mediastreamtrackgenerator-mediastreamtrackgenerator">constructor for MediaStreamTrackGenerator</a><span>, in §3.2.2</span>
      <li><a href="#dom-mediastreamtrackprocessor-mediastreamtrackprocessor">constructor for MediaStreamTrackProcessor</a><span>, in §3.1.2</span>
     </ul>
-   <li><a href="#dom-mediastreamtracksignal-framerate">frameRate</a><span>, in §3.3</span>
    <li><a href="#mediastreamtrackgenerator-kind">[[kind]]</a><span>, in §3.2.1</span>
    <li><a href="#dom-mediastreamtrackgeneratorinit-kind">kind</a><span>, in §3.2</span>
    <li><a href="#mediastreamtrackprocessor-maxbuffersize">[[maxBufferSize]]</a><span>, in §3.1.1</span>
@@ -959,7 +950,6 @@ significant security risk.</p>
     </ul>
    <li><a href="#dom-mediastreamtrackgenerator-readablecontrol">readableControl</a><span>, in §3.2.3</span>
    <li><a href="#dom-mediastreamtracksignaltype-request-frame">"request-frame"</a><span>, in §3.3</span>
-   <li><a href="#dom-mediastreamtracksignaltype-set-min-frame-rate">"set-min-frame-rate"</a><span>, in §3.3</span>
    <li><a href="#mediastreamtrackgenerator-signaltarget">[[signalTarget]]</a><span>, in §3.2.1</span>
    <li><a href="#dom-mediastreamtrackgeneratorinit-signaltarget">signalTarget</a><span>, in §3.2</span>
    <li><a href="#dom-mediastreamtracksignal-signaltype">signalType</a><span>, in §3.3</span>
@@ -1045,12 +1035,6 @@ significant security risk.</p>
     <li><a href="#ref-for-exceptiondef-typeerror①">3.2.2. Constructor</a> <a href="#ref-for-exceptiondef-typeerror②">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-idl-double">
-   <a href="https://heycam.github.io/webidl/#idl-double">https://heycam.github.io/webidl/#idl-double</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-idl-double">3.3. Stream control</a>
-   </ul>
-  </aside>
   <aside class="dfn-panel" data-for="term-for-idl-unsigned-short">
    <a href="https://heycam.github.io/webidl/#idl-unsigned-short">https://heycam.github.io/webidl/#idl-unsigned-short</a><b>Referenced in:</b>
    <ul>
@@ -1083,7 +1067,6 @@ significant security risk.</p>
      <li><span class="dfn-paneled" id="term-for-idl-DOMString">DOMString</span>
      <li><span class="dfn-paneled" id="term-for-EnforceRange">EnforceRange</span>
      <li><span class="dfn-paneled" id="term-for-exceptiondef-typeerror">TypeError</span>
-     <li><span class="dfn-paneled" id="term-for-idl-double">double</span>
      <li><span class="dfn-paneled" id="term-for-idl-unsigned-short">unsigned short</span>
     </ul>
   </ul>
@@ -1136,12 +1119,10 @@ significant security risk.</p>
 
 <c- b>dictionary</c-> <a href="#dictdef-mediastreamtracksignal"><code><c- g>MediaStreamTrackSignal</c-></code></a> {
   <c- b>required</c-> <a data-link-type="idl-name" href="#enumdef-mediastreamtracksignaltype"><c- n>MediaStreamTrackSignalType</c-></a> <a data-type="MediaStreamTrackSignalType " href="#dom-mediastreamtracksignal-signaltype"><code><c- g>signalType</c-></code></a>;
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double"><c- b>double</c-></a> <a data-type="double " href="#dom-mediastreamtracksignal-framerate"><code><c- g>frameRate</c-></code></a>;
 };
 
 <c- b>enum</c-> <a href="#enumdef-mediastreamtracksignaltype"><code><c- g>MediaStreamTrackSignalType</c-></code></a> {
   <a href="#dom-mediastreamtracksignaltype-request-frame"><code><c- s>"request-frame"</c-></code></a>,
-  <a href="#dom-mediastreamtracksignaltype-set-min-frame-rate"><code><c- s>"set-min-frame-rate"</c-></code></a>
 };
 
 </pre>
@@ -1255,12 +1236,6 @@ significant security risk.</p>
    <b><a href="#dom-mediastreamtracksignal-signaltype">#dom-mediastreamtracksignal-signaltype</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-mediastreamtracksignal-signaltype">3.3. Stream control</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="dom-mediastreamtracksignal-framerate">
-   <b><a href="#dom-mediastreamtracksignal-framerate">#dom-mediastreamtracksignal-framerate</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-mediastreamtracksignal-framerate">3.3. Stream control</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="enumdef-mediastreamtracksignaltype">
