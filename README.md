@@ -13,3 +13,4 @@ to the objects defined in [MEDIACAPTURE-MAIN](https://w3c.github.io/mediacapture
 draws upon definitions from [WEBRTC-CODEC](https://github.com/WICG/web-codecs).
 
 
+To modify the specification, please update `index.bs` from which the HTML document is automatically generated using [Bikeshed](https://tabatkins.github.io/bikeshed/).
