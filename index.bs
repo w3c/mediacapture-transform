@@ -138,11 +138,10 @@ interface MediaStreamTrackGenerator : MediaStreamTrack {
 };
 
 dictionary MediaStreamTrackGeneratorInit {
-  // At least one of the two fields must be set.
-  // If both are provided and signalTarget.kind and kind do not match, the
-  // MediaStreamTrackGenerator's constructor will raise an exception.
+  required DOMString kind;
+  // If signalTarget is provided and signalTarget.kind and kind do not match,
+  // the MediaStreamTrackGenerator's constructor will raise an exception.
   MediaStreamTrack signalTarget;
-  DOMString kind;
 };
 </pre>
 
@@ -150,9 +149,6 @@ dictionary MediaStreamTrackGeneratorInit {
 <dl>
 <dt><dfn for=MediaStreamTrackGenerator>`[[signalTarget]]`</dfn></dt>
 <dd>(Optional) track to which the {{MediaStreamTrackGenerator}} will automatically forward control signals.</dd>
-<dt><dfn for=MediaStreamTrackGenerator>`[[kind]]`</dfn></dt>
-<dd>Kind of media data for this {{MediaStreamTrackGenerator}}. Must be a valid {{MediaStreamTrack}} kind
-  (i.e., `"audio"`  or `"video"`).</dd>
 </dl>
 
 ### Constructor
@@ -160,21 +156,18 @@ dictionary MediaStreamTrackGeneratorInit {
   MediaStreamTrackGenerator(init)
 </dfn>
 1. If |init|.{{MediaStreamTrackGeneratorInit/signalTarget}} is not empty and is not a valid {{MediaStreamTrack}},
-    or |init|.{{MediaStreamTrackGeneratorInit/kind}} is not empty and it is not `"audio"` or `"video"`,
+    or |init|.{{MediaStreamTrackGeneratorInit/kind}} is not `"audio"` or `"video"`,
     throw a {{TypeError}}.
-2. If neither |init|.{{MediaStreamTrackGeneratorInit/signalTarget}} nor
-    and |init|.{{MediaStreamTrackGeneratorInit/kind}} are empty, and
+2. If |init|.{{MediaStreamTrackGeneratorInit/signalTarget}} is not empty, and
     |init|.{{MediaStreamTrackGeneratorInit/signalTarget}}.{{MediaStreamTrack/kind}}
     does not match |init|.{{MediaStreamTrackGeneratorInit/kind}}, throw a {{TypeError}}.
 3. Let |g| be a new {{MediaStreamTrackGenerator}} object.
-4. If |init|.{{MediaStreamTrackGeneratorInit/signalTarget}} is not empty,
+4. Initialize the {{MediaStreamTrack/kind}} field of |g| (inherited from {{MediaStreamTrack}})
+    with |init|.{{MediaStreamTrackGeneratorInit/kind}}.
+5. If |init|.{{MediaStreamTrackGeneratorInit/signalTarget}} is not empty,
     assign |init|.{{MediaStreamTrackGeneratorInit/signalTarget}}
-    to the `[[signalTarget]]` internal slot of |g| and
-    initialize the {{MediaStreamTrack/kind}} field of |g| (inherited from {{MediaStreamTrack}})
-    with |init|.{{MediaStreamTrackGeneratorInit/signalTarget}}.{{MediaStreamTrack/kind}}.
-    Otherwise, initialize the {{MediaStreamTrack/kind}} field of |g| with
-    |init|.{{MediaStreamTrackGeneratorInit/kind}}.
-5. Return |g|.
+    to the `[[signalTarget]]` internal slot of |g|.
+6. Return |g|.
 
 ### Attributes
 <dl>
