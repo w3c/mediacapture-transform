@@ -193,12 +193,10 @@ accessible from JavaScript.
 <pre class="idl">
 dictionary MediaStreamTrackSignal {
   required MediaStreamSignalType signalType;
-  double frameRate;
 }
 
 enum MediaStreamTrackSignalType {
   "request-frame"
-  "set-min-frame-rate",
 }
 </pre>
 In the MediaStream model, apart from media, which flows from sources to sinks, there are also
@@ -217,10 +215,6 @@ The {{MediaStreamTrackSignal}} dictionary has the following fields:
   the track or source. The possible values are defined by the {{MediaStreamTrackSignalType}}
   enum and are the following:
     * `"request-frame"`, tells the source to produce a new frame.
-    * `"set-min-frame-rate"`, tells the source or track to maintain a
-      minimum frame rate.
-* {{MediaStreamTrackSignal/frameRate}} a numeric attribute representing a frame rate in frames per
-  second, used together with `"set-min-frame-rate"` control signals.
 
 This set of control signals is intended to be extensible, so it is possible that new signal types
 and parameters may be added in the future. Note also that this set of control signals is
@@ -241,7 +235,7 @@ a pre-existing platform track (e.g., camera, screen capture) to pre-existing pla
 Platform Track -> Processor -> Transform -> Generator -> Platform Sinks
 
 Absent the Breakout Box elements, the platform sinks would normally send the signals directly
-to the platform track (and its source). Arguably, in many cases the source of the platform track
+to the platform track (and its source). Arguably, in this case the source of the platform track
 can still be considered the source for the platform sinks and it would be desirable to keep
 the original platform signaling even with the Processor -> Transform -> Generator chain between
 them. This can be achieved by assigning the platform track to the
@@ -301,5 +295,3 @@ The media data this API exposes is already available through other APIs (e.g., m
 canvas + canvas capture). In addition to the media data, this API exposes some control signals
 such as requests for new frames. These signals are intended as hints and do not pose a
 significant security risk.
-
-
