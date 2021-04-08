@@ -197,12 +197,10 @@ accessible from JavaScript.
 <pre class="idl">
 dictionary MediaStreamTrackSignal {
   required MediaStreamTrackSignalType signalType;
-  double frameRate;
 };
 
 enum MediaStreamTrackSignalType {
   "request-frame",
-  "set-min-frame-rate"
 };
 </pre>
 In the MediaStream model, apart from media, which flows from sources to sinks, there are also
@@ -221,10 +219,6 @@ The {{MediaStreamTrackSignal}} dictionary has the following fields:
     the track or source. The possible values are defined by the {{MediaStreamTrackSignalType}}
     enum and are the following:
     * `"request-frame"`, tells the source to produce a new frame.
-    * `"set-min-frame-rate"`, tells the source or track to maintain a
-        minimum frame rate.
-* {{MediaStreamTrackSignal/frameRate}} a numeric attribute representing a frame rate in frames per
-    second, used together with `"set-min-frame-rate"` control signals.
 
 This set of control signals is intended to be extensible, so it is possible that new signal types
 and parameters may be added in the future. Note also that this set of control signals is
