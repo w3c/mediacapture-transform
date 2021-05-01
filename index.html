@@ -6,9 +6,9 @@
   <meta content="UD" name="w3c-status">
   <link href="https://www.w3.org/StyleSheets/TR/2016/W3C-UD" rel="stylesheet">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="Bikeshed version c5fd42b86, updated Mon Apr 5 16:27:33 2021 -0700" name="generator">
+  <meta content="Bikeshed version c6f50773a, updated Fri Apr 16 16:45:47 2021 -0700" name="generator">
   <link href="https://w3c.github.io/mediacapture-insertable-streams/" rel="canonical">
-  <meta content="b614e2eb08b36120460f8044be3b9bd95972f2e8" name="document-revision">
+  <meta content="12a57c85d4431c1b36552c69816f22a0de395c72" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -115,9 +115,9 @@ pre .property::before, pre .property::after {
     --ins-bg: transparent;
 
     --a-normal-text: #034575;
-    --a-normal-underline: #707070;
+    --a-normal-underline: #bbb;
     --a-visited-text: var(--a-normal-text);
-    --a-visited-underline: #bbb;
+    --a-visited-underline: #707070;
     --a-hover-bg: rgba(75%, 75%, 75%, .25);
     --a-active-text: #c00;
     --a-active-underline: #c00;
@@ -569,7 +569,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">MediaStreamTrack Insertable Media Processing using Streams</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Unofficial Proposal Draft, <time class="dt-updated" datetime="2021-04-08">8 April 2021</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Unofficial Proposal Draft, <time class="dt-updated" datetime="2021-05-01">1 May 2021</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -838,14 +838,14 @@ way for the platform sinks to know what the upstream source is.</p>
     Consider a face recognition function <code>detectFace(videoFrame)</code> that returns a face position
 (in some format), and a manipulation function <code>blurBackground(videoFrame, facePosition)</code> that
 returns a new VideoFrame similar to the given <code>videoFrame</code>, but with the non-face parts blurred. 
-<pre class="example" id="example-2531ccc5"><a class="self-link" href="#example-2531ccc5"></a>let stream = await getUserMedia({video:true});
+<pre class="example" id="example-ed5d2c3d"><a class="self-link" href="#example-ed5d2c3d"></a>let stream = await getUserMedia({video:true});
 let videoTrack = stream.getVideoTracks()[0];
-let trackProcessor = new TrackProcessor(videoTrack);
-let trackGenerator = new TrackGenerator();
+let trackProcessor = new MediaStreamTrackProcessor(videoTrack);
+let trackGenerator = new MediaStreamTrackGenerator();
 let transformer = new TransformStream({
    async transform(videoFrame, controller) {
-      let facePosition = detectFace(videoFrame);
-      let newFrame = blurBackground(videoFrame.data, facePosition);
+      let facePosition = await detectFace(videoFrame);
+      let newFrame = blurBackground(videoFrame, facePosition);
       videoFrame.close();
       controller.enqueue(newFrame);
   }
