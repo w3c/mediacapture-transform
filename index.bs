@@ -256,12 +256,12 @@ returns a new VideoFrame similar to the given `videoFrame`, but with the non-fac
 <pre class="example">
 let stream = await getUserMedia({video:true});
 let videoTrack = stream.getVideoTracks()[0];
-let trackProcessor = new TrackProcessor(videoTrack);
-let trackGenerator = new TrackGenerator();
+let trackProcessor = new MediaStreamTrackProcessor(videoTrack);
+let trackGenerator = new MediaStreamTrackGenerator();
 let transformer = new TransformStream({
    async transform(videoFrame, controller) {
-      let facePosition = detectFace(videoFrame);
-      let newFrame = blurBackground(videoFrame.data, facePosition);
+      let facePosition = await detectFace(videoFrame);
+      let newFrame = blurBackground(videoFrame, facePosition);
       videoFrame.close();
       controller.enqueue(newFrame);
   }
