@@ -256,8 +256,8 @@ returns a new VideoFrame similar to the given `videoFrame`, but with the non-fac
 <pre class="example">
 let stream = await getUserMedia({video:true});
 let videoTrack = stream.getVideoTracks()[0];
-let trackProcessor = new MediaStreamTrackProcessor(videoTrack);
-let trackGenerator = new MediaStreamTrackGenerator();
+let trackProcessor = new MediaStreamTrackProcessor({track: videoTrack});
+let trackGenerator = new MediaStreamTrackGenerator({kind: 'video'});
 let transformer = new TransformStream({
    async transform(videoFrame, controller) {
       let facePosition = await detectFace(videoFrame);
