@@ -254,7 +254,7 @@ clarifications on how a {{MediaStreamTrackGenerator}} behaves as a
 
 ### clone
 The {{MediaStreamTrack/clone}} method on a {{MediaStreamTrackGenerator}}
-returns a new {{MediaStreamTrack}} object whose underlying source is the the
+returns a new {{MediaStreamTrack}} object whose underlying source is the
 same as the one for the {{MediaStreamTrackGenerator}} being cloned.
 This underlying source is the {{MediaStreamTrackGenerator/writable}} of
 the {{MediaStreamTrackGenerator}}.
@@ -308,8 +308,8 @@ a {{MediaStreamTracksGenerator}}:
       </td>
       <td>
         As a setting, this is the height, in pixels, of the latest
-        frame received. As a capability, max MUST reflect the largest height
-        with which a {{VideoFrame}} object can be created, and min MUST reflect
+        frame received. As a capability, `max` MUST reflect the largest height
+        with which a {{VideoFrame}} object can be created, and `min` MUST reflect
         the smallest height with which a VideoFrame can be created.
       </td>
     </tr>
@@ -322,8 +322,8 @@ a {{MediaStreamTracksGenerator}}:
       </td>
       <td>
         As a setting, this is an estimate of the frame rate based on
-        recently received frames. As a capability min MUST be zero and
-        max MUST be the maximum frame rate supported by the system.
+        recently received frames. As a capability `min` MUST be zero and
+        `max` MUST be the maximum frame rate supported by the system.
       </td>
     </tr>
     <tr id="def-constraint-aspect">
@@ -337,9 +337,9 @@ a {{MediaStreamTracksGenerator}}:
         As a setting, this is the aspect ratio of the latest frame;
         this is the width in pixels divided by height in pixels as a
         double rounded to the tenth decimal place. As a capability,
-        min MUST be the
-        smallest aspect ratio supported by a {{VideoFrame}}, and max MUST be
-        the largest asct ration suppored by a {{VideoFrame}}.
+        `min` MUST be the
+        smallest aspect ratio supported by a {{VideoFrame}}, and `max` MUST be
+        the largest aspect ratio supported by a {{VideoFrame}}.
       </td>
     </tr>
     <tr id="def-constraint-resizeMode">
@@ -370,6 +370,8 @@ a {{MediaStreamTracksGenerator}}:
 The {{MediaStreamTrack/applyConstraints}} method applied to a video {{MediaStreamTrack}}
 sourced from a {{MediaStreamTrackGenerator}} supports the properties defined above.
 It can be used, for example, to resize frames or adjust the frame rate of the track.
+Note that these constraints have no effect on the {{VideoFrame}} objects
+written to the {{MediaStreamTrackGenerator/writable}} of a {{MediaStreamTrackGenerator}}.
 
 The following constrainable properties are defined for audio {{MediaStreamTrack}}s
 sourced from a {{MediaStreamTracksGenerator}}, but in an informational capacity
@@ -422,7 +424,7 @@ for example, resize the frames of a video track.
         <dfn>sampleSize</dfn>
       </td>
       <td>
-        {{ConstrainDouble}}
+        {{ConstrainULong}}
       </td>
       <td>
         As a setting, this is the linear sample size of the latest {{AudioFrame}}
@@ -433,7 +435,7 @@ for example, resize the frames of a video track.
 </table>
 
 ### Events and attributes
-Events and attributes work the same as any {{MediaStreamTrack}}.
+Events and attributes work the same as for any {{MediaStreamTrack}}.
 It is relevant to note that if the {{MediaStreamTrackGenerator/writable}}
 stream of a {{MediaStreamTrackGenerator}} is closed, all the live
 tracks connected to it, possibly including the {{MediaStreamTrackGenerator}}
