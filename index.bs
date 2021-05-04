@@ -247,6 +247,197 @@ a generator to a processor (e.g., with a call like
 the Web Platform-exposed signals, but ignores any internal custom signals as there is no
 way for the platform sinks to know what the upstream source is.
 
+## MediaStreamTrack
+A {{MediaStreamTrackGenerator}} is a {{MediaStreamTrack}}. This section adds
+clarifications on how a {{MediaStreamTrackGenerator}} behaves as a
+{{MediaStreamTrack}}.
+
+### clone
+The {{MediaStreamTrack/clone}} method on a {{MediaStreamTrackGenerator}} behaves
+exactly as it does in any {{MediaStreamTrack}}. It returns a new
+{{MediaStreamTrack}} object whose underlying source is the the same as the one
+for the {{MediaStreamTrackGenerator}} being cloned. This underlying source is the
+{{MediaStreamTrackGenerator/writable}} of the {{MediaStreamTrackGenerator}}.
+
+### stop
+The {{MediaStreamTrack/clone}} method on a {{MediaStreamTrackGenerator}} behaves
+exactly as it does in any {{MediaStreamTrack}}. When the last track connected to
+the {{MediaStreamTrackGenerator/writable}} of a {{MediaStreamTrackGenerator}} is
+stopped, the {{MediaStreamTrackGenerator/writable}} is closed.
+
+### Constraintable properties
+
+The following constrainable properties are defined to apply to video
+{{MediaStreamTracksGenerator}}s and any {{MediaStreamTrack}}s sourced from
+a {{MediaStreamTracksGenerator}}:
+<table>
+  <thead>
+    <tr>
+      <th>
+        Property Name
+      </th>
+      <th>
+        Values
+      </th>
+      <th>
+        Notes
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id="def-constraint-width">
+      <td data-tests="">
+        <dfn>width</dfn>
+      </td>
+      <td>
+        {{ConstrainULong}}
+      </td>
+      <td>
+        As a setting, this is the width, in pixels, of the latest
+        frame received. As a capability, max MUST reflect the largest width
+        with which a VideoFrame object can be created, and min MUST reflect
+        the smallest width with which a VideoFrame can be created.
+      </td>
+    </tr>
+    <tr id="def-constraint-height">
+      <td data-tests="">
+        <dfn>height</dfn>
+      </td>
+      <td>
+        {{ConstrainULong}}
+      </td>
+      <td>
+        As a setting, this is the height, in pixels, of the latest
+        frame received. As a capability, max MUST reflect the largest height
+        with which a {{VideoFrame}} object can be created, and min MUST reflect
+        the smallest height with which a VideoFrame can be created.
+      </td>
+    </tr>
+    <tr id="def-constraint-frameRate">
+      <td data-tests="">
+        <dfn>frameRate</dfn>
+      </td>
+      <td>
+        {{ConstrainDouble}}
+      </td>
+      <td>
+        As a setting, this is an estimate of the frame rate based on
+        recently received frames. As a capability min MUST be zero and
+        max MUST be the maximum frame rate supported by the system.
+      </td>
+    </tr>
+    <tr id="def-constraint-aspect">
+      <td data-tests="">
+        <dfn>aspectRatio</dfn>
+      </td>
+      <td>
+        {{ConstrainDouble}}
+      </td>
+      <td>
+        As a setting, this is the aspect ratio of the latest frame;
+        this is the width in pixels divided by height in pixels as a
+        double rounded to the tenth decimal place. As a capability,
+        min MUST be the
+        smallest aspect ratio supported by a {{VideoFrame}}, and max MUST be
+        the largest asct ration suppored by a {{VideoFrame}}.
+      </td>
+    </tr>
+    <tr id="def-constraint-resizeMode">
+      <td data-tests="">
+        <dfn>resizeMode</dfn>
+      </td>
+      <td>
+        {{ConstrainDOMString}}
+      </td>
+      <td>
+        As a setting, this string should be one of the members of
+        {{VideoResizeModeEnum}}. The value "{{VideoResizeModeEnum/none}}"
+        means that the frames output by the MediaStreamTrack are unmodified
+        versions of the frames written to the
+        {{MediaStreamTrackGenerator/writable}} backing
+        the track. The value "{{VideoResizeModeEnum/crop-and-scale}}" means
+        that the frames output by the MediaStreamTrack may be cropped and/or
+        downscaled versions
+        of the source frames, based on the values of the width, height and
+        aspectRatio constraints of the track.
+        As a capability, the values "{{VideoResizeModeEnum/none}}" and
+        "{{VideoResizeModeEnum/crop-and-scale}}" both MUST be present.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+The {{MediaStreamTrack/applyConstraints}} method applied to a video {{MediaStreamTrack}}
+sourced from a {{MediaStreamTrackGenerator}} supports the properties defined above. It can be used, for example, to resize
+frames or adjust the source frame rate.
+
+The following constrainable properties are defined for audio {{MediaStreamTrack}}s
+sourced from a {{MediaStreamTracksGenerator}}, but in an informational capacity
+only available via {{MediaStreamTrack/getSettings}}. It is not possible to
+reconfigure an audio track sourced by a {{MediaStreamTracksGenerator}} using
+{{MediaStreamTrack/applyConstraints}} in the same way that it is possble to,
+for example, resize the frames of a video track. Similarly,
+{{MediaStreamTrack/getCapabilities}} MUST return an empty object.
+<table>
+  <thead>
+    <tr>
+      <th>
+        Property Name
+      </th>
+      <th>
+        Values
+      </th>
+      <th>
+        Notes
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id="def-constraint-width">
+      <td data-tests="">
+        <dfn>sampleRate</dfn>
+      </td>
+      <td>
+        {{ConstrainDouble}}
+      </td>
+      <td>
+        As a setting, this is the sample rate, in samples per second, of the
+        latest {{AudioFrame}} delivered by the track.
+      </td>
+    </tr>
+    <tr id="def-constraint-channelCount">
+      <td data-tests="">
+        <dfn>channelCount</dfn>
+      </td>
+      <td>
+        {{ConstrainULong}}
+      </td>
+      <td>
+        As a setting, this is the number of independent audio channels of the
+        latest {{AudioFrame}} delivered by the track.
+      </td>
+    </tr>
+    <tr id="def-constraint-sampleSize">
+      <td data-tests="">
+        <dfn>sampleSize</dfn>
+      </td>
+      <td>
+        {{ConstrainDouble}}
+      </td>
+      <td>
+        As a setting, this is the linear sample size of the latest {{AudioFrame}}
+        delivered by the track.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+### Events and attributes
+Events and attributes work the same as any {{MediaStreamTrack}}.
+It is relevant to note that if the {{MediaStreamTrackGenerator/writable}}
+stream of a {{MediaStreamTrackGenerator}} is closed, all the live
+tracks connected to it, possibly including the {{MediaStreamTrackGenerator}}
+itself, are ended and the `ended` event is fired on them.
 
 # Examples # {#examples}
 Consider a face recognition function `detectFace(videoFrame)` that returns a face position
