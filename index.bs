@@ -253,21 +253,21 @@ clarifications on how a {{MediaStreamTrackGenerator}} behaves as a
 {{MediaStreamTrack}}.
 
 ### clone
-The {{MediaStreamTrack/clone}} method on a {{MediaStreamTrackGenerator}} behaves
-exactly as it does in any {{MediaStreamTrack}}. It returns a new
-{{MediaStreamTrack}} object whose underlying source is the the same as the one
-for the {{MediaStreamTrackGenerator}} being cloned. This underlying source is the
-{{MediaStreamTrackGenerator/writable}} of the {{MediaStreamTrackGenerator}}.
+The {{MediaStreamTrack/clone}} method on a {{MediaStreamTrackGenerator}}
+returns a new {{MediaStreamTrack}} object whose underlying source is the the
+same as the one for the {{MediaStreamTrackGenerator}} being cloned.
+This underlying source is the {{MediaStreamTrackGenerator/writable}} of
+the {{MediaStreamTrackGenerator}}.
 
 ### stop
-The {{MediaStreamTrack/clone}} method on a {{MediaStreamTrackGenerator}} behaves
-exactly as it does in any {{MediaStreamTrack}}. When the last track connected to
+The {{MediaStreamTrack/stop}} method on a {{MediaStreamTrackGenerator}} stops
+the track. When the last track connected to
 the {{MediaStreamTrackGenerator/writable}} of a {{MediaStreamTrackGenerator}} is
 stopped, the {{MediaStreamTrackGenerator/writable}} is closed.
 
 ### Constraintable properties
 
-The following constrainable properties are defined to apply to video
+The following constrainable properties are defined for video
 {{MediaStreamTracksGenerator}}s and any {{MediaStreamTrack}}s sourced from
 a {{MediaStreamTracksGenerator}}:
 <table>
@@ -368,15 +368,15 @@ a {{MediaStreamTracksGenerator}}:
 </table>
 
 The {{MediaStreamTrack/applyConstraints}} method applied to a video {{MediaStreamTrack}}
-sourced from a {{MediaStreamTrackGenerator}} supports the properties defined above. It can be used, for example, to resize
-frames or adjust the source frame rate.
+sourced from a {{MediaStreamTrackGenerator}} supports the properties defined above.
+It can be used, for example, to resize frames or adjust the frame rate of the track.
 
 The following constrainable properties are defined for audio {{MediaStreamTrack}}s
 sourced from a {{MediaStreamTracksGenerator}}, but in an informational capacity
 only available via {{MediaStreamTrack/getSettings}}. It is not possible to
 reconfigure an audio track sourced by a {{MediaStreamTracksGenerator}} using
 {{MediaStreamTrack/applyConstraints}} in the same way that it is possble to,
-for example, resize the frames of a video track. Similarly,
+for example, resize the frames of a video track.
 {{MediaStreamTrack/getCapabilities}} MUST return an empty object.
 <table>
   <thead>
