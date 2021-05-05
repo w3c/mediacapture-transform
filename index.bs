@@ -294,9 +294,9 @@ a {{MediaStreamTrackGenerator}}:
       </td>
       <td>
         As a setting, this is the width, in pixels, of the latest
-        frame received. As a capability, max MUST reflect the largest width
-        with which a VideoFrame object can be created, and min MUST reflect
-        the smallest width with which a VideoFrame can be created.
+        frame delivered to the track. As a capability, `max` MUST reflect the
+        largest width with which a {{VideoFrame}} object may have, and `min`
+        MUST reflect the smallest width with which a {{VideoFrame}} may have.
       </td>
     </tr>
     <tr id="def-constraint-height">
@@ -308,9 +308,9 @@ a {{MediaStreamTrackGenerator}}:
       </td>
       <td>
         As a setting, this is the height, in pixels, of the latest
-        frame received. As a capability, `max` MUST reflect the largest height
-        with which a {{VideoFrame}} object can be created, and `min` MUST reflect
-        the smallest height with which a VideoFrame can be created.
+        frame delivered to the track. As a capability, `max` MUST reflect the largest height
+        a {{VideoFrame}} object may have, and `min` MUST reflect
+        the smallest height a {{VideoFrame}} may have.
       </td>
     </tr>
     <tr id="def-constraint-frameRate">
@@ -321,8 +321,8 @@ a {{MediaStreamTrackGenerator}}:
         {{ConstrainDouble}}
       </td>
       <td>
-        As a setting, this is an estimate of the frame rate based on
-        recently received frames. As a capability `min` MUST be zero and
+        As a setting, this is an estimate of the frame rate based on frames
+        recently delivered to the track. As a capability `min` MUST be zero and
         `max` MUST be the maximum frame rate supported by the system.
       </td>
     </tr>
@@ -355,7 +355,8 @@ a {{MediaStreamTrackGenerator}}:
         means that the frames output by the MediaStreamTrack are unmodified
         versions of the frames written to the
         {{MediaStreamTrackGenerator/writable}} backing
-        the track. The value "{{VideoResizeModeEnum/crop-and-scale}}" means
+        the track, regardless of any constraints.
+        The value "{{VideoResizeModeEnum/crop-and-scale}}" means
         that the frames output by the MediaStreamTrack may be cropped and/or
         downscaled versions
         of the source frames, based on the values of the width, height and
@@ -371,7 +372,8 @@ The {{MediaStreamTrack/applyConstraints}} method applied to a video {{MediaStrea
 sourced from a {{MediaStreamTrackGenerator}} supports the properties defined above.
 It can be used, for example, to resize frames or adjust the frame rate of the track.
 Note that these constraints have no effect on the {{VideoFrame}} objects
-written to the {{MediaStreamTrackGenerator/writable}} of a {{MediaStreamTrackGenerator}}.
+written to the {{MediaStreamTrackGenerator/writable}} of a {{MediaStreamTrackGenerator}},
+just on the output of the track on which the constraints have been applied.
 
 The following constrainable properties are defined for audio {{MediaStreamTrack}}s
 sourced from a {{MediaStreamTrackGenerator}}, but in an informational capacity
