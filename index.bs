@@ -294,7 +294,7 @@ a {{MediaStreamTrackGenerator}}:
       </td>
       <td>
         As a setting, this is the width, in pixels, of the latest
-        frame delivered to the track. As a capability, `max` MUST reflect the
+        frame delivered by the track to its sinks. As a capability, `max` MUST reflect the
         largest width a {{VideoFrame}} may have, and `min`
         MUST reflect the smallest width a {{VideoFrame}} may have.
       </td>
@@ -308,7 +308,7 @@ a {{MediaStreamTrackGenerator}}:
       </td>
       <td>
         As a setting, this is the height, in pixels, of the latest
-        frame delivered to the track. As a capability, `max` MUST reflect the largest height
+        frame delivered by the track to its sinks. As a capability, `max` MUST reflect the largest height
         a {{VideoFrame}} may have, and `min` MUST reflect
         the smallest height a {{VideoFrame}} may have.
       </td>
@@ -322,7 +322,7 @@ a {{MediaStreamTrackGenerator}}:
       </td>
       <td>
         As a setting, this is an estimate of the frame rate based on frames
-        recently delivered to the track. As a capability `min` MUST be zero and
+        recently delivered by the track to its sinks. As a capability `min` MUST be zero and
         `max` MUST be the maximum frame rate supported by the system.
       </td>
     </tr>
@@ -334,7 +334,8 @@ a {{MediaStreamTrackGenerator}}:
         {{ConstrainDouble}}
       </td>
       <td>
-        As a setting, this is the aspect ratio of the latest frame;
+        As a setting, this is the aspect ratio of the latest frame
+        delivered by the track to its sinks;
         this is the width in pixels divided by height in pixels as a
         double rounded to the tenth decimal place. As a capability,
         `min` MUST be the
