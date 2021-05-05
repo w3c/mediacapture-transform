@@ -295,8 +295,8 @@ a {{MediaStreamTrackGenerator}}:
       <td>
         As a setting, this is the width, in pixels, of the latest
         frame delivered to the track. As a capability, `max` MUST reflect the
-        largest width with which a {{VideoFrame}} object may have, and `min`
-        MUST reflect the smallest width with which a {{VideoFrame}} may have.
+        largest width a {{VideoFrame}} may have, and `min`
+        MUST reflect the smallest width a {{VideoFrame}} may have.
       </td>
     </tr>
     <tr id="def-constraint-height">
@@ -309,7 +309,7 @@ a {{MediaStreamTrackGenerator}}:
       <td>
         As a setting, this is the height, in pixels, of the latest
         frame delivered to the track. As a capability, `max` MUST reflect the largest height
-        a {{VideoFrame}} object may have, and `min` MUST reflect
+        a {{VideoFrame}} may have, and `min` MUST reflect
         the smallest height a {{VideoFrame}} may have.
       </td>
     </tr>
