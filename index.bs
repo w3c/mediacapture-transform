@@ -374,9 +374,9 @@ Note that these constraints have no effect on the {{VideoFrame}} objects
 written to the {{MediaStreamTrackGenerator/writable}} of a {{MediaStreamTrackGenerator}}.
 
 The following constrainable properties are defined for audio {{MediaStreamTrack}}s
-sourced from a {{MediaStreamTracksGenerator}}, but in an informational capacity
+sourced from a {{MediaStreamTrackGenerator}}, but in an informational capacity
 only available via {{MediaStreamTrack/getSettings}}. It is not possible to
-reconfigure an audio track sourced by a {{MediaStreamTracksGenerator}} using
+reconfigure an audio track sourced by a {{MediaStreamTrackGenerator}} using
 {{MediaStreamTrack/applyConstraints}} in the same way that it is possble to,
 for example, resize the frames of a video track.
 {{MediaStreamTrack/getCapabilities}} MUST return an empty object.
