@@ -17,9 +17,9 @@ Markup Shorthands: css no, markdown yes
 url: https://wicg.github.io/web-codecs/#videoframe; text: VideoFrame; type: interface; spec: WEBCODECS
 url: https://wicg.github.io/web-codecs/#audioframe; text: AudioFrame; type: interface; spec: WEBCODECS
 url: https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack; text: MediaStreamTrack; type: interface; spec: MEDIACAPTURE-STREAMS
-url: https://www.w3.org/TR/mediacapture-streams/#dom-constrainulong; text: ConstrainULong; type: interface; spec: MEDIACAPTURE-STREAMS
-url: https://www.w3.org/TR/mediacapture-streams/#dom-constraindouble; text: ConstrainDouble; type: interface; spec: MEDIACAPTURE-STREAMS
-url: https://www.w3.org/TR/mediacapture-streams/#dom-constraindomstring; text: ConstrainDOMString; type: interface; spec: MEDIACAPTURE-STREAMS
+url: https://www.w3.org/TR/mediacapture-streams/#dom-constrainulong; text: ConstrainULong; type: typedef; spec: MEDIACAPTURE-STREAMS
+url: https://www.w3.org/TR/mediacapture-streams/#dom-constraindouble; text: ConstrainDouble; type: typedef; spec: MEDIACAPTURE-STREAMS
+url: https://www.w3.org/TR/mediacapture-streams/#dom-constraindomstring; text: ConstrainDOMString; type: typedef; spec: MEDIACAPTURE-STREAMS
 </pre>
 <pre class=biblio>
 {
