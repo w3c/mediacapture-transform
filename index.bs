@@ -30,6 +30,9 @@ url: https://wicg.github.io/web-codecs/#audioframe; text: AudioFrame; type: inte
   }
 }
 </pre>
+<pre class=link-defaults>
+spec:streams; type:interface; text:WritableStream
+</pre>
 
 # Introduction # {#introduction}
 
@@ -186,86 +189,25 @@ accessible from JavaScript.
 </dd>
 </dl>
 
-## Stream control ## {#stream-control}
-<pre class="idl">
-dictionary MediaStreamTrackSignal {
-  required MediaStreamTrackSignalType signalType;
-};
-
-enum MediaStreamTrackSignalType {
-  "request-frame",
-};
-</pre>
-In the MediaStream model, apart from media, which flows from sources to sinks, there are also
-control signals that flow in the opposite direction (i.e., from sinks to sources via the track).
-A {{MediaStreamTrackProcessor}} is a sink and it allows sending control
-signals to its track and source via its {{MediaStreamTrackProcessor/writableControl}} field.
-A {{MediaStreamTrackGenerator}} is a track for which a custom source can be implemented
-by writing media frames to its {{MediaStreamTrackGenerator/writable}} field. Such a source can
-receive control signals sent by sinks via its {{MediaStreamTrackGenerator/readableControl}} field.
-Note that control signals are just hints that a sink can send to its track (or the source
-backing it). There is no obligation for a source or track to react to them.
-
-Control signals are represented as {{MediaStreamTrackSignal}} objects.
-The {{MediaStreamTrackSignal}} dictionary has the following fields:
-* {{MediaStreamTrackSignal/signalType}}, which specifies the action to be requested to
-    the track or source. The possible values are defined by the {{MediaStreamTrackSignalType}}
-    enum and are the following:
-    * `"request-frame"`, tells the source to produce a new frame.
-
-This set of control signals is intended to be extensible, so it is possible that new signal types
-and parameters may be added in the future. Note also that this set of control signals is
-not intended to cover all possible signaling that may occur between platform sinks and
-tracks/sources. A user agent implementation is free to implement any internal signaling between
-specific types of sinks and specific types of sources, and it would not make sense to expose all
-such specific signaling to generic Web platform objects like track generators and processors,
-as they can be considered implementation details that may differ significantly across browsers.
-It is, however, a requirement of this specification that it is possible to operate a
-MediaStreamTrackGenerator connected to a MediaStreamTrackProcessor using only the
-Web Platform-exposed signals and without connecting any implicit signalling.
-
-### Implicit signaling ### {#implicit-signaling}
-A common use case for processors and generators is to connect the media flow from
-a pre-existing platform track (e.g., camera, screen capture) to pre-existing platform sinks
-(e.g., peer connection, media element) with a transformation in between, in a chain like this:
-
-Platform Track -> Processor -> Transform -> Generator -> Platform Sinks
-
-Absent the Breakout Box elements, the platform sinks would normally send the signals directly
-to the platform track (and its source). Arguably, in many cases the source of the platform track
-can still be considered the source for the platform sinks and it would be desirable to keep
-the original platform signaling even with the Processor -> Transform -> Generator chain between
-them. This can be achieved by assigning the platform track to the
-{{MediaStreamTrackGeneratorInit/signalTarget}} field in
-{{MediaStreamTrackGeneratorInit}}. Note that such a connection between the platform track and the
-generator includes all possible internal signaling coming from the platform sinks and not just
-the generic signals exposed as {{MediaStreamTrackSignal}} objects via the
-{{MediaStreamTrackGenerator/readableControl}} and
-{{MediaStreamTrackProcessor/writableControl}} fields. Just connecting explicit signals from
-a generator to a processor (e.g., with a call like
-`generator.readableControl.pipeTo(processor.writableControl`) forwards only
-the Web Platform-exposed signals, but ignores any internal custom signals as there is no
-way for the platform sinks to know what the upstream source is.
-
-## MediaStreamTrack ## {#generator-as-track}
+### Specialization of MediaStreamTrack behavior ### {#generator-as-track}
 A {{MediaStreamTrackGenerator}} is a {{MediaStreamTrack}}. This section adds
 clarifications on how a {{MediaStreamTrackGenerator}} behaves as a
 {{MediaStreamTrack}}.
 
-### clone ### {#generator-clone}
+#### clone #### {#generator-clone}
 The {{MediaStreamTrack/clone}} method on a {{MediaStreamTrackGenerator}}
-returns a new {{MediaStreamTrack}} object whose underlying source is the
+returns a new {{MediaStreamTrack}} object whose source is the
 same as the one for the {{MediaStreamTrackGenerator}} being cloned.
-This underlying source is the {{MediaStreamTrackGenerator/writable}} of
+This source is the {{MediaStreamTrackGenerator/writable}} field of
 the {{MediaStreamTrackGenerator}}.
 
-### stop ### {#generator-stop}
+#### stop #### {#generator-stop}
 The {{MediaStreamTrack/stop}} method on a {{MediaStreamTrackGenerator}} stops
 the track. When the last track connected to
 the {{MediaStreamTrackGenerator/writable}} of a {{MediaStreamTrackGenerator}} is
-stopped, the {{MediaStreamTrackGenerator/writable}} is closed.
+stopped, its {{MediaStreamTrackGenerator/writable}} is [=WritableStream/closing|closed=].
 
-### Constraintable properties ### {#generator-constrainable-properties}
+#### Constraintable properties #### {#generator-constrainable-properties}
 
 The following constrainable properties are defined for video
 {{MediaStreamTrackGenerator}}s and any {{MediaStreamTrack}}s sourced from
@@ -294,7 +236,8 @@ a {{MediaStreamTrackGenerator}}:
       </td>
       <td>
         As a setting, this is the width, in pixels, of the latest
-        frame delivered by the track to its sinks. As a capability, `max` MUST reflect the
+        frame delivered by the track.
+        As a capability, `max` MUST reflect the
         largest width a {{VideoFrame}} may have, and `min`
         MUST reflect the smallest width a {{VideoFrame}} may have.
       </td>
@@ -308,7 +251,8 @@ a {{MediaStreamTrackGenerator}}:
       </td>
       <td>
         As a setting, this is the height, in pixels, of the latest
-        frame delivered by the track to its sinks. As a capability, `max` MUST reflect the largest height
+        frame delivered by the track.
+        As a capability, `max` MUST reflect the largest height
         a {{VideoFrame}} may have, and `min` MUST reflect
         the smallest height a {{VideoFrame}} may have.
       </td>
@@ -322,7 +266,8 @@ a {{MediaStreamTrackGenerator}}:
       </td>
       <td>
         As a setting, this is an estimate of the frame rate based on frames
-        recently delivered by the track to its sinks. As a capability `min` MUST be zero and
+        recently delivered by the track.
+        As a capability `min` MUST be zero and
         `max` MUST be the maximum frame rate supported by the system.
       </td>
     </tr>
@@ -335,7 +280,7 @@ a {{MediaStreamTrackGenerator}}:
       </td>
       <td>
         As a setting, this is the aspect ratio of the latest frame
-        delivered by the track to its sinks;
+        delivered by the track;
         this is the width in pixels divided by height in pixels as a
         double rounded to the tenth decimal place. As a capability,
         `min` MUST be the
@@ -437,12 +382,74 @@ for example, resize the frames of a video track.
   </tbody>
 </table>
 
-### Events and attributes ### {#generator-events-attributes}
+#### Events and attributes #### {#generator-events-attributes}
 Events and attributes work the same as for any {{MediaStreamTrack}}.
 It is relevant to note that if the {{MediaStreamTrackGenerator/writable}}
 stream of a {{MediaStreamTrackGenerator}} is closed, all the live
 tracks connected to it, possibly including the {{MediaStreamTrackGenerator}}
 itself, are ended and the `ended` event is fired on them.
+
+
+## Stream control ## {#stream-control}
+<pre class="idl">
+dictionary MediaStreamTrackSignal {
+  required MediaStreamTrackSignalType signalType;
+};
+
+enum MediaStreamTrackSignalType {
+  "request-frame",
+};
+</pre>
+In the MediaStream model, apart from media, which flows from sources to sinks, there are also
+control signals that flow in the opposite direction (i.e., from sinks to sources via the track).
+A {{MediaStreamTrackProcessor}} is a sink and it allows sending control
+signals to its track and source via its {{MediaStreamTrackProcessor/writableControl}} field.
+A {{MediaStreamTrackGenerator}} is a track for which a custom source can be implemented
+by writing media frames to its {{MediaStreamTrackGenerator/writable}} field. Such a source can
+receive control signals sent by sinks via its {{MediaStreamTrackGenerator/readableControl}} field.
+Note that control signals are just hints that a sink can send to its track (or the source
+backing it). There is no obligation for a source or track to react to them.
+
+Control signals are represented as {{MediaStreamTrackSignal}} objects.
+The {{MediaStreamTrackSignal}} dictionary has the following fields:
+* {{MediaStreamTrackSignal/signalType}}, which specifies the action to be requested to
+    the track or source. The possible values are defined by the {{MediaStreamTrackSignalType}}
+    enum and are the following:
+    * `"request-frame"`, tells the source to produce a new frame.
+
+This set of control signals is intended to be extensible, so it is possible that new signal types
+and parameters may be added in the future. Note also that this set of control signals is
+not intended to cover all possible signaling that may occur between platform sinks and
+tracks/sources. A user agent implementation is free to implement any internal signaling between
+specific types of sinks and specific types of sources, and it would not make sense to expose all
+such specific signaling to generic Web platform objects like track generators and processors,
+as they can be considered implementation details that may differ significantly across browsers.
+It is, however, a requirement of this specification that it is possible to operate a
+MediaStreamTrackGenerator connected to a MediaStreamTrackProcessor using only the
+Web Platform-exposed signals and without connecting any implicit signalling.
+
+### Implicit signaling ### {#implicit-signaling}
+A common use case for processors and generators is to connect the media flow from
+a pre-existing platform track (e.g., camera, screen capture) to pre-existing platform sinks
+(e.g., peer connection, media element) with a transformation in between, in a chain like this:
+
+Platform Track -> Processor -> Transform -> Generator -> Platform Sinks
+
+Absent the Breakout Box elements, the platform sinks would normally send the signals directly
+to the platform track (and its source). Arguably, in many cases the source of the platform track
+can still be considered the source for the platform sinks and it would be desirable to keep
+the original platform signaling even with the Processor -> Transform -> Generator chain between
+them. This can be achieved by assigning the platform track to the
+{{MediaStreamTrackGeneratorInit/signalTarget}} field in
+{{MediaStreamTrackGeneratorInit}}. Note that such a connection between the platform track and the
+generator includes all possible internal signaling coming from the platform sinks and not just
+the generic signals exposed as {{MediaStreamTrackSignal}} objects via the
+{{MediaStreamTrackGenerator/readableControl}} and
+{{MediaStreamTrackProcessor/writableControl}} fields. Just connecting explicit signals from
+a generator to a processor (e.g., with a call like
+`generator.readableControl.pipeTo(processor.writableControl`) forwards only
+the Web Platform-exposed signals, but ignores any internal custom signals as there is no
+way for the platform sinks to know what the upstream source is.
 
 # Examples # {#examples}
 Consider a face recognition function `detectFace(videoFrame)` that returns a face position
