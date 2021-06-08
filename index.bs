@@ -16,6 +16,7 @@ Markup Shorthands: css no, markdown yes
 <pre class=anchors>
 url: https://wicg.github.io/web-codecs/#videoframe; text: VideoFrame; type: interface; spec: WEBCODECS
 url: https://wicg.github.io/web-codecs/#audioframe; text: AudioFrame; type: interface; spec: WEBCODECS
+url: https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack; text: MediaStreamTrack; type: interface; spec: MEDIACAPTURE-STREAMS
 </pre>
 <pre class=biblio>
 {
@@ -27,6 +28,10 @@ url: https://wicg.github.io/web-codecs/#audioframe; text: AudioFrame; type: inte
   "MEDIACAPTURE-SCREEN-SHARE": {
     "href": "https://w3c.github.io/mediacapture-screen-share/",
     "title": "Screen Capture"
+  },
+  "MEDIACAPTURE-STREAMS": {
+    "href": "https://www.w3.org/TR/mediacapture-streams/",
+    "title": "Media Capture and Streams"
   }
 }
 </pre>
