@@ -21,6 +21,8 @@ url: https://www.w3.org/TR/mediacapture-streams/#dom-constrainulong; text: Const
 url: https://www.w3.org/TR/mediacapture-streams/#dom-constraindouble; text: ConstrainDouble; type: typedef; spec: MEDIACAPTURE-STREAMS
 url: https://www.w3.org/TR/mediacapture-streams/#dom-constraindomstring; text: ConstrainDOMString; type: typedef; spec: MEDIACAPTURE-STREAMS
 url: https://www.w3.org/TR/mediacapture-streams/#dom-videoresizemodeenum; text: VideoResizeModeEnum; type: enum; spec: MEDIACAPTURE-STREAMS
+url: https://w3c.github.io/mediacapture-main/#idl-def-VideoResizeModeEnum.user; text: none; for: VideoResizeModeEnum; type: enum; spec: MEDIACAPTURE-STREAMS
+url: https://w3c.github.io/mediacapture-main/#idl-def-VideoResizeModeEnum.right; text: crop-and-scale; for: VideoResizeModeEnum; type: enum; spec: MEDIACAPTURE-STREAMS
 </pre>
 <pre class=biblio>
 {
