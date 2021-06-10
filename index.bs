@@ -28,7 +28,6 @@ url: https://infra.spec.whatwg.org/#queue-enqueue; text: enqueue; for: Queue; ty
 url: https://infra.spec.whatwg.org/#queue-dequeue; text: dequeue; for: Queue; type: typedef; spec: INFRA
 url: https://infra.spec.whatwg.org/#list-is-empty; text: empty; for: Queue; type: typedef; spec: INFRA
 url: https://infra.spec.whatwg.org/#booleans; text: Boolean; type: typedef; spec: INFRA
-url: https://streams.spec.whatwg.org/#readablestream-close; text: close; for: ReadableStream; type: typedef; spec: STREAMS
 url: https://www.w3.org/TR/mediacapture-streams/#track-ended; text: TrackEnded; type: typedef; spec: MEDIACAPTURE-STREAMS
 </pre>
 <pre class=biblio>
@@ -215,7 +214,7 @@ The <dfn>processorClose</dfn> algorithm is given a |processor| as input.
 It is defined by running the following steps:
 1. If |processor|.`[[isClosed]]` is true, abort these steps.
 2. Disconnect |processor| from |processor|.`[[track]]`. The mechanism to do this is UA specific and the result is that |processor| is no longer a sink of |processor|.`[[track]]`.
-3. {{ReadableStream/close|Close}} |processor|.{{MediaStreamTrackProcessor/readable}}.
+3. [=ReadableStream/close|Close=] |processor|.{{MediaStreamTrackProcessor/readable}}.
 4. {{Queue/dequeue}} all elements in |processor|.`[[queue]]`.
 
 </dd>
