@@ -28,6 +28,7 @@ url: https://infra.spec.whatwg.org/#queue-enqueue; text: enqueue; for: Queue; ty
 url: https://infra.spec.whatwg.org/#queue-dequeue; text: dequeue; for: Queue; type: typedef; spec: INFRA
 url: https://infra.spec.whatwg.org/#list-is-empty; text: empty; for: Queue; type: typedef; spec: INFRA
 url: https://infra.spec.whatwg.org/#booleans; text: Boolean; type: typedef; spec: INFRA
+url: https://www.w3.org/TR/mediacapture-streams/#source-stopped; text: StopSource; type: typedef; spec: MEDIACAPTURE-STREAM
 url: https://www.w3.org/TR/mediacapture-streams/#track-ended; text: TrackEnded; type: typedef; spec: MEDIACAPTURE-STREAMS
 url: https://streams.spec.whatwg.org/#readable-stream-default-controller-close; text: ReadableStreamDefaultControllerClose; type: typedef; spec: STREAMS
 url: https://streams.spec.whatwg.org/#readablestream-controller; text: ReadableStreamControllerSlot; type: typedef; spec: STREAMS
@@ -250,7 +251,27 @@ When the `[[track]]` of a {{MediaStreamTrackProcessor}} |processor|
 {{TrackEnded|ends}}, the [=processorClose=] algorithm must be
 executed with |processor| as parameter.
 
-## MediaStreamTrackGenerator interface ## {#track-generator}
+## MediaStreamTrackGenerator ## {#generator}
+A {{MediaStreamTrackGenerator}} allows the creation of a {{WritableStream}}
+that acts as a {{MediaStreamTrack}} source in the
+<a href="https://www.w3.org/TR/mediacapture-streams/#the-model-sources-sinks-constraints-and-settings">
+MediaStream model</a>. Since the model does not expose sources directly
+but through the tracks connected to it, a {{MediaStreamTrackGenerator}}
+is also a track connected to its {{WritableStream}} source. Further tracks
+connected to the same {{WritableStream}} can be created using the
+{{MediaStreamTrack/clone}} method. The {{WritableStream}} source is
+exposed as the {{MediaStreamTrackGenerator/writable}} field of
+{{MediaStreamTrackGenerator}}.
+
+Similarly to {{MediaStreamTrackProcessor}}, the {{WritableStream}} of
+an audio {{MediaStreamTrackGenerator}} accepts {{AudioData}} objects,
+and a video {{MediaStreamTrackGenerator}} accepts {{VideoFrame}} objects.
+When a {{VideoFrame}} or {{AudioData}} object is written to
+{{MediaStreamTrackGenerator/writable}},
+the frame's `close()` method is automatically invoked, so that its internal
+resources are no longer accessible from JavaScript.
+
+### Interface definition ### {#generator-interface}
 <pre class="idl">
 interface MediaStreamTrackGenerator : MediaStreamTrack {
     constructor(MediaStreamTrackGeneratorInit init);
@@ -262,7 +283,7 @@ dictionary MediaStreamTrackGeneratorInit {
 };
 </pre>
 
-### Constructor ### {#constructor-generator}
+### Constructor ### {#generator-constructor}
 <dfn constructor for=MediaStreamTrackGenerator title="MediaStreamTrackGenerator(init)">
   MediaStreamTrackGenerator(init)
 </dfn>
@@ -273,16 +294,33 @@ dictionary MediaStreamTrackGeneratorInit {
     with |init|.{{MediaStreamTrackGeneratorInit/kind}}.
 4. Return |g|.
 
-### Attributes ### {#attributes-generator}
+### Attributes ### {#generator-attributes}
 <dl>
 <dt><dfn attribute for=MediaStreamTrackGenerator>writable</dfn></dt>
-<dd>Allows writing media frames the {{MediaStreamTrackGenerator}}, which is
-itself a {{MediaStreamTrack}}. If the {{MediaStreamTrack/kind}} attribute is `"audio"`,
-the stream will accept {{AudioData}} objects and fail with any other type. If
-{{MediaStreamTrack/kind}} is `"video"`, the stream will accept {{VideoFrame}} objects
-and fail with any other type. When a frame is written to {{MediaStreamTrackGenerator/writable}},
-the frame's `close()` method is automatically invoked, so that its internal resources are no longer
-accessible from JavaScript.
+<dd>Allows writing media frames to the {{MediaStreamTrackGenerator}}, which is
+itself a {{MediaStreamTrack}}. When this attribute is access for the first time,
+it MUST be initialized with the following steps:
+1. Initialize [=this=].{{MediaStreamTrackGenerator/writable}} to be a new {{WritableStream}}.
+2. <a dfn for="WritableStream">Set up</a> [=this=].{{MediaStreamTrackGenerator/writable}}, with its [=WritableStream/set up/writeAlgorithm=] set to [=writeFrame=] with |this| as parameter, with [=WritableStream/set up/closeAlgorithm=] set to [=closeWritable=] with |this| as parameter and [=WritableStream/set up/abortAlgorithm=] set to [=closeWritable=] with |this| as parameter.
+
+The <dfn>writeFrame</dfn> algorithm is given a |generator| and a |frame| as input. It is defined by running the following steps:
+1. If |generator|.{{MediaStreamTrack/kind}} equals `video` and |frame| is not a {{VideoFrame}} object, return [=a promise rejected with=] a {{TypeError}}.
+2. If |generator|.{{MediaStreamTrack/kind}} equals `audio` and |frame| is not an {{AudioData}} object, return [=a promise rejected with=] a {{TypeError}}.
+3. Send the media data backing |frame| to all live tracks connected to |generator|, possibly including |generator| itself.
+4. Invoke the `close` method of |frame|.
+5. Return  [=a promise resolved with=] undefined.
+
+The <dfn>closeWritable</dfn> algorithm is given a |generator| as input.
+It is defined by running the following steps.
+1. {{StopSource|Stop}} the generator as a MediaStreamTrack source.
+
+<p class="note">
+A consecuence of this step is that all tracks connected to
+|generator|.{{MediaStreamTrackGenerator/writable}} will be ended.
+</p>
+2. Return [=a promise resolved with=] undefined.
+
+
 </dd>
 </dl>
 
