@@ -146,7 +146,7 @@ does not give the UA enough flexibility to choose the buffering policy.
 <pre class="idl">
 interface MediaStreamTrackProcessor {
     constructor(MediaStreamTrackProcessorInit init);
-    attribute ReadableStream readable;  // VideoFrame or AudioFrame
+    attribute ReadableStream readable;
 };
 
 dictionary MediaStreamTrackProcessorInit {
@@ -195,7 +195,7 @@ application that have not yet been handled.
 in the `[[track]]` internal slot. This attribute is created the first time it is invoked
 according to the following steps:
 1. Initialize [=this=].{{MediaStreamTrackProcessor/readable}} to be a new {{ReadableStream}}.
-2. <a dfn for="ReadableStream">Set up</a> [=this=].{{MediaStreamTrackProcessor/readable}} with its [=ReadableStream/set up/pullAlgorithm=] set to [=processorPull=] with |this| as parameter, [=ReadableStream/set up/cancelAlgorithm=] set to [=processorCancel=] with |this| as parameter, and [=ReadableStream/set up/highWatermark=] set to 0.
+2. <a dfn for="ReadableStream">Set up</a> [=this=].{{MediaStreamTrackProcessor/readable}} with its [=ReadableStream/set up/pullAlgorithm=] set to [=processorPull=] with [=this=] as parameter, [=ReadableStream/set up/cancelAlgorithm=] set to [=processorCancel=] with [=this=] as parameter, and [=ReadableStream/set up/highWatermark=] set to 0.
 
 The <dfn>processorPull</dfn> algorithm is given a |processor| as input. It is defined by the following steps:
 1. Increment the value of the |processor|.`[[numPendingReads]]` by 1.
@@ -301,7 +301,7 @@ dictionary MediaStreamTrackGeneratorInit {
 itself a {{MediaStreamTrack}}. When this attribute is access for the first time,
 it MUST be initialized with the following steps:
 1. Initialize [=this=].{{MediaStreamTrackGenerator/writable}} to be a new {{WritableStream}}.
-2. <a dfn for="WritableStream">Set up</a> [=this=].{{MediaStreamTrackGenerator/writable}}, with its [=WritableStream/set up/writeAlgorithm=] set to [=writeFrame=] with |this| as parameter, with [=WritableStream/set up/closeAlgorithm=] set to [=closeWritable=] with |this| as parameter and [=WritableStream/set up/abortAlgorithm=] set to [=closeWritable=] with |this| as parameter.
+2. <a dfn for="WritableStream">Set up</a> [=this=].{{MediaStreamTrackGenerator/writable}}, with its [=WritableStream/set up/writeAlgorithm=] set to [=writeFrame=] with [=this=] as parameter, [=WritableStream/set up/closeAlgorithm=] set to [=closeWritable=] with [=this=] as parameter, and [=WritableStream/set up/abortAlgorithm=] set to [=closeWritable=] with [=this=] as parameter.
 
 The <dfn>writeFrame</dfn> algorithm is given a |generator| and a |frame| as input. It is defined by running the following steps:
 1. If |generator|.{{MediaStreamTrack/kind}} equals `video` and |frame| is not a {{VideoFrame}} object, return [=a promise rejected with=] a {{TypeError}}.
