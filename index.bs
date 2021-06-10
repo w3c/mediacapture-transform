@@ -28,6 +28,8 @@ url: https://infra.spec.whatwg.org/#queue-enqueue; text: enqueue; for: Queue; ty
 url: https://infra.spec.whatwg.org/#queue-dequeue; text: dequeue; for: Queue; type: typedef; spec: INFRA
 url: https://infra.spec.whatwg.org/#list-is-empty; text: empty; for: Queue; type: typedef; spec: INFRA
 url: https://infra.spec.whatwg.org/#booleans; text: Boolean; type: typedef; spec: INFRA
+url: https://streams.spec.whatwg.org/#readablestream-close; text: close; for: ReadableStream; type: typedef; spec: STREAMS
+url: https://www.w3.org/TR/mediacapture-streams/#track-ended; text: TrackEnded; type: typedef; spec: MEDIACAPTURE-STREAMS
 </pre>
 <pre class=biblio>
 {
@@ -47,6 +49,10 @@ url: https://infra.spec.whatwg.org/#booleans; text: Boolean; type: typedef; spec
   "INFRA": {
     "href": "https://https://infra.spec.whatwg.org",
     "title": "Infra"
+  },
+  "STREAMS": {
+    "href": "https://streams.spec.whatwg.org",
+    "title": "Streams"
   }
 }
 </pre>
@@ -196,30 +202,30 @@ The <dfn>processorPull</dfn> algorithm is given a |processor| as input. It is de
 The <dfn>maybeReadFrame</dfn> algorithm is given a |processor| as input. It is defined by the following steps:
 1. If |processor|.`[[queue]]` is {{Queue/empty}}, abort these steps.
 2. If |processor|.`[[numPendingReads]]` equals zero, abort these steps.
-3. {{Queue/dequeue}} a frame from `[[queue]]` and [=ReadableStream/Enqueue=] it in {{MediaStreamTrackProcessor/readable}}.
+3. {{Queue/dequeue}} a frame from |processor|.`[[queue]]` and [=ReadableStream/Enqueue=] it in |processor|.{{MediaStreamTrackProcessor/readable}}.
 4. Decrement |processor|.`[[numPendingReads]]` by 1.
 5. Go to step 1.
 
 The <dfn>processorCancel</dfn> algorithm is given a |processor| as input.
 It is defined by running the following steps:
-1. Run the [[processorClose] algorithm.
+1. Run the [=processorClose=] algorithm.
 3. Return  [=a promise resolved with=] undefined.
 
 The <dfn>processorClose</dfn> algorithm is given a |processor| as input.
 It is defined by running the following steps:
 1. If |processor|.`[[isClosed]]` is true, abort these steps.
 2. Disconnect |processor| from |processor|.`[[track]]`. The mechanism to do this is UA specific and the result is that |processor| is no longer a sink of |processor|.`[[track]]`.
-3. {{ReadableStream/close/|Close}} |processor|.{{MediaStreamTrackProcessor/readable}}.
+3. {{ReadableStream/close|Close}} |processor|.{{MediaStreamTrackProcessor/readable}}.
 4. {{Queue/dequeue}} all elements in |processor|.`[[queue]]`.
 
 </dd>
 </dl>
 
 ### Handling interaction with the track ### {#processor-handling-interaction-with-track}
-When `[[track]]` delivers a frame to a {{MediaStreamTrackProcessor}}
-|processor|, the following steps MUST be executed:
+When the `[[track]]` of a {{MediaStreamTrackProcessor}} |processor| delivers a
+frame to |processor|, the following steps MUST be executed:
 1. If |processor|.`[[queue]]` has |processor|.`[[maxBufferSize]]` elements, {{Queue/dequeue}} an item from |processor|.`[[queue]]`.
-2. {{Queue/enqueue}} the new frame in [=MediaStreamTrackProcessor/`[[queue]]`=].
+2. {{Queue/enqueue}} the new frame in |processor|.`[[queue]]`.
 3. [=Queue a task=] to run the [=maybeReadFrame=] algorithm with |processor| as parameter.
 
 </dd>
@@ -229,8 +235,9 @@ is a gap in the timestamps of the frames.
 </p>
 </dl>
 
-When `[[track]]` of a {{MediaStreamTrackProcessor}} |processor|
-ends, the [=processorClose=] algorithm must be executed.
+When the `[[track]]` of a {{MediaStreamTrackProcessor}} |processor|
+{{TrackEnded|ends}}, the [=processorClose=] algorithm must be
+executed with |processor| as parameter.
 
 ## MediaStreamTrackGenerator interface ## {#track-generator}
 <pre class="idl">
@@ -283,8 +290,8 @@ the {{MediaStreamTrackGenerator}}.
 #### stop #### {#generator-stop}
 The {{MediaStreamTrack/stop}} method on a {{MediaStreamTrackGenerator}} stops
 the track. When the last track connected to
-the {{MediaStreamTrackGenerator/writable}} of a {{MediaStreamTrackGenerator}} is
-stopped, its {{MediaStreamTrackGenerator/writable}} is [=WritableStream/closing|closed=].
+the {{MediaStreamTrackGenerator/writable}} of a {{MediaStreamTrackGenerator}}
+ends, its {{MediaStreamTrackGenerator/writable}} is [=WritableStream/closing|closed=].
 
 #### Constraintable properties #### {#generator-constrainable-properties}
 
