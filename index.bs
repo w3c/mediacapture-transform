@@ -153,8 +153,10 @@ the {{Queue/dequeue}} operation on `[[queue]]` as many times as is necessary
 to ensure `[[queue]]`'s size does not exceed the new value of `[[maxBufferSize]]`.
 </dd>
 <dt><dfn for=MediaStreamTrackProcessor>`[[numPendingReads]]`</dfn></dt>
-<dd>An integer whose value represents the number of read requests issued by the application
-that have not yet been handled.
+<dd>An integer whose value represents the number of read requests issued by the application that have not yet been handled.
+</dd>
+<dt><dfn for=MediaStreamTrackProcessor>`[[isClosed]]`</dfn></dt>
+<dd>An boolean whose value indicates if the {{MediaStreamTrackProcessor}} is closed.
 </dd>
 </dl>
 
@@ -165,13 +167,12 @@ that have not yet been handled.
 1. If |init|.{{MediaStreamTrackProcessorInit/track}} is not a valid {{MediaStreamTrack}},
     throw a {{TypeError}}.
 2. Let |processor| be a new {{MediaStreamTrackProcessor}} object.
-3. Assign |init|.{{MediaStreamTrackProcessorInit/track}} to the `[[track]]`
-    internal slot of |processor|.
-4. Assign |init|.{{MediaStreamTrackProcessorInit/maxBufferSize}} to the `[[maxBufferSize]]`
-    internal slot of |processor|.
+3. Assign |init|.{{MediaStreamTrackProcessorInit/track}} to |processor|.`[[track]]`.
+4. Assign |init|.{{MediaStreamTrackProcessorInit/maxBufferSize}} to |processor|.`[[maxBufferSize]]`.
 5. Set the `[[queue]]` internal slot of |processor| to an empty {{Queue}}.
-6. Set the `[[numPendingReads]]` internal slot of |processor| to 0.
-7. Return |processor|.
+6. Set |processor|.`[[numPendingReads]]` to 0.
+7. Set |processor|.`[[isClosed]]` to false.
+8. Return |processor|.
 
 <p class="note">
 The application may detect that frames have been dropped by noticing that there is a gap in the
@@ -185,39 +186,51 @@ timestamps of the frames.
 in the `[[track]]` internal slot. This attribute is created the first time it is invoked
 according to the following steps:
 1. Initialize [=this=].{{MediaStreamTrackProcessor/readable}} to be a new {{ReadableStream}}.
-2. <a dfn for="ReadableStream">Set up</a> [=this=].{{MediaStreamTrackProcessor/readable}}.
+2. <a dfn for="ReadableStream">Set up</a> [=this=].{{MediaStreamTrackProcessor/readable}} with its [=ReadableStream/set up/pullAlgorithm=] set to [=processorPull=] with |this| as parameter, [=ReadableStream/set up/cancelAlgorithm=] set to [=processorCancel=] with |this| as parameter, and [=ReadableStream/set up/highWatermark=] set to 0.
+
+The <dfn>processorPull</dfn> algorithm is given a |processor| as input. It is defined by the following steps:
+1. Increment the value of the |processor|.`[[numPendingReads]]` by 1.
+2. [=Queue a task=] to run the [=maybeReadFrame=] algorithm with |processor| as parameter.
+3. Return  [=a promise resolved with=] undefined.
+
+The <dfn>maybeReadFrame</dfn> algorithm is given a |processor| as input. It is defined by the following steps:
+1. If |processor|.`[[queue]]` is {{Queue/empty}}, abort these steps.
+2. If |processor|.`[[numPendingReads]]` equals zero, abort these steps.
+3. {{Queue/dequeue}} a frame from `[[queue]]` and [=ReadableStream/Enqueue=] it in {{MediaStreamTrackProcessor/readable}}.
+4. Decrement |processor|.`[[numPendingReads]]` by 1.
+5. Go to step 1.
+
+The <dfn>processorCancel</dfn> algorithm is given a |processor| as input.
+It is defined by running the following steps:
+1. Run the [[processorClose] algorithm.
+3. Return  [=a promise resolved with=] undefined.
+
+The <dfn>processorClose</dfn> algorithm is given a |processor| as input.
+It is defined by running the following steps:
+1. If |processor|.`[[isClosed]]` is true, abort these steps.
+2. Disconnect |processor| from |processor|.`[[track]]`. The mechanism to do this is UA specific and the result is that |processor| is no longer a sink of |processor|.`[[track]]`.
+3. {{ReadableStream/close/|Close}} |processor|.{{MediaStreamTrackProcessor/readable}}.
+4. {{Queue/dequeue}} all elements in |processor|.`[[queue]]`.
 
 </dd>
 </dl>
 
-### Handling frames delivered by the track ### {#processor-handling-frame-from-track}
-When `[[track]]` delivers a frame to  a {{MediaStreamTrackProcessor}},
-the following steps MUST be executed:
-1. If `[[queue]]` has `[[maxBufferSize]]` elements, {{Queue/dequeue}} an item from `[[queue]]`.
+### Handling interaction with the track ### {#processor-handling-interaction-with-track}
+When `[[track]]` delivers a frame to a {{MediaStreamTrackProcessor}}
+|processor|, the following steps MUST be executed:
+1. If |processor|.`[[queue]]` has |processor|.`[[maxBufferSize]]` elements, {{Queue/dequeue}} an item from |processor|.`[[queue]]`.
 2. {{Queue/enqueue}} the new frame in [=MediaStreamTrackProcessor/`[[queue]]`=].
-3. [=Queue a task=] to run the [=maybeReadFrame=] algorithm.
-
-The <dfn>maybeReadFrame</dfn> algorithm has the following steps:
-1. If `[[queue]]` is {{Queue/empty}}, abort these steps.
-2. If the `[[numPendingReads]]` slot equals zero, abort these steps.
-3. {{Queue/dequeue}} a frame from `[[queue]]` and [=ReadableStream/Enqueue=] it in {{MediaStreamTrackProcessor/readable}}.
-4. Decrement the value of the `[[numPendingReads]]` slot by 1.
-5. Go to step 1.
-
-### Reading frames from the processor ### {#processor-read-from-readable}
-An application uses the {{MediaStreamTrackProcessor/readable}} field to read the frames
-delivered to the {{MediaStreamTrackProcessor}} by `[[track]]`.
-When a read operation is issued, the following steps MUST be executed:
-1. Increment the value of the `[[numPendingReads]]` slot by 1.
-2. [=Queue a task=] to run the [=maybeReadFrame=] algorithm.
+3. [=Queue a task=] to run the [=maybeReadFrame=] algorithm with |processor| as parameter.
 
 </dd>
 <p class="note">
-The application may detect that frames have been dropped by noticing that there is a gap in the
-timestamps of the frames.
+The application may detect that frames have been dropped by noticing that there
+is a gap in the timestamps of the frames.
 </p>
 </dl>
 
+When `[[track]]` of a {{MediaStreamTrackProcessor}} |processor|
+ends, the [=processorClose=] algorithm must be executed.
 
 ## MediaStreamTrackGenerator interface ## {#track-generator}
 <pre class="idl">
