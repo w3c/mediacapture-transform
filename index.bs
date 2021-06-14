@@ -32,6 +32,8 @@ url: https://www.w3.org/TR/mediacapture-streams/#source-stopped; text: StopSourc
 url: https://www.w3.org/TR/mediacapture-streams/#track-ended; text: TrackEnded; type: typedef; spec: MEDIACAPTURE-STREAMS
 url: https://streams.spec.whatwg.org/#readable-stream-default-controller-close; text: ReadableStreamDefaultControllerClose; type: typedef; spec: STREAMS
 url: https://streams.spec.whatwg.org/#readablestream-controller; text: ReadableStreamControllerSlot; type: typedef; spec: STREAMS
+url: https://www.w3.org/TR/mediacapture-streams/#ends-nostop; text: EndTrack; type: typedef; spec: MEDIACAPTURE-STREAMS
+url: https://www.w3.org/TR/mediacapture-streams/#dom-overconstrainederror; text: OverconstrainedError; type: typedef; spec: MEDIACAPTURE-STREAMS
 url: https://infra.spec.whatwg.org/#list-empty; text: Empty; for: List; type: typedef; spec: INFRA
 url: https://infra.spec.whatwg.org/#list-remove; text: remove; for: List; type: typedef; spec: INFRA
 </pre>
@@ -329,7 +331,7 @@ dictionary MediaStreamTrackGeneratorInit {
 <dl>
 <dt><dfn attribute for=MediaStreamTrackGenerator>writable</dfn></dt>
 <dd>Allows writing media frames to the {{MediaStreamTrackGenerator}}, which is
-itself a {{MediaStreamTrack}}. When this attribute is access for the first time,
+itself a {{MediaStreamTrack}}. When this attribute is accessed for the first time,
 it MUST be initialized with the following steps:
 1. Initialize [=this=].{{MediaStreamTrackGenerator/writable}} to be a new {{WritableStream}}.
 2. <a dfn for="WritableStream">Set up</a> [=this=].{{MediaStreamTrackGenerator/writable}}, with its [=WritableStream/set up/writeAlgorithm=] set to [=writeFrame=] with |this| as parameter, with [=WritableStream/set up/closeAlgorithm=] set to [=closeWritable=] with |this| as parameter and [=WritableStream/set up/abortAlgorithm=] set to [=closeWritable=] with |this| as parameter.
@@ -341,16 +343,17 @@ The <dfn>writeFrame</dfn> algorithm is given a |generator| and a |frame| as inpu
 4. Invoke the `close` method of |frame|.
 5. Return  [=a promise resolved with=] undefined.
 
+<p class="note">
+When the media data is sent to a track, the UA may apply processing
+(e.g., cropping and downscaling) to ensure that the the media data sent
+to the track satisfies the track's constraints. Each track may receive a
+different version of the media data depending on its constraints.
+</p>
+
 The <dfn>closeWritable</dfn> algorithm is given a |generator| as input.
 It is defined by running the following steps.
-1. {{StopSource|Stop}} the generator as a MediaStreamTrack source.
-
-<p class="note">
-A consecuence of this step is that all tracks connected to
-|generator|.{{MediaStreamTrackGenerator/writable}} will be ended.
-</p>
+1. For each track `t` connected to |generator|, {{EndTrack|end}} `t`.
 2. Return [=a promise resolved with=] undefined.
-
 
 </dd>
 </dl>
@@ -402,7 +405,7 @@ a {{MediaStreamTrackGenerator}}:
       </td>
       <td>
         As a setting, this is the width, in pixels, of the latest
-        frame delivered by the track.
+        frame received by the track.
         As a capability, `max` MUST reflect the
         largest width a {{VideoFrame}} may have, and `min`
         MUST reflect the smallest width a {{VideoFrame}} may have.
@@ -417,7 +420,7 @@ a {{MediaStreamTrackGenerator}}:
       </td>
       <td>
         As a setting, this is the height, in pixels, of the latest
-        frame delivered by the track.
+        frame received by the track.
         As a capability, `max` MUST reflect the largest height
         a {{VideoFrame}} may have, and `min` MUST reflect
         the smallest height a {{VideoFrame}} may have.
@@ -432,7 +435,7 @@ a {{MediaStreamTrackGenerator}}:
       </td>
       <td>
         As a setting, this is an estimate of the frame rate based on frames
-        recently delivered by the track.
+        recently received by the track.
         As a capability `min` MUST be zero and
         `max` MUST be the maximum frame rate supported by the system.
       </td>
@@ -486,6 +489,13 @@ It can be used, for example, to resize frames or adjust the frame rate of the tr
 Note that these constraints have no effect on the {{VideoFrame}} objects
 written to the {{MediaStreamTrackGenerator/writable}} of a {{MediaStreamTrackGenerator}},
 just on the output of the track on which the constraints have been applied.
+Note also that, since a {{MediaStreamTrackGenerator}} can in principle produce
+media data with any setting for the supported constrainable properties,
+an {{MediaStreamTrack/applyConstraints}} call on a track
+backed by a {{MediaStreamTrackGenerator}} will generally not fail with
+{{OverconstrainedError}} unless the given constraints
+are outside the system-supported range, as reported by
+{{MediaStreamTrack/getCapabilities}}.
 
 The following constrainable properties are defined for audio {{MediaStreamTrack}}s
 sourced from a {{MediaStreamTrackGenerator}}, but in an informational capacity
