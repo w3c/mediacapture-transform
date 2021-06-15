@@ -610,7 +610,7 @@ Suppose there is a model for audio-visual speech separation, represented
 by a class `AudioVisualModel` with a method `updateVideo(videoFrame)` that
 updates the internal state of the model upon a new video frame, a
 method `getSpeechData(audioData)` that returns a noise-canceled {{AudioData}}
-given an input non-canceled {{AudioData}}, and a `close()` method that
+given an input raw {{AudioData}}, and a `close()` method that
 releases resources used internally by the model.
 
 <pre class="example">
@@ -637,9 +637,9 @@ self.onmessage = async function(e) {
   const model = new AudioVideoModel();
   const audioTransformer = new TransformStream({
     async transform(audioData, controller) {
-        const newAudioData = model.getNewAudioData(audioData);
+        const speechData = model.getSpeechData(audioData);
         audioData.close();
-        controller.enqueue(newAudioData);
+        controller.enqueue(speechData);
     }
   });
 
@@ -661,12 +661,12 @@ self.onmessage = async function(e) {
     resolve();
   }
 
-  await Promise.all(audioPromise, videoPromise);
+  await Promise.all([audioPromise, videoPromise]);
   model.close();
 }
 </pre>
 
-A similar example that instead allows video effects that are influenced by
+An example that instead allows video effects that are influenced by
 speech would be similar, except that the roles of audio and video would be
 reversed.
 
