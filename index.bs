@@ -544,16 +544,18 @@ tracks connected to it, possibly including the {{MediaStreamTrackGenerator}}
 itself, are ended and the `ended` event is fired on them.
 
 # Examples # {#examples}
+## Video Processing
 Consider a face recognition function `detectFace(videoFrame)` that returns a face position
 (in some format), and a manipulation function `blurBackground(videoFrame, facePosition)` that
-returns a new VideoFrame similar to the given `videoFrame`, but with the non-face parts blurred.
+returns a new VideoFrame similar to the given `videoFrame`, but with the non-face parts blurred. Then display the before and after tracks on video elements.
 
 <pre class="example">
-let stream = await getUserMedia({video:true});
-let videoTrack = stream.getVideoTracks()[0];
-let trackProcessor = new MediaStreamTrackProcessor(videoTrack);
-let trackGenerator = new MediaStreamTrackGenerator();
-let transformer = new TransformStream({
+async function main() {
+const stream = await getUserMedia({video:true});
+const videoTrack = stream.getVideoTracks()[0];
+const processor = new MediaStreamTrackProcessor({track: videoTrack});
+const generator = new MediaStreamTrackGenerator({kind: 'video'});
+const transformer = new TransformStream({
    async transform(videoFrame, controller) {
       let facePosition = await detectFace(videoFrame);
       let newFrame = blurBackground(videoFrame, facePosition);
@@ -562,11 +564,160 @@ let transformer = new TransformStream({
   }
 });
 
-// After this, trackGenerator can be assigned to any sink such as a
-// peer connection, or media element.
-trackProcessor.readable
-    .pipeThrough(transformer)
-    .pipeTo(trackGenerator.writable);
+processor.readable.pipeThrough(transformer).pipeTo(generator.writable);
+const videoBefore = document.getElementById('video-before');
+const videoAfter = document.getElementById('video-after');
+videoBefore.srcObject = stream;
+const streamAfter = new MediaStream([generator]);
+videoAfter.srcObject = streamAfter;
+
+</pre>
+
+The same example using a worker:
+<pre class="example">
+// main.js
+const stream = await getUserMedia({video:true});
+const videoTrack = stream.getVideoTracks()[0];
+const processor = new MediaStreamTrackProcessor({track: videoTrack});
+const generator = new MediaStreamTrackGenerator({kind: 'video'});
+const worker = new Worker('worker.js');
+worker.postMessage(
+  {readable: processor.readable, writable: generator.writable},
+  [processor.readable, generator.writable]);
+const videoBefore = document.getElementById('video-before');
+const videoAfter = document.getElementById('video-after');
+videoBefore.srcObject = stream;
+const streamAfter = new MediaStream([generator]);
+videoAfter.srcObject = streamAfter;
+
+// worker.js
+self.onmessage = async function(e) {
+  const transformer = new TransformStream({
+    async transform(videoFrame, controller) {
+        const facePosition = await detectFace(videoFrame);
+        const newFrame = blurBackground(videoFrame, facePosition);
+        videoFrame.close();
+        controller.enqueue(newFrame);
+    }
+  });
+
+  e.data.readable.pipeThrough(transformer).pipeTo(e.data.writable);
+}
+</pre>
+
+## Multi-source processing
+Suppose there is a model for audio-visual speech separation, represented
+by a class `AudioVisualModel` with a method `updateVideo(videoFrame)` that
+updates the internal state of the model upon a new video frame, a
+method `getSpeechData(audioData)` that returns a noise-canceled {{AudioData}}
+given an input non-canceled {{AudioData}}, and a `close()` method that
+releases resources used internally by the model.
+
+<pre class="example">
+// main.js
+const stream = await getUserMedia({audio:true, video:true});
+const audioTrack = stream.getAudioTracks()[0];
+const videoTrack = stream.getVideoTracks()[0];
+const audioProcessor = new MediaStreamTrackProcessor({track: audioTrack});
+const videoProcessor = new MediaStreamTrackProcessor({track: videoTrack});
+const audioGenerator = new MediaStreamTrackGenerator({kind: 'audio'});
+const worker = new Worker('worker.js');
+worker.postMessage({
+    audioReadable: audioProcessor.readable,
+    videoReadable: videoProcessor.readable,
+    audioWritable: audioGenerator.writable
+  }, [
+    audioProcessor.readable,
+    videoProcessor.readable,
+    audioGenerator.writable
+  ]);
+
+// worker.js
+self.onmessage = async function(e) {
+  const model = new AudioVideoModel();
+  const audioTransformer = new TransformStream({
+    async transform(audioData, controller) {
+        const newAudioData = model.getNewAudioData(audioData);
+        audioData.close();
+        controller.enqueue(newAudioData);
+    }
+  });
+
+  const audioPromise = e.data.audioReadable
+      .pipeThrough(audioTransformer)
+      .pipeTo(e.data.audioWritable);
+
+  const videoReader = e.data.videoReadable.getReadable();
+  const videoPromise = new Promise(async resolve => {
+    while (true) {
+      const result = await videoReader.read();
+      if (result.done) {
+        break;
+      } else {
+        model.updateState(result.value);
+        result.value.close();
+      }
+    }
+    resolve();
+  }
+
+  await Promise.all(audioPromise, videoPromise);
+  model.close();
+}
+</pre>
+
+A similar example that instead allows video effects that are influenced by
+speech would be similar, except that the roles of audio and video would be
+reversed.
+
+## Custom sink
+Suppose there are `sendAudioToNetwork(audioData)`  and
+`sendVideoToNetwork(videoFrame)` functions that respectively send {{AudioData}}
+and {{VideoFrame}} objects to a custom network sink, together with a
+`setupNetworkSinks()` function to set up the sinks and a
+`cleanupNetworkSinks()` function to release resources used by the sinks.
+
+<pre class="example">
+// main.js
+const stream = await getUserMedia({audio:true, video:true});
+const audioTrack = stream.getAudioTracks()[0];
+const videoTrack = stream.getVideoTracks()[0];
+const audioProcessor = new MediaStreamTrackProcessor({track: audioTrack});
+const videoProcessor = new MediaStreamTrackProcessor({track: videoTrack});
+const worker = new Worker('worker.js');
+worker.postMessage({
+    audioReadable: audioProcessor.readable,
+    videoReadable: videoProcessor.readable,
+  }, [
+    audioProcessor.readable,
+    videoProcessor.readable,
+  ]);
+
+// worker.js
+function writeToSink(readable, sinkFunction) {
+  return new Promise(async resolve => {
+    while (true) {
+      const result = await readable.read();
+      if (result.done) {
+        break;
+      } else {
+        sinkFunction(result.value);
+        result.value.close();
+      }
+    }
+    resolve();
+  });
+}
+
+self.onmessage = async function(e) {
+  setupNetworkSinks();
+  const audioReader = e.data.audioReadable.getReader();
+  const videoReader = e.data.videoReadable.getReader();
+  const audioPromise = writeToSink(audioReader, sendAudioToNetwork);
+  const videoPromise = writeToSink(videoReader, sendVideoToNetwork);
+  await Promise.all([audioPromise, videoPromise]);
+  cleanupNetworkSinks();
+}
 </pre>
 
 # Security and Privacy considerations # {#security-considerations}
