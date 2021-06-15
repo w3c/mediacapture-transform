@@ -218,7 +218,7 @@ the track. When the last track connected to
 the {{MediaStreamTrackGenerator/writable}} of a {{MediaStreamTrackGenerator}} is
 stopped, its {{MediaStreamTrackGenerator/writable}} is [=WritableStream/closing|closed=].
 
-#### Constraintable properties #### {#generator-constrainable-properties}
+#### Constrainable properties #### {#generator-constrainable-properties}
 
 The following constrainable properties are defined for video
 {{MediaStreamTrackGenerator}}s and any {{MediaStreamTrack}}s sourced from
