@@ -116,7 +116,7 @@ This specification explicitly aims to support the following use cases:
     Other examples that do not require integration with video but can benefit
     from the model include echo detection and other forms of ML-based noise
     cancellation.
-  - *Multi-source processing*: In this use case, two or more tracks are combined into one. For example, a presentation containing a live wheather map and a camera track with speaker can be combined to produce a weather report application. Audio-visual speech separation is another case of multi-source processing.
+  - *Multi-source processing*: In this use case, two or more tracks are combined into one. For example, a presentation containing a live weather map and a camera track with the speaker can be combined to produce a weather report application. Audio-visual speech separation, referenced above, is another case of multi-source processing.
   - *Custom audio or video sink*: In this use case, the purpose is not producing a processed {{MediaStreamTrack}}, but to consume the media in a different way. For example, an application could use [[WEBCODECS]] and [[WEBTRANSPORT]] to create an {{RTCPeerConnection}}-like sink, but using different codec configuration and networking protocols.
 
 # Specification # {#specification}
