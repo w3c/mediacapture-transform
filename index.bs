@@ -547,7 +547,9 @@ itself, are ended and the `ended` event is fired on them.
 ## Video Processing
 Consider a face recognition function `detectFace(videoFrame)` that returns a face position
 (in some format), and a manipulation function `blurBackground(videoFrame, facePosition)` that
-returns a new VideoFrame similar to the given `videoFrame`, but with the non-face parts blurred. Then display the before and after tracks on video elements.
+returns a new VideoFrame similar to the given `videoFrame`, but with the
+non-face parts blurred. The example also shows the video before and after
+effects on video elements.
 
 <pre class="example">
 async function main() {
@@ -647,14 +649,14 @@ self.onmessage = async function(e) {
       .pipeThrough(audioTransformer)
       .pipeTo(e.data.audioWritable);
 
-  const videoReader = e.data.videoReadable.getReadable();
+  const videoReader = e.data.videoReadable.getReader();
   const videoPromise = new Promise(async resolve => {
     while (true) {
       const result = await videoReader.read();
       if (result.done) {
         break;
       } else {
-        model.updateState(result.value);
+        model.updateVideo(result.value);
         result.value.close();
       }
     }
