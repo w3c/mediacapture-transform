@@ -552,7 +552,6 @@ non-face parts blurred. The example also shows the video before and after
 effects on video elements.
 
 <pre class="example">
-async function main() {
 const stream = await getUserMedia({video:true});
 const videoTrack = stream.getVideoTracks()[0];
 const processor = new MediaStreamTrackProcessor({track: videoTrack});
@@ -572,7 +571,6 @@ const videoAfter = document.getElementById('video-after');
 videoBefore.srcObject = stream;
 const streamAfter = new MediaStream([generator]);
 videoAfter.srcObject = streamAfter;
-
 </pre>
 
 The same example using a worker:
