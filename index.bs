@@ -424,7 +424,7 @@ rely on explicit use authorization via permission dialogs (see
 while element capture and {{MediaStreamTrackGenerator}}
 rely on the same-origin policy.
 A potential issue with {{MediaStreamTrackProcessor}} is resource exhaustion.
-For example, a site might hold on too many open {{VideoFrame}} objects
+For example, a site might hold on to too many open {{VideoFrame}} objects
 and deplete a system-wide pool of GPU-memory-backed frames. UAs can
 mitigate this risk by limiting the number of pool-backed frames a site can
 hold. This can be achieved by reducing the maximum number of buffered frames
