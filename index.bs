@@ -29,6 +29,8 @@ url: https://infra.spec.whatwg.org/#queue-dequeue; text: dequeue; for: Queue; ty
 url: https://infra.spec.whatwg.org/#list-is-empty; text: empty; for: Queue; type: typedef; spec: INFRA
 url: https://infra.spec.whatwg.org/#booleans; text: Boolean; type: typedef; spec: INFRA
 url: https://www.w3.org/TR/mediacapture-streams/#track-ended; text: TrackEnded; type: typedef; spec: MEDIACAPTURE-STREAMS
+url: https://streams.spec.whatwg.org/#readable-stream-default-controller-close; text: ReadableStreamDefaultControllerClose; type: typedef; spec: STREAMS
+url: https://streams.spec.whatwg.org/#readablestream-controller; text: ReadableStreamControllerSlot; type: typedef; spec: STREAMS
 </pre>
 <pre class=biblio>
 {
@@ -111,19 +113,26 @@ A {{MediaStreamTrackProcessor}} internally contains a circular queue
 that allows buffering incoming media frames delivered by the track it
 is connected to. This buffering allows the {{MediaStreamTrackProcessor}}
 to temporarily hold frames waiting to be read from its associated {{ReadableStream}}.
-If the application is reading frames too slowly and the queue has reached its
-maximum size when the track delivers a new frame, the {{MediaStreamTrackProcessor}}
-will drop the oldest frame from the queue and push the new frame into the queue.
-The maximum size of the queue is decided by the UA and can change dynamically.
-The application can influence the maximum size of the queue via a parameter provided
-in the {{MediaStreamTrackProcessor}} constructor. In this case, the
-{{MediaStreamTrackProcessor}} will make sure that the size of the queue
-is never greater than the value provided by the application, but the actual maximum
-size of the queue can be smaller than such value.
-A {{MediaStreamTrackProcessor}} makes frames available to the its
+The application can influence the maximum size of the queue via a parameter
+provided in the {{MediaStreamTrackProcessor}} constructor. However, the
+maximum size of the queue is decided by the UA and can change dynamically,
+but it will not exceed the size requested by the application.
+When the application provides the maximum size parameter on the constructor,
+buffering will work such that if the application is reading frames too slowly
+and the queue has reached its maximum size when the track delivers a new frame,
+the {{MediaStreamTrackProcessor}} will drop the oldest frame from the queue
+and push the new frame into the queue.
+If the application does not provide a maximum size parameter, the UA is free
+to decide the buffering policy that will be applied by
+{{MediaStreamTrackProcessor}}. However, in all cases frames that are not dropped
+by the {{MediaStreamTrackProcessor}} must be made available to its associated
+{{ReadableStream}} in the order in which they arrive to the
+{{MediaStreamTrackProcessor}}.
+
+A {{MediaStreamTrackProcessor}} makes frames available to its
 associated {{ReadableStream}} only when a read request has been issued on
 the stream. The idea is to avoid the stream's internal buffering, which
-is not circular and would result in dropping new frames instead of old
+is not circular and may result in dropping new frames instead of old
 ones.
 
 ### Interface definition ### {#track-processor-interface}
@@ -146,19 +155,24 @@ dictionary MediaStreamTrackProcessorInit {
 <dd>Track whose raw data is to be exposed by the {{MediaStreamTrackProcessor}}.</dd>
 <dt><dfn for=MediaStreamTrackProcessor>`[[appMaxBufferSize]]`</dfn></dt>
 <dd>The maximum number of media frames to be buffered by the {{MediaStreamTrackProcessor}}
-as specified by the application.</dd>
+as specified by the application. It may have no value if the application does
+not provide it. Its minimum valid value is 1.</dd>
 <dt><dfn for=MediaStreamTrackProcessor>`[[queue]]`</dfn></dt>
 <dd>A {{Queue|queue}} used to buffer media frames not yet read by the application</dd>
 <dt><dfn for=MediaStreamTrackProcessor>`[[maxBufferSize]]`</dfn></dt>
 <dd>The actual maximum number of media frames to be buffered in
 the `[[queue]]` slot. The UA can update the value of this slot at any time.
-Its value will always be less than or equal to `[[appMaxBufferSize]]`, if
+Its value will always be less than or equal to `[[appMaxBufferSize]]` if
 `[[appMaxBufferSize]]` is provided. When the UA updates this value, it invokes
 the {{Queue/dequeue}} operation on `[[queue]]` as many times as is necessary
 to ensure `[[queue]]`'s size does not exceed the new value of `[[maxBufferSize]]`.
+If the application does not provide a maximum number of media frames on the
+constructor, this slot may have no value and the UA is free to decide the
+buffering policy.
 </dd>
 <dt><dfn for=MediaStreamTrackProcessor>`[[numPendingReads]]`</dfn></dt>
-<dd>An integer whose value represents the number of read requests issued by the application that have not yet been handled.
+<dd>An integer whose value represents the number of read requests issued by the
+application that have not yet been handled.
 </dd>
 <dt><dfn for=MediaStreamTrackProcessor>`[[isClosed]]`</dfn></dt>
 <dd>An boolean whose value indicates if the {{MediaStreamTrackProcessor}} is closed.
@@ -173,16 +187,12 @@ to ensure `[[queue]]`'s size does not exceed the new value of `[[maxBufferSize]]
     throw a {{TypeError}}.
 2. Let |processor| be a new {{MediaStreamTrackProcessor}} object.
 3. Assign |init|.{{MediaStreamTrackProcessorInit/track}} to |processor|.`[[track]]`.
-4. Assign |init|.{{MediaStreamTrackProcessorInit/maxBufferSize}} to |processor|.`[[maxBufferSize]]`.
-5. Set the `[[queue]]` internal slot of |processor| to an empty {{Queue}}.
-6. Set |processor|.`[[numPendingReads]]` to 0.
-7. Set |processor|.`[[isClosed]]` to false.
-8. Return |processor|.
-
-<p class="note">
-The application may detect that frames have been dropped by noticing that there is a gap in the
-timestamps of the frames.
-</p>
+4. If |init|.{{MediaStreamTrackProcessorInit/maxBufferSize}} has a integer value greater than or equal to 1, assign it to |processor|.`[[appMaxBufferSize]]`.
+5. If |processor|.`[[appMaxBufferSize]]` has a value, assign it to |processor|.`[[maxBufferSize]]`.
+6. Set the `[[queue]]` internal slot of |processor| to an empty {{Queue}}.
+7. Set |processor|.`[[numPendingReads]]` to 0.
+8. Set |processor|.`[[isClosed]]` to false.
+9. Return |processor|.
 
 ### Attributes ### {#attributes-processor}
 <dl>
@@ -214,7 +224,7 @@ The <dfn>processorClose</dfn> algorithm is given a |processor| as input.
 It is defined by running the following steps:
 1. If |processor|.`[[isClosed]]` is true, abort these steps.
 2. Disconnect |processor| from |processor|.`[[track]]`. The mechanism to do this is UA specific and the result is that |processor| is no longer a sink of |processor|.`[[track]]`.
-3. [=ReadableStream/close|Close=] |processor|.{{MediaStreamTrackProcessor/readable}}.
+3. {{ReadableStreamDefaultControllerClose|Close}} |processor|.{{MediaStreamTrackProcessor/readable}}.{{ReadableStreamControllerSlot|[[controller]]}}.
 4. {{Queue/dequeue}} all elements in |processor|.`[[queue]]`.
 
 </dd>
@@ -223,11 +233,14 @@ It is defined by running the following steps:
 ### Handling interaction with the track ### {#processor-handling-interaction-with-track}
 When the `[[track]]` of a {{MediaStreamTrackProcessor}} |processor| delivers a
 frame to |processor|, the following steps MUST be executed:
-1. If |processor|.`[[queue]]` has |processor|.`[[maxBufferSize]]` elements, {{Queue/dequeue}} an item from |processor|.`[[queue]]`.
-2. {{Queue/enqueue}} the new frame in |processor|.`[[queue]]`.
-3. [=Queue a task=] to run the [=maybeReadFrame=] algorithm with |processor| as parameter.
+1. If |processor|.`[[maxBufferSize]]` has a value and |processor|.`[[queue]]` has |processor|.`[[maxBufferSize]]` elements, {{Queue/dequeue}} an item from |processor|.`[[queue]]`.
+2. If |processor|.`[[maxBufferSize]]` has no value, the UA MAY {{Queue/dequeue}} an item from |processor|.`[[queue]]`.
+3. If |processor|.`[[maxBufferSize]]` has no value, the UA MAY abort these steps.
+4. {{Queue/enqueue}} the new frame in |processor|.`[[queue]]`.
+5. [=Queue a task=] to run the [=maybeReadFrame=] algorithm with |processor| as parameter.
 
 </dd>
+
 <p class="note">
 The application may detect that frames have been dropped by noticing that there
 is a gap in the timestamps of the frames.
