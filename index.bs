@@ -31,6 +31,8 @@ url: https://infra.spec.whatwg.org/#booleans; text: Boolean; type: typedef; spec
 url: https://www.w3.org/TR/mediacapture-streams/#track-ended; text: TrackEnded; type: typedef; spec: MEDIACAPTURE-STREAMS
 url: https://streams.spec.whatwg.org/#readable-stream-default-controller-close; text: ReadableStreamDefaultControllerClose; type: typedef; spec: STREAMS
 url: https://streams.spec.whatwg.org/#readablestream-controller; text: ReadableStreamControllerSlot; type: typedef; spec: STREAMS
+url: https://infra.spec.whatwg.org/#list-empty; text: Empty; for: List; type: typedef; spec: INFRA
+url: https://infra.spec.whatwg.org/#list-remove; text: remove; for: List; type: typedef; spec: INFRA
 </pre>
 <pre class=biblio>
 {
@@ -153,23 +155,12 @@ dictionary MediaStreamTrackProcessorInit {
 <dl>
 <dt><dfn for=MediaStreamTrackProcessor>`[[track]]`</dfn></dt>
 <dd>Track whose raw data is to be exposed by the {{MediaStreamTrackProcessor}}.</dd>
-<dt><dfn for=MediaStreamTrackProcessor>`[[appMaxBufferSize]]`</dfn></dt>
+<dt><dfn for=MediaStreamTrackProcessor>`[[maxBufferSize]]`</dfn></dt>
 <dd>The maximum number of media frames to be buffered by the {{MediaStreamTrackProcessor}}
 as specified by the application. It may have no value if the application does
 not provide it. Its minimum valid value is 1.</dd>
 <dt><dfn for=MediaStreamTrackProcessor>`[[queue]]`</dfn></dt>
 <dd>A {{Queue|queue}} used to buffer media frames not yet read by the application</dd>
-<dt><dfn for=MediaStreamTrackProcessor>`[[maxBufferSize]]`</dfn></dt>
-<dd>The actual maximum number of media frames to be buffered in
-the `[[queue]]` slot. The UA can update the value of this slot at any time.
-Its value will always be less than or equal to `[[appMaxBufferSize]]` if
-`[[appMaxBufferSize]]` is provided. When the UA updates this value, it invokes
-the {{Queue/dequeue}} operation on `[[queue]]` as many times as is necessary
-to ensure `[[queue]]`'s size does not exceed the new value of `[[maxBufferSize]]`.
-If the application does not provide a maximum number of media frames on the
-constructor, this slot may have no value and the UA is free to decide the
-buffering policy.
-</dd>
 <dt><dfn for=MediaStreamTrackProcessor>`[[numPendingReads]]`</dfn></dt>
 <dd>An integer whose value represents the number of read requests issued by the
 application that have not yet been handled.
@@ -187,8 +178,7 @@ application that have not yet been handled.
     throw a {{TypeError}}.
 2. Let |processor| be a new {{MediaStreamTrackProcessor}} object.
 3. Assign |init|.{{MediaStreamTrackProcessorInit/track}} to |processor|.`[[track]]`.
-4. If |init|.{{MediaStreamTrackProcessorInit/maxBufferSize}} has a integer value greater than or equal to 1, assign it to |processor|.`[[appMaxBufferSize]]`.
-5. If |processor|.`[[appMaxBufferSize]]` has a value, assign it to |processor|.`[[maxBufferSize]]`.
+4. If |init|.{{MediaStreamTrackProcessorInit/maxBufferSize}} has a integer value greater than or equal to 1, assign it to |processor|.`[[maxBufferSize]]`.
 6. Set the `[[queue]]` internal slot of |processor| to an empty {{Queue}}.
 7. Set |processor|.`[[numPendingReads]]` to 0.
 8. Set |processor|.`[[isClosed]]` to false.
@@ -226,19 +216,21 @@ It is defined by running the following steps:
 2. Disconnect |processor| from |processor|.`[[track]]`. The mechanism to do this is UA specific and the result is that |processor| is no longer a sink of |processor|.`[[track]]`.
 3. {{ReadableStreamDefaultControllerClose|Close}} |processor|.{{MediaStreamTrackProcessor/readable}}.{{ReadableStreamControllerSlot|[[controller]]}}.
 4. {{Queue/dequeue}} all elements in |processor|.`[[queue]]`.
+5. Set |processor|.`[[isClosed]]` to true.
 
 </dd>
 </dl>
 
 ### Handling interaction with the track ### {#processor-handling-interaction-with-track}
 When the `[[track]]` of a {{MediaStreamTrackProcessor}} |processor| delivers a
-frame to |processor|, the following steps MUST be executed:
+frame to |processor|, the UA MUST execute the following steps:
 1. If |processor|.`[[maxBufferSize]]` has a value and |processor|.`[[queue]]` has |processor|.`[[maxBufferSize]]` elements, {{Queue/dequeue}} an item from |processor|.`[[queue]]`.
-2. If |processor|.`[[maxBufferSize]]` has no value, the UA MAY {{Queue/dequeue}} an item from |processor|.`[[queue]]`.
-3. If |processor|.`[[maxBufferSize]]` has no value, the UA MAY abort these steps.
-4. {{Queue/enqueue}} the new frame in |processor|.`[[queue]]`.
-5. [=Queue a task=] to run the [=maybeReadFrame=] algorithm with |processor| as parameter.
+2. {{Queue/enqueue}} the new frame in |processor|.`[[queue]]`.
+3. [=Queue a task=] to run the [=maybeReadFrame=] algorithm with |processor| as parameter.
 
+At any time, the UA MAY {{List/remove}} any frame from |processor|.`[[queue]]`.
+The UA may decide to remove frames from |processor|.`[[queue]]`, for example,
+to prevent resource exhaustion.
 </dd>
 
 <p class="note">
