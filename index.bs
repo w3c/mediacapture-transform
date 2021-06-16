@@ -230,7 +230,7 @@ frame to |processor|, the UA MUST execute the following steps:
 
 At any time, the UA MAY {{List/remove}} any frame from |processor|.`[[queue]]`.
 The UA may decide to remove frames from |processor|.`[[queue]]`, for example,
-to prevent resource exhaustion.
+to prevent resource exhaustion or to improve performance in certain situations.
 </dd>
 
 <p class="note">
