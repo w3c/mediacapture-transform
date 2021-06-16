@@ -215,7 +215,7 @@ It is defined by running the following steps:
 1. If |processor|.`[[isClosed]]` is true, abort these steps.
 2. Disconnect |processor| from |processor|.`[[track]]`. The mechanism to do this is UA specific and the result is that |processor| is no longer a sink of |processor|.`[[track]]`.
 3. {{ReadableStreamDefaultControllerClose|Close}} |processor|.{{MediaStreamTrackProcessor/readable}}.{{ReadableStreamControllerSlot|[[controller]]}}.
-4. {{Queue/dequeue}} all elements in |processor|.`[[queue]]`.
+4. {{List/Empty}} |processor|.`[[queue]]`.
 5. Set |processor|.`[[isClosed]]` to true.
 
 </dd>
