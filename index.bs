@@ -16,6 +16,13 @@ Markup Shorthands: css no, markdown yes
 <pre class=anchors>
 url: https://wicg.github.io/web-codecs/#videoframe; text: VideoFrame; type: interface; spec: WEBCODECS
 url: https://wicg.github.io/web-codecs/#audioframe; text: AudioFrame; type: interface; spec: WEBCODECS
+url: https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack; text: MediaStreamTrack; type: interface; spec: MEDIACAPTURE-STREAMS
+url: https://www.w3.org/TR/mediacapture-streams/#dom-constrainulong; text: ConstrainULong; type: typedef; spec: MEDIACAPTURE-STREAMS
+url: https://www.w3.org/TR/mediacapture-streams/#dom-constraindouble; text: ConstrainDouble; type: typedef; spec: MEDIACAPTURE-STREAMS
+url: https://www.w3.org/TR/mediacapture-streams/#dom-constraindomstring; text: ConstrainDOMString; type: typedef; spec: MEDIACAPTURE-STREAMS
+url: https://www.w3.org/TR/mediacapture-streams/#dom-videoresizemodeenum; text: VideoResizeModeEnum; type: enum; spec: MEDIACAPTURE-STREAMS
+url: https://w3c.github.io/mediacapture-main/#idl-def-VideoResizeModeEnum.user; text: none; for: VideoResizeModeEnum; type: enum; spec: MEDIACAPTURE-STREAMS
+url: https://w3c.github.io/mediacapture-main/#idl-def-VideoResizeModeEnum.right; text: crop-and-scale; for: VideoResizeModeEnum; type: enum; spec: MEDIACAPTURE-STREAMS
 </pre>
 <pre class=biblio>
 {
@@ -27,8 +34,15 @@ url: https://wicg.github.io/web-codecs/#audioframe; text: AudioFrame; type: inte
   "MEDIACAPTURE-SCREEN-SHARE": {
     "href": "https://w3c.github.io/mediacapture-screen-share/",
     "title": "Screen Capture"
+  },
+  "MEDIACAPTURE-STREAMS": {
+    "href": "https://www.w3.org/TR/mediacapture-streams/",
+    "title": "Media Capture and Streams"
   }
 }
+</pre>
+<pre class=link-defaults>
+spec:streams; type:interface; text:WritableStream
 </pre>
 
 # Introduction # {#introduction}
@@ -83,7 +97,7 @@ dictionary MediaStreamTrackProcessorInit {
 };
 </pre>
 
-### Internal slots
+### Internal slots ### {#internal-slots-processor}
 <dl>
 <dt><dfn for=MediaStreamTrackProcessor>`[[track]]`</dfn></dt>
 <dd>Track whose raw data is to be exposed by the {{MediaStreamTrackProcessor}}.</dd>
@@ -91,7 +105,7 @@ dictionary MediaStreamTrackProcessorInit {
 <dd>The maximum number of media frames buffered by the {{MediaStreamTrackProcessor}}.</dd>
 </dl>
 
-### Constructor
+### Constructor ### {#constructor-processor}
 <dfn constructor for=MediaStreamTrackProcessor title="MediaStreamTrackProcessor(init)">
   MediaStreamTrackProcessor(|init|)
 </dfn>
@@ -104,7 +118,7 @@ dictionary MediaStreamTrackProcessorInit {
     internal slot of |processor|.
 4. Return |processor|.
 
-### Attributes
+### Attributes ### {#attributes-processor}
 <dl>
 <dt><dfn for=MediaStreamTrackProcessor>readable</dfn></dt>
 <dd>Allows reading the frames flowing through the {{MediaStreamTrack}} stored
@@ -145,13 +159,13 @@ dictionary MediaStreamTrackGeneratorInit {
 };
 </pre>
 
-### Internal slots
+### Internal slots ### {#internal-slots-generator}
 <dl>
 <dt><dfn for=MediaStreamTrackGenerator>`[[signalTarget]]`</dfn></dt>
 <dd>(Optional) track to which the {{MediaStreamTrackGenerator}} will automatically forward control signals.</dd>
 </dl>
 
-### Constructor
+### Constructor ### {#constructor-generator}
 <dfn constructor for=MediaStreamTrackGenerator title="MediaStreamTrackGenerator(init)">
   MediaStreamTrackGenerator(init)
 </dfn>
@@ -169,7 +183,7 @@ dictionary MediaStreamTrackGeneratorInit {
     to the `[[signalTarget]]` internal slot of |g|.
 6. Return |g|.
 
-### Attributes
+### Attributes ### {#attributes-generator}
 <dl>
 <dt><dfn attribute for=MediaStreamTrackGenerator>writable</dfn></dt>
 <dd>Allows writing media frames the {{MediaStreamTrackGenerator}}, which is
@@ -185,6 +199,207 @@ accessible from JavaScript.
 {{MediaStreamTrackGenerator}}. Control signals are objects of type {{MediaStreamTrackSignal}}.
 </dd>
 </dl>
+
+### Specialization of MediaStreamTrack behavior ### {#generator-as-track}
+A {{MediaStreamTrackGenerator}} is a {{MediaStreamTrack}}. This section adds
+clarifications on how a {{MediaStreamTrackGenerator}} behaves as a
+{{MediaStreamTrack}}.
+
+#### clone #### {#generator-clone}
+The {{MediaStreamTrack/clone}} method on a {{MediaStreamTrackGenerator}}
+returns a new {{MediaStreamTrack}} object whose source is the
+same as the one for the {{MediaStreamTrackGenerator}} being cloned.
+This source is the {{MediaStreamTrackGenerator/writable}} field of
+the {{MediaStreamTrackGenerator}}.
+
+#### stop #### {#generator-stop}
+The {{MediaStreamTrack/stop}} method on a {{MediaStreamTrackGenerator}} stops
+the track. When the last track connected to
+the {{MediaStreamTrackGenerator/writable}} of a {{MediaStreamTrackGenerator}} is
+stopped, its {{MediaStreamTrackGenerator/writable}} is [=WritableStream/closing|closed=].
+
+#### Constrainable properties #### {#generator-constrainable-properties}
+
+The following constrainable properties are defined for video
+{{MediaStreamTrackGenerator}}s and any {{MediaStreamTrack}}s sourced from
+a {{MediaStreamTrackGenerator}}:
+<table>
+  <thead>
+    <tr>
+      <th>
+        Property Name
+      </th>
+      <th>
+        Values
+      </th>
+      <th>
+        Notes
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id="def-constraint-width">
+      <td data-tests="">
+        <dfn>width</dfn>
+      </td>
+      <td>
+        {{ConstrainULong}}
+      </td>
+      <td>
+        As a setting, this is the width, in pixels, of the latest
+        frame delivered by the track.
+        As a capability, `max` MUST reflect the
+        largest width a {{VideoFrame}} may have, and `min`
+        MUST reflect the smallest width a {{VideoFrame}} may have.
+      </td>
+    </tr>
+    <tr id="def-constraint-height">
+      <td data-tests="">
+        <dfn>height</dfn>
+      </td>
+      <td>
+        {{ConstrainULong}}
+      </td>
+      <td>
+        As a setting, this is the height, in pixels, of the latest
+        frame delivered by the track.
+        As a capability, `max` MUST reflect the largest height
+        a {{VideoFrame}} may have, and `min` MUST reflect
+        the smallest height a {{VideoFrame}} may have.
+      </td>
+    </tr>
+    <tr id="def-constraint-frameRate">
+      <td data-tests="">
+        <dfn>frameRate</dfn>
+      </td>
+      <td>
+        {{ConstrainDouble}}
+      </td>
+      <td>
+        As a setting, this is an estimate of the frame rate based on frames
+        recently delivered by the track.
+        As a capability `min` MUST be zero and
+        `max` MUST be the maximum frame rate supported by the system.
+      </td>
+    </tr>
+    <tr id="def-constraint-aspect">
+      <td data-tests="">
+        <dfn>aspectRatio</dfn>
+      </td>
+      <td>
+        {{ConstrainDouble}}
+      </td>
+      <td>
+        As a setting, this is the aspect ratio of the latest frame
+        delivered by the track;
+        this is the width in pixels divided by height in pixels as a
+        double rounded to the tenth decimal place. As a capability,
+        `min` MUST be the
+        smallest aspect ratio supported by a {{VideoFrame}}, and `max` MUST be
+        the largest aspect ratio supported by a {{VideoFrame}}.
+      </td>
+    </tr>
+    <tr id="def-constraint-resizeMode">
+      <td data-tests="">
+        <dfn>resizeMode</dfn>
+      </td>
+      <td>
+        {{ConstrainDOMString}}
+      </td>
+      <td>
+        As a setting, this string should be one of the members of
+        {{VideoResizeModeEnum}}. The value "{{VideoResizeModeEnum/none}}"
+        means that the frames output by the MediaStreamTrack are unmodified
+        versions of the frames written to the
+        {{MediaStreamTrackGenerator/writable}} backing
+        the track, regardless of any constraints.
+        The value "{{VideoResizeModeEnum/crop-and-scale}}" means
+        that the frames output by the MediaStreamTrack may be cropped and/or
+        downscaled versions
+        of the source frames, based on the values of the width, height and
+        aspectRatio constraints of the track.
+        As a capability, the values "{{VideoResizeModeEnum/none}}" and
+        "{{VideoResizeModeEnum/crop-and-scale}}" both MUST be present.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+The {{MediaStreamTrack/applyConstraints}} method applied to a video {{MediaStreamTrack}}
+sourced from a {{MediaStreamTrackGenerator}} supports the properties defined above.
+It can be used, for example, to resize frames or adjust the frame rate of the track.
+Note that these constraints have no effect on the {{VideoFrame}} objects
+written to the {{MediaStreamTrackGenerator/writable}} of a {{MediaStreamTrackGenerator}},
+just on the output of the track on which the constraints have been applied.
+
+The following constrainable properties are defined for audio {{MediaStreamTrack}}s
+sourced from a {{MediaStreamTrackGenerator}}, but in an informational capacity
+only available via {{MediaStreamTrack/getSettings}}. It is not possible to
+reconfigure an audio track sourced by a {{MediaStreamTrackGenerator}} using
+{{MediaStreamTrack/applyConstraints}} in the same way that it is possble to,
+for example, resize the frames of a video track.
+{{MediaStreamTrack/getCapabilities}} MUST return an empty object.
+<table>
+  <thead>
+    <tr>
+      <th>
+        Property Name
+      </th>
+      <th>
+        Values
+      </th>
+      <th>
+        Notes
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id="def-constraint-sampleRate">
+      <td data-tests="">
+        <dfn>sampleRate</dfn>
+      </td>
+      <td>
+        {{ConstrainDouble}}
+      </td>
+      <td>
+        As a setting, this is the sample rate, in samples per second, of the
+        latest {{AudioFrame}} delivered by the track.
+      </td>
+    </tr>
+    <tr id="def-constraint-channelCount">
+      <td data-tests="">
+        <dfn>channelCount</dfn>
+      </td>
+      <td>
+        {{ConstrainULong}}
+      </td>
+      <td>
+        As a setting, this is the number of independent audio channels of the
+        latest {{AudioFrame}} delivered by the track.
+      </td>
+    </tr>
+    <tr id="def-constraint-sampleSize">
+      <td data-tests="">
+        <dfn>sampleSize</dfn>
+      </td>
+      <td>
+        {{ConstrainULong}}
+      </td>
+      <td>
+        As a setting, this is the linear sample size of the latest {{AudioFrame}}
+        delivered by the track.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+#### Events and attributes #### {#generator-events-attributes}
+Events and attributes work the same as for any {{MediaStreamTrack}}.
+It is relevant to note that if the {{MediaStreamTrackGenerator/writable}}
+stream of a {{MediaStreamTrackGenerator}} is closed, all the live
+tracks connected to it, possibly including the {{MediaStreamTrackGenerator}}
+itself, are ended and the `ended` event is fired on them.
+
 
 ## Stream control ## {#stream-control}
 <pre class="idl">
@@ -224,7 +439,7 @@ It is, however, a requirement of this specification that it is possible to opera
 MediaStreamTrackGenerator connected to a MediaStreamTrackProcessor using only the
 Web Platform-exposed signals and without connecting any implicit signalling.
 
-### Implicit signaling
+### Implicit signaling ### {#implicit-signaling}
 A common use case for processors and generators is to connect the media flow from
 a pre-existing platform track (e.g., camera, screen capture) to pre-existing platform sinks
 (e.g., peer connection, media element) with a transformation in between, in a chain like this:
@@ -246,7 +461,6 @@ a generator to a processor (e.g., with a call like
 `generator.readableControl.pipeTo(processor.writableControl`) forwards only
 the Web Platform-exposed signals, but ignores any internal custom signals as there is no
 way for the platform sinks to know what the upstream source is.
-
 
 # Examples # {#examples}
 Consider a face recognition function `detectFace(videoFrame)` that returns a face position
