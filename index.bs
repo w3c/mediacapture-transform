@@ -36,6 +36,7 @@ url: https://www.w3.org/TR/mediacapture-streams/#ends-nostop; text: EndTrack; ty
 url: https://www.w3.org/TR/mediacapture-streams/#dom-overconstrainederror; text: OverconstrainedError; type: typedef; spec: MEDIACAPTURE-STREAMS
 url: https://infra.spec.whatwg.org/#list-empty; text: Empty; for: List; type: typedef; spec: INFRA
 url: https://infra.spec.whatwg.org/#list-remove; text: remove; for: List; type: typedef; spec: INFRA
+url: https://www.w3.org/TR/mediacapture-streams/#set-track-muted; text: SetMuted; type: typedef; spec: MEDIACAPTURE-STREAMS
 </pre>
 <pre class=biblio>
 {
@@ -308,7 +309,8 @@ resources are no longer accessible from JavaScript.
 <pre class="idl">
 interface MediaStreamTrackGenerator : MediaStreamTrack {
     constructor(MediaStreamTrackGeneratorInit init);
-    attribute WritableStream writable;  // VideoFrame or AudioFrame
+    attribute WritableStream writable;
+    undefined setMuted(boolean newState);
 };
 
 dictionary MediaStreamTrackGeneratorInit {
@@ -357,6 +359,21 @@ It is defined by running the following steps.
 
 </dd>
 </dl>
+
+### Methods ### {#generator-methods}
+<dl>
+<dt><dfn method for=MediaStreamTrackGenerator>setMuted()</dfn></dt>
+<dd>Allows muting or unmuting all tracks connected to this
+{{MediaStreamTrackGenerator}}, possibly including the {{MediaStreamTrackGenerator}}
+itself.
+
+When this method is called, the UA MUST execute the following steps, taking
+a boolean |newState| as input:
+1. For each track `t` connected to |generator|, {{SetMuted|set the muted state}} of `t` to |newState|.
+
+The UA MAY at any time automatically {{SetMuted|set the muted state}} of any
+track connected to a {{MediaStreamTrackGenerator}} if it detects absence or
+presence of media data flowing through the track.
 
 ### Specialization of MediaStreamTrack behavior ### {#generator-as-track}
 A {{MediaStreamTrackGenerator}} is a {{MediaStreamTrack}}. This section adds
