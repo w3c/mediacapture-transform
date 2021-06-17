@@ -120,18 +120,25 @@ provided in the {{MediaStreamTrackProcessor}} constructor. However, the
 maximum size of the queue is decided by the UA and can change dynamically,
 but it will not exceed the size requested by the application.
 If the application does not provide a maximum size parameter, the UA is free
-to decide the size of the queue. In all cases the UA is free to decice
-what buffering will be applied by {{MediaStreamTrackProcessor}} as long as
-the number of queued frames does not exceed the maximum requested by the
-user, if any. In all cases frames that are not dropped
-by the {{MediaStreamTrackProcessor}} must be made available to its associated
-{{ReadableStream}} in the order in which they arrive to the
-{{MediaStreamTrackProcessor}}.
+to decide the maximum size of the queue.
+
+When a new frame arrives to the
+{{MediaStreamTrackProcessor}}, if the queue has reached its maximum size,
+the oldest frame will be removed from the queue, and the new frame will be
+added to the queue. This means that for the particular case of a queue
+with a maximum size of 1, if there is a queued frame, it will aways be
+the most recent one.
+
+The UA is also free to remove any frames from the queue at any time. The UA
+may remove frames in order to save resources or to improve performance in
+specific situations. In all cases, frames that are not dropped
+must be made available to the {{ReadableStream}} in the order in which
+they arrive to the {{MediaStreamTrackProcessor}}.
 
 A {{MediaStreamTrackProcessor}} makes frames available to its
 associated {{ReadableStream}} only when a read request has been issued on
 the stream. The idea is to avoid the stream's internal buffering, which
-does not give the UA flexibility to choose the buffering policy.
+does not give the UA enough flexibility to choose the buffering policy.
 
 ### Interface definition ### {#track-processor-interface}
 
@@ -203,7 +210,7 @@ The <dfn>maybeReadFrame</dfn> algorithm is given a |processor| as input. It is d
 
 The <dfn>processorCancel</dfn> algorithm is given a |processor| as input.
 It is defined by running the following steps:
-1. Run the [=processorClose=] algorithm.
+1. Run the [=processorClose=] algorithm with |processor| as parameter.
 3. Return  [=a promise resolved with=] undefined.
 
 The <dfn>processorClose</dfn> algorithm is given a |processor| as input.
@@ -219,7 +226,11 @@ It is defined by running the following steps:
 
 ### Handling interaction with the track ### {#processor-handling-interaction-with-track}
 When the `[[track]]` of a {{MediaStreamTrackProcessor}} |processor| delivers a
-frame to |processor|, the UA MUST execute the following steps:
+frame to |processor|, the UA MUST execute the [=handleNewFrame=] algorithm
+with |processor| as parameter.
+
+The <dfn>handleNewFrame</dfn> algorithm is given a |processor| as input.
+It is defined by running the following steps:
 1. If |processor|.`[[maxBufferSize]]` has a value and |processor|.`[[queue]]` has |processor|.`[[maxBufferSize]]` elements, {{Queue/dequeue}} an item from |processor|.`[[queue]]`.
 2. {{Queue/enqueue}} the new frame in |processor|.`[[queue]]`.
 3. [=Queue a task=] to run the [=maybeReadFrame=] algorithm with |processor| as parameter.
