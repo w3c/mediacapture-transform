@@ -345,7 +345,7 @@ The <dfn>writeFrame</dfn> algorithm is given a |generator| and a |frame| as inpu
 
 <p class="note">
 When the media data is sent to a track, the UA may apply processing
-(e.g., cropping and downscaling) to ensure that the the media data sent
+(e.g., cropping and downscaling) to ensure that the media data sent
 to the track satisfies the track's constraints. Each track may receive a
 different version of the media data depending on its constraints.
 </p>
