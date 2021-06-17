@@ -28,9 +28,12 @@ url: https://infra.spec.whatwg.org/#queue-enqueue; text: enqueue; for: Queue; ty
 url: https://infra.spec.whatwg.org/#queue-dequeue; text: dequeue; for: Queue; type: typedef; spec: INFRA
 url: https://infra.spec.whatwg.org/#list-is-empty; text: empty; for: Queue; type: typedef; spec: INFRA
 url: https://infra.spec.whatwg.org/#booleans; text: Boolean; type: typedef; spec: INFRA
+url: https://www.w3.org/TR/mediacapture-streams/#source-stopped; text: StopSource; type: typedef; spec: MEDIACAPTURE-STREAM
 url: https://www.w3.org/TR/mediacapture-streams/#track-ended; text: TrackEnded; type: typedef; spec: MEDIACAPTURE-STREAMS
 url: https://streams.spec.whatwg.org/#readable-stream-default-controller-close; text: ReadableStreamDefaultControllerClose; type: typedef; spec: STREAMS
 url: https://streams.spec.whatwg.org/#readablestream-controller; text: ReadableStreamControllerSlot; type: typedef; spec: STREAMS
+url: https://www.w3.org/TR/mediacapture-streams/#ends-nostop; text: EndTrack; type: typedef; spec: MEDIACAPTURE-STREAMS
+url: https://www.w3.org/TR/mediacapture-streams/#dom-overconstrainederror; text: OverconstrainedError; type: typedef; spec: MEDIACAPTURE-STREAMS
 url: https://infra.spec.whatwg.org/#list-empty; text: Empty; for: List; type: typedef; spec: INFRA
 url: https://infra.spec.whatwg.org/#list-remove; text: remove; for: List; type: typedef; spec: INFRA
 </pre>
@@ -56,7 +59,16 @@ url: https://infra.spec.whatwg.org/#list-remove; text: remove; for: List; type: 
   "STREAMS": {
     "href": "https://streams.spec.whatwg.org",
     "title": "Streams"
+  },
+  "WEBAUDIO": {
+    "href": "https://www.w3.org/TR/webaudio/",
+    "title": "Web Audio API"
+  },
+  "WEBTRANSPORT": {
+    "href": "https://www.w3.org/TR/webtransport/",
+    "title": "WebTransport"
   }
+
 }
 </pre>
 <pre class=link-defaults>
@@ -75,7 +87,7 @@ including, but not limited to:
 These use cases further require that processing can be done in worker
 threads (requirement N23-N24).
 
-This specification gives an interface inspired by [[WEBCODECS]] to
+This specification gives an interface based on [[WEBCODECS]] and [[STREAMS]] to
 provide access to such functionality.
 
 This specification provides access to raw media,
@@ -85,7 +97,29 @@ decoder part of a codec. The processed media can be consumed by any destination
 that can take a MediaStreamTrack, including HTML &lt;video&gt; and &lt;audio&gt; tags,
 RTCPeerConnection, canvas or MediaRecorder.
 
-# Terminology # {#terminology}
+This specification explicitly aims to support the following use cases:
+- *Video processing*: This is the "Funny Hats" use case, where the input is a single video track and the output is a transformed video track.
+- *Audio processing*: This is the equivalent of the video processing use case, but for audio tracks. This use case overlaps partially with the {{AudioWorklet}} interface, but the model provided by this specification differs in significant ways:
+    - Pull-based programming model, as opposed to {{AudioWorklet}}'s clock-based model. This means that processing of each single block of audio data does not have a set time budget.
+    - Offers direct access to the data and metadata from the original {{MediaStreamTrack}}. In particular, timestamps come directly from the track as opposed to an {{AudioContext}}.
+    - Easier integration with video processing by providing the same API and programming model and allowing both to run on the same scope.
+    - Does not run on a real-time thread. This means that the model is not suitable for applications with strong low-latency requirements.
+
+    These differences make the model provided by this specification more
+    suitable than {{AudioWorklet}} for processing that requires more tolerance
+    to transient CPU spikes, better integration with video
+    {{MediaStreamTrack}}s, access to track metadata (e.g., timestamps), but
+    not strong low-latency requirements such as local audio rendering.
+
+    An example of this would be <a href="https://arxiv.org/abs/1804.03619">
+    audio-visual speech separation</a>, which can be used to combine the video
+    and audio tracks from a speaker on the sender side of a video call and
+    remove noise not coming from the speaker (i.e., the "Noisy cafeteria" case).
+    Other examples that do not require integration with video but can benefit
+    from the model include echo detection and other forms of ML-based noise
+    cancellation.
+  - *Multi-source processing*: In this use case, two or more tracks are combined into one. For example, a presentation containing a live weather map and a camera track with the speaker can be combined to produce a weather report application. Audio-visual speech separation, referenced above, is another case of multi-source processing.
+  - *Custom audio or video sink*: In this use case, the purpose is not producing a processed {{MediaStreamTrack}}, but to consume the media in a different way. For example, an application could use [[WEBCODECS]] and [[WEBTRANSPORT]] to create an {{RTCPeerConnection}}-like sink, but using different codec configuration and networking protocols.
 
 # Specification # {#specification}
 
@@ -145,7 +179,7 @@ does not give the UA enough flexibility to choose the buffering policy.
 <pre class="idl">
 interface MediaStreamTrackProcessor {
     constructor(MediaStreamTrackProcessorInit init);
-    attribute ReadableStream readable;  // VideoFrame or AudioFrame
+    attribute ReadableStream readable;
 };
 
 dictionary MediaStreamTrackProcessorInit {
@@ -194,7 +228,7 @@ application that have not yet been handled.
 in the `[[track]]` internal slot. This attribute is created the first time it is invoked
 according to the following steps:
 1. Initialize [=this=].{{MediaStreamTrackProcessor/readable}} to be a new {{ReadableStream}}.
-2. <a dfn for="ReadableStream">Set up</a> [=this=].{{MediaStreamTrackProcessor/readable}} with its [=ReadableStream/set up/pullAlgorithm=] set to [=processorPull=] with |this| as parameter, [=ReadableStream/set up/cancelAlgorithm=] set to [=processorCancel=] with |this| as parameter, and [=ReadableStream/set up/highWatermark=] set to 0.
+2. <a dfn for="ReadableStream">Set up</a> [=this=].{{MediaStreamTrackProcessor/readable}} with its [=ReadableStream/set up/pullAlgorithm=] set to [=processorPull=] with [=this=] as parameter, [=ReadableStream/set up/cancelAlgorithm=] set to [=processorCancel=] with [=this=] as parameter, and [=ReadableStream/set up/highWatermark=] set to 0.
 
 The <dfn>processorPull</dfn> algorithm is given a |processor| as input. It is defined by the following steps:
 1. Increment the value of the |processor|.`[[numPendingReads]]` by 1.
@@ -250,7 +284,27 @@ When the `[[track]]` of a {{MediaStreamTrackProcessor}} |processor|
 {{TrackEnded|ends}}, the [=processorClose=] algorithm must be
 executed with |processor| as parameter.
 
-## MediaStreamTrackGenerator interface ## {#track-generator}
+## MediaStreamTrackGenerator ## {#generator}
+A {{MediaStreamTrackGenerator}} allows the creation of a {{WritableStream}}
+that acts as a {{MediaStreamTrack}} source in the
+<a href="https://www.w3.org/TR/mediacapture-streams/#the-model-sources-sinks-constraints-and-settings">
+MediaStream model</a>. Since the model does not expose sources directly
+but through the tracks connected to it, a {{MediaStreamTrackGenerator}}
+is also a track connected to its {{WritableStream}} source. Further tracks
+connected to the same {{WritableStream}} can be created using the
+{{MediaStreamTrack/clone}} method. The {{WritableStream}} source is
+exposed as the {{MediaStreamTrackGenerator/writable}} field of
+{{MediaStreamTrackGenerator}}.
+
+Similarly to {{MediaStreamTrackProcessor}}, the {{WritableStream}} of
+an audio {{MediaStreamTrackGenerator}} accepts {{AudioData}} objects,
+and a video {{MediaStreamTrackGenerator}} accepts {{VideoFrame}} objects.
+When a {{VideoFrame}} or {{AudioData}} object is written to
+{{MediaStreamTrackGenerator/writable}},
+the frame's `close()` method is automatically invoked, so that its internal
+resources are no longer accessible from JavaScript.
+
+### Interface definition ### {#generator-interface}
 <pre class="idl">
 interface MediaStreamTrackGenerator : MediaStreamTrack {
     constructor(MediaStreamTrackGeneratorInit init);
@@ -262,7 +316,7 @@ dictionary MediaStreamTrackGeneratorInit {
 };
 </pre>
 
-### Constructor ### {#constructor-generator}
+### Constructor ### {#generator-constructor}
 <dfn constructor for=MediaStreamTrackGenerator title="MediaStreamTrackGenerator(init)">
   MediaStreamTrackGenerator(init)
 </dfn>
@@ -273,16 +327,34 @@ dictionary MediaStreamTrackGeneratorInit {
     with |init|.{{MediaStreamTrackGeneratorInit/kind}}.
 4. Return |g|.
 
-### Attributes ### {#attributes-generator}
+### Attributes ### {#generator-attributes}
 <dl>
 <dt><dfn attribute for=MediaStreamTrackGenerator>writable</dfn></dt>
-<dd>Allows writing media frames the {{MediaStreamTrackGenerator}}, which is
-itself a {{MediaStreamTrack}}. If the {{MediaStreamTrack/kind}} attribute is `"audio"`,
-the stream will accept {{AudioData}} objects and fail with any other type. If
-{{MediaStreamTrack/kind}} is `"video"`, the stream will accept {{VideoFrame}} objects
-and fail with any other type. When a frame is written to {{MediaStreamTrackGenerator/writable}},
-the frame's `close()` method is automatically invoked, so that its internal resources are no longer
-accessible from JavaScript.
+<dd>Allows writing media frames to the {{MediaStreamTrackGenerator}}, which is
+itself a {{MediaStreamTrack}}. When this attribute is accessed for the first time,
+it MUST be initialized with the following steps:
+1. Initialize [=this=].{{MediaStreamTrackGenerator/writable}} to be a new {{WritableStream}}.
+2. <a dfn for="WritableStream">Set up</a> [=this=].{{MediaStreamTrackGenerator/writable}}, with its [=WritableStream/set up/writeAlgorithm=] set to [=writeFrame=] with |this| as parameter, with [=WritableStream/set up/closeAlgorithm=] set to [=closeWritable=] with |this| as parameter and [=WritableStream/set up/abortAlgorithm=] set to [=closeWritable=] with |this| as parameter.
+
+The <dfn>writeFrame</dfn> algorithm is given a |generator| and a |frame| as input. It is defined by running the following steps:
+1. If |generator|.{{MediaStreamTrack/kind}} equals `video` and |frame| is not a {{VideoFrame}} object, return [=a promise rejected with=] a {{TypeError}}.
+2. If |generator|.{{MediaStreamTrack/kind}} equals `audio` and |frame| is not an {{AudioData}} object, return [=a promise rejected with=] a {{TypeError}}.
+3. Send the media data backing |frame| to all live tracks connected to |generator|, possibly including |generator| itself.
+4. Invoke the `close` method of |frame|.
+5. Return  [=a promise resolved with=] undefined.
+
+<p class="note">
+When the media data is sent to a track, the UA may apply processing
+(e.g., cropping and downscaling) to ensure that the media data sent
+to the track satisfies the track's constraints. Each track may receive a
+different version of the media data depending on its constraints.
+</p>
+
+The <dfn>closeWritable</dfn> algorithm is given a |generator| as input.
+It is defined by running the following steps.
+1. For each track `t` connected to |generator|, {{EndTrack|end}} `t`.
+2. Return [=a promise resolved with=] undefined.
+
 </dd>
 </dl>
 
@@ -304,7 +376,7 @@ the track. When the last track connected to
 the {{MediaStreamTrackGenerator/writable}} of a {{MediaStreamTrackGenerator}}
 ends, its {{MediaStreamTrackGenerator/writable}} is [=WritableStream/closing|closed=].
 
-#### Constraintable properties #### {#generator-constrainable-properties}
+#### Constrainable properties #### {#generator-constrainable-properties}
 
 The following constrainable properties are defined for video
 {{MediaStreamTrackGenerator}}s and any {{MediaStreamTrack}}s sourced from
@@ -333,7 +405,7 @@ a {{MediaStreamTrackGenerator}}:
       </td>
       <td>
         As a setting, this is the width, in pixels, of the latest
-        frame delivered by the track.
+        frame received by the track.
         As a capability, `max` MUST reflect the
         largest width a {{VideoFrame}} may have, and `min`
         MUST reflect the smallest width a {{VideoFrame}} may have.
@@ -348,7 +420,7 @@ a {{MediaStreamTrackGenerator}}:
       </td>
       <td>
         As a setting, this is the height, in pixels, of the latest
-        frame delivered by the track.
+        frame received by the track.
         As a capability, `max` MUST reflect the largest height
         a {{VideoFrame}} may have, and `min` MUST reflect
         the smallest height a {{VideoFrame}} may have.
@@ -363,7 +435,7 @@ a {{MediaStreamTrackGenerator}}:
       </td>
       <td>
         As a setting, this is an estimate of the frame rate based on frames
-        recently delivered by the track.
+        recently received by the track.
         As a capability `min` MUST be zero and
         `max` MUST be the maximum frame rate supported by the system.
       </td>
@@ -417,6 +489,13 @@ It can be used, for example, to resize frames or adjust the frame rate of the tr
 Note that these constraints have no effect on the {{VideoFrame}} objects
 written to the {{MediaStreamTrackGenerator/writable}} of a {{MediaStreamTrackGenerator}},
 just on the output of the track on which the constraints have been applied.
+Note also that, since a {{MediaStreamTrackGenerator}} can in principle produce
+media data with any setting for the supported constrainable properties,
+an {{MediaStreamTrack/applyConstraints}} call on a track
+backed by a {{MediaStreamTrackGenerator}} will generally not fail with
+{{OverconstrainedError}} unless the given constraints
+are outside the system-supported range, as reported by
+{{MediaStreamTrack/getCapabilities}}.
 
 The following constrainable properties are defined for audio {{MediaStreamTrack}}s
 sourced from a {{MediaStreamTrackGenerator}}, but in an informational capacity
@@ -487,16 +566,19 @@ tracks connected to it, possibly including the {{MediaStreamTrackGenerator}}
 itself, are ended and the `ended` event is fired on them.
 
 # Examples # {#examples}
+## Video Processing
 Consider a face recognition function `detectFace(videoFrame)` that returns a face position
 (in some format), and a manipulation function `blurBackground(videoFrame, facePosition)` that
-returns a new VideoFrame similar to the given `videoFrame`, but with the non-face parts blurred.
+returns a new VideoFrame similar to the given `videoFrame`, but with the
+non-face parts blurred. The example also shows the video before and after
+effects on video elements.
 
 <pre class="example">
-let stream = await getUserMedia({video:true});
-let videoTrack = stream.getVideoTracks()[0];
-let trackProcessor = new MediaStreamTrackProcessor(videoTrack);
-let trackGenerator = new MediaStreamTrackGenerator();
-let transformer = new TransformStream({
+const stream = await getUserMedia({video:true});
+const videoTrack = stream.getVideoTracks()[0];
+const processor = new MediaStreamTrackProcessor({track: videoTrack});
+const generator = new MediaStreamTrackGenerator({kind: 'video'});
+const transformer = new TransformStream({
    async transform(videoFrame, controller) {
       let facePosition = await detectFace(videoFrame);
       let newFrame = blurBackground(videoFrame, facePosition);
@@ -505,11 +587,159 @@ let transformer = new TransformStream({
   }
 });
 
-// After this, trackGenerator can be assigned to any sink such as a
-// peer connection, or media element.
-trackProcessor.readable
-    .pipeThrough(transformer)
-    .pipeTo(trackGenerator.writable);
+processor.readable.pipeThrough(transformer).pipeTo(generator.writable);
+const videoBefore = document.getElementById('video-before');
+const videoAfter = document.getElementById('video-after');
+videoBefore.srcObject = stream;
+const streamAfter = new MediaStream([generator]);
+videoAfter.srcObject = streamAfter;
+</pre>
+
+The same example using a worker:
+<pre class="example">
+// main.js
+const stream = await getUserMedia({video:true});
+const videoTrack = stream.getVideoTracks()[0];
+const processor = new MediaStreamTrackProcessor({track: videoTrack});
+const generator = new MediaStreamTrackGenerator({kind: 'video'});
+const worker = new Worker('worker.js');
+worker.postMessage(
+  {readable: processor.readable, writable: generator.writable},
+  [processor.readable, generator.writable]);
+const videoBefore = document.getElementById('video-before');
+const videoAfter = document.getElementById('video-after');
+videoBefore.srcObject = stream;
+const streamAfter = new MediaStream([generator]);
+videoAfter.srcObject = streamAfter;
+
+// worker.js
+self.onmessage = async function(e) {
+  const transformer = new TransformStream({
+    async transform(videoFrame, controller) {
+        const facePosition = await detectFace(videoFrame);
+        const newFrame = blurBackground(videoFrame, facePosition);
+        videoFrame.close();
+        controller.enqueue(newFrame);
+    }
+  });
+
+  e.data.readable.pipeThrough(transformer).pipeTo(e.data.writable);
+}
+</pre>
+
+## Multi-source processing
+Suppose there is a model for audio-visual speech separation, represented
+by a class `AudioVisualModel` with a method `updateVideo(videoFrame)` that
+updates the internal state of the model upon a new video frame, a
+method `getSpeechData(audioData)` that returns a noise-canceled {{AudioData}}
+given an input raw {{AudioData}}, and a `close()` method that
+releases resources used internally by the model.
+
+<pre class="example">
+// main.js
+const stream = await getUserMedia({audio:true, video:true});
+const audioTrack = stream.getAudioTracks()[0];
+const videoTrack = stream.getVideoTracks()[0];
+const audioProcessor = new MediaStreamTrackProcessor({track: audioTrack});
+const videoProcessor = new MediaStreamTrackProcessor({track: videoTrack});
+const audioGenerator = new MediaStreamTrackGenerator({kind: 'audio'});
+const worker = new Worker('worker.js');
+worker.postMessage({
+    audioReadable: audioProcessor.readable,
+    videoReadable: videoProcessor.readable,
+    audioWritable: audioGenerator.writable
+  }, [
+    audioProcessor.readable,
+    videoProcessor.readable,
+    audioGenerator.writable
+  ]);
+
+// worker.js
+self.onmessage = async function(e) {
+  const model = new AudioVideoModel();
+  const audioTransformer = new TransformStream({
+    async transform(audioData, controller) {
+        const speechData = model.getSpeechData(audioData);
+        audioData.close();
+        controller.enqueue(speechData);
+    }
+  });
+
+  const audioPromise = e.data.audioReadable
+      .pipeThrough(audioTransformer)
+      .pipeTo(e.data.audioWritable);
+
+  const videoReader = e.data.videoReadable.getReader();
+  const videoPromise = new Promise(async resolve => {
+    while (true) {
+      const result = await videoReader.read();
+      if (result.done) {
+        break;
+      } else {
+        model.updateVideo(result.value);
+        result.value.close();
+      }
+    }
+    resolve();
+  }
+
+  await Promise.all([audioPromise, videoPromise]);
+  model.close();
+}
+</pre>
+
+An example that instead allows video effects that are influenced by
+speech would be similar, except that the roles of audio and video would be
+reversed.
+
+## Custom sink
+Suppose there are `sendAudioToNetwork(audioData)`  and
+`sendVideoToNetwork(videoFrame)` functions that respectively send {{AudioData}}
+and {{VideoFrame}} objects to a custom network sink, together with a
+`setupNetworkSinks()` function to set up the sinks and a
+`cleanupNetworkSinks()` function to release resources used by the sinks.
+
+<pre class="example">
+// main.js
+const stream = await getUserMedia({audio:true, video:true});
+const audioTrack = stream.getAudioTracks()[0];
+const videoTrack = stream.getVideoTracks()[0];
+const audioProcessor = new MediaStreamTrackProcessor({track: audioTrack});
+const videoProcessor = new MediaStreamTrackProcessor({track: videoTrack});
+const worker = new Worker('worker.js');
+worker.postMessage({
+    audioReadable: audioProcessor.readable,
+    videoReadable: videoProcessor.readable,
+  }, [
+    audioProcessor.readable,
+    videoProcessor.readable,
+  ]);
+
+// worker.js
+function writeToSink(readable, sinkFunction) {
+  return new Promise(async resolve => {
+    while (true) {
+      const result = await readable.read();
+      if (result.done) {
+        break;
+      } else {
+        sinkFunction(result.value);
+        result.value.close();
+      }
+    }
+    resolve();
+  });
+}
+
+self.onmessage = async function(e) {
+  setupNetworkSinks();
+  const audioReader = e.data.audioReadable.getReader();
+  const videoReader = e.data.videoReadable.getReader();
+  const audioPromise = writeToSink(audioReader, sendAudioToNetwork);
+  const videoPromise = writeToSink(videoReader, sendVideoToNetwork);
+  await Promise.all([audioPromise, videoPromise]);
+  cleanupNetworkSinks();
+}
 </pre>
 
 # Security and Privacy considerations # {#security-considerations}
@@ -536,7 +766,7 @@ rely on explicit use authorization via permission dialogs (see
 while element capture and {{MediaStreamTrackGenerator}}
 rely on the same-origin policy.
 A potential issue with {{MediaStreamTrackProcessor}} is resource exhaustion.
-For example, a site might hold on too many open {{VideoFrame}} objects
+For example, a site might hold on to too many open {{VideoFrame}} objects
 and deplete a system-wide pool of GPU-memory-backed frames. UAs can
 mitigate this risk by limiting the number of pool-backed frames a site can
 hold. This can be achieved by reducing the maximum number of buffered frames
