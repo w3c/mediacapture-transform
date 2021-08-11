@@ -746,7 +746,7 @@ self.onmessage = async function(e) {
 
 This section is informative.
 
-## Use with multiple consumers ##
+## Use with multiple consumers
 
 There are use cases where the programmer may desire that a single stream of frames
 is consumed by multiple consumers. However, the standard tee() operation is problematic
