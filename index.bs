@@ -754,7 +754,7 @@ in this context:
 
  * It defeats the backpressure mechanism that guards against excessive queueing
  * It creates multiple links to the same buffers, meaning that the question of which
-   consumer gets to destroy() the buffer is a difficult one to address
+consumer gets to destroy() the buffer is a difficult one to address
 
 Therefore, the use of tee() with Streams containing media should only be done when
 fully understanding the implications. Instead, custom elements for splitting streams
@@ -768,21 +768,21 @@ When both branches want to do further processing, the correct way of splitting t
 depends on context:
 
  * If both branches require the ability to dispose of the frames, clone() the frame
-   and enqueue distinct copies in both queues. This corresponds to the function
-   ReadableStreamTee(stream, cloneForBranch2=true).
+and enqueue distinct copies in both queues. This corresponds to the function
+ReadableStreamTee(stream, cloneForBranch2=true).
 
  * If one branch requires all frames, and the other branch tolerates dropped frames,
-   enqueue buffers in the all-frames-required stream and use the backpressure signal
-   from that stream to stop reading from the source. If backpressure signal from the
-   other stream indicates room, enqueue the same frame in that queue too.
+enqueue buffers in the all-frames-required stream and use the backpressure signal
+from that stream to stop reading from the source. If backpressure signal from the
+other stream indicates room, enqueue the same frame in that queue too.
 
  * If neither stream tolerates dropped frames, use the combined backpressure signal
-   to stop reading from the source. In this case, frames will be processed in
-   lockstep if the buffer sizes are both 1.
+to stop reading from the source. In this case, frames will be processed in
+lockstep if the buffer sizes are both 1.
 
  * If one branch disposes of the frames, and the other branch does not, and it is
-   OK for the incoming stream to be stalled only when the underlying
-   buffer pool allocated to the process is exhausted, standard tee() may be used.
+OK for the incoming stream to be stalled only when the underlying
+buffer pool allocated to the process is exhausted, standard tee() may be used.
 
 # Security and Privacy considerations # {#security-considerations}
 
