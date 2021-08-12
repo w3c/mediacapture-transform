@@ -755,6 +755,21 @@ is consumed by multiple consumers.
 Examples include the case where the result of a background blurring function should
 be both displayed in a self-view and encoded using a {{VideoEncoder}}.
 
+For cases where both consumers are consuming unprocessed frames, and synchronization
+is not desired, instantianting multiple {{MediaStreamTrackProcessor}} objects is a robust solution.
+
+For cases where both consumers intend to convert the result of a processing step into a
+{{MediaStreamTrack}}
+using a {{MediaStreamTrackGenerator}}, for example when feeding a processed stream
+to both a &lt;video&gt& tag and an {{RTCPeerConnection}}, attaching the resulting {{MediaStreamTrack}}
+to multiple sinks may be the most appropriate mechanism.
+
+For cases where the downstream processing takes frames, not streams, the frames can
+be cloned as needed and sent off to the downstream processing; "clone" is a cheap operation.
+
+When the stream is the output of some processing, and both branches need a Stream object
+to do further processing, one needs a function that produces two streams from one stream.
+
 However, the standard tee() operation is problematic
 in this context:
 
@@ -766,23 +781,10 @@ Therefore, the use of tee() with Streams containing media should only be done wh
 fully understanding the implications. Instead, custom elements for splitting streams
 more appropriate to the use case should be used.
 
-For cases where both consumers are consuming unprocessed frames, and synchronization
-is not desired, instantianting multiple {{MediaStreamTrackProcessor}} objects is a robust solution.
-
-For cases where both consumers intend to convert the result of a processing step into a
-{{MediaStreamTrack}}
-using a {{MediaStreamTrackGenerator}}, attaching the resulting {{MediaStreamTrack}} to
-multiple sinks may be the most appropriate mechanism.
-
-For cases where the downstream processing takes frames, not streams, the frames can
-be cloned as needed and sent off to the downstream processing; "clone" is a cheap operation.
-
-When the stream is the output of some processing, and both branches need a Stream object
-to do further processing, the correct way of splitting the stream depends on context:
-
 *   If both branches require the ability to dispose of the frames, clone() the frame
     and enqueue distinct copies in both queues. This corresponds to the function
-    ReadableStreamTee(stream, cloneForBranch2=true).
+    ReadableStreamTee(stream, cloneForBranch2=true). Then choose one of the
+    alternatives below.
 
 *   If one branch requires all frames, and the other branch tolerates dropped frames,
     enqueue buffers in the all-frames-required stream and use the backpressure signal
@@ -793,8 +795,7 @@ to do further processing, the correct way of splitting the stream depends on con
     to stop reading from the source. In this case, frames will be processed in
     lockstep if the buffer sizes are both 1.
 
-*   If one branch disposes of the frames, and the other branch does not, and it is
-    OK for the incoming stream to be stalled only when the underlying
+*   If it is OK for the incoming stream to be stalled only when the underlying
     buffer pool allocated to the process is exhausted, standard tee() may be used.
 
 # Security and Privacy considerations # {#security-considerations}
