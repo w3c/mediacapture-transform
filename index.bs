@@ -774,8 +774,11 @@ For cases where both consumers intend to convert the result of a processing step
 using a {{MediaStreamTrackGenerator}}, attaching the resulting {{MediaStreamTrack}} to
 multiple sinks may be the most appropriate mechanism.
 
-When the stream is the output of some processing, and both branches want to do further processing,
-the correct way of splitting the stream depends on context:
+For cases where the downstream processing takes frames, not streams, the frames can
+be cloned as needed and sent off to the downstream processing; "clone" is a cheap operation.
+
+When the stream is the output of some processing, and both branches need a Stream object
+to do further processing, the correct way of splitting the stream depends on context:
 
 *   If both branches require the ability to dispose of the frames, clone() the frame
     and enqueue distinct copies in both queues. This corresponds to the function
