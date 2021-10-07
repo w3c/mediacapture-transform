@@ -178,6 +178,7 @@ does not give the UA enough flexibility to choose the buffering policy.
 ### Interface definition ### {#track-processor-interface}
 
 <pre class="idl">
+[Exposed=Window,DedicatedWorker]
 interface MediaStreamTrackProcessor {
     constructor(MediaStreamTrackProcessorInit init);
     attribute ReadableStream readable;
@@ -307,6 +308,7 @@ resources are no longer accessible from JavaScript.
 
 ### Interface definition ### {#generator-interface}
 <pre class="idl">
+[Exposed=Window,DedicatedWorker]
 interface MediaStreamTrackGenerator : MediaStreamTrack {
     constructor(MediaStreamTrackGeneratorInit init);
     attribute WritableStream writable;  // VideoFrame or AudioFrame
@@ -741,7 +743,52 @@ self.onmessage = async function(e) {
   await Promise.all([audioPromise, videoPromise]);
   cleanupNetworkSinks();
 }
+
 </pre>
+Example using transfer of the MediaStreamTrack:
+<pre class="example">
+// main.js
+const stream = await getUserMedia({audio:true, video:true});
+const audioTrack = stream.getAudioTracks()[0];
+const videoTrack = stream.getVideoTracks()[0];
+const worker = new Worker('worker.js');
+worker.postMessage({
+    audioTrack: audioTrack,
+    videoTrack: videoTrack,
+  }, [
+    audioTrack, videoTrack
+  ]);
+
+// worker.js
+function writeToSink(readable, sinkFunction) {
+  return new Promise(async resolve => {
+    while (true) {
+      const result = await readable.read();
+      if (result.done) {
+        break;
+      } else {
+        sinkFunction(result.value);
+        result.value.close();
+      }
+    }
+    resolve();
+  });
+}
+
+self.onmessage = async function(e) {
+  setupNetworkSinks();
+  const audioProcessor = new MediaStreamTrackProcessor({track: e.data.audioTrack});
+  const videoProcessor = new MediaStreamTrackProcessor({track: e.data.videoTrack});
+  const audioReader = audioProcessor.readable.getReader();
+  const videoReader = videoProcessor.readable.getReader();
+  const audioPromise = writeToSink(audioReader, sendAudioToNetwork);
+  const videoPromise = writeToSink(videoReader, sendVideoToNetwork);
+  await Promise.all([audioPromise, videoPromise]);
+  cleanupNetworkSinks();
+}
+
+</pre>
+
 
 # Implementation advice # {#implementation-advice}
 
