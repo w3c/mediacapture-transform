@@ -695,7 +695,7 @@ An example that instead allows video effects that are influenced by
 speech would be similar, except that the roles of audio and video would be
 reversed.
 
-## Custom sink ##
+## Custom sink
 Suppose there are `sendAudioToNetwork(audioData)`  and
 `sendVideoToNetwork(videoFrame)` functions that respectively send {{AudioData}}
 and {{VideoFrame}} objects to a custom network sink, together with a
@@ -779,8 +779,8 @@ self.onmessage = async function(e) {
   setupNetworkSinks();
   const audioProcessor = new MediaStreamTrackProcessor({track: e.data.audioTrack});
   const videoProcessor = new MediaStreamTrackProcessor({track: e.data.videoTrack});
-  const audioReader = e.data.audioReadable.getReader();
-  const videoReader = e.data.videoReadable.getReader();
+  const audioReader = audioProcessor.readable.getReader();
+  const videoReader = videoProcessor.readable.getReader();
   const audioPromise = writeToSink(audioReader, sendAudioToNetwork);
   const videoPromise = writeToSink(videoReader, sendVideoToNetwork);
   await Promise.all([audioPromise, videoPromise]);
