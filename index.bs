@@ -404,7 +404,7 @@ sourced from a {{VideoTrackSource}} ends, that {{VideoTrackSource}}'s
 #### Constrainable properties #### {#generator-constrainable-properties}
 
 The following constrainable properties are defined for any {{MediaStreamTrack}}s sourced from
-a {{VideoTrackGenerator}}:
+a {{VideoTrackSource}}:
 <table>
   <thead>
     <tr>
@@ -493,7 +493,7 @@ a {{VideoTrackGenerator}}:
         {{VideoResizeModeEnum}}. The value "{{VideoResizeModeEnum/none}}"
         means that the frames output by the MediaStreamTrack are unmodified
         versions of the frames written to the
-        {{VideoTrackGenerator/writable}} backing
+        {{VideoTrackSource/writable}} backing
         the track, regardless of any constraints.
         The value "{{VideoResizeModeEnum/crop-and-scale}}" means
         that the frames output by the MediaStreamTrack may be cropped and/or
@@ -508,23 +508,23 @@ a {{VideoTrackGenerator}}:
 </table>
 
 The {{MediaStreamTrack/applyConstraints}} method applied to a video {{MediaStreamTrack}}
-sourced from a {{VideoTrackGenerator}} supports the properties defined above.
+sourced from a {{VideoTrackSource}} supports the properties defined above.
 It can be used, for example, to resize frames or adjust the frame rate of the track.
 Note that these constraints have no effect on the {{VideoFrame}} objects
-written to the {{VideoTrackGenerator/writable}} of a {{VideoTrackGenerator}},
+written to the {{VideoTrackSource/writable}} of a {{VideoTrackSource}},
 just on the output of the track on which the constraints have been applied.
-Note also that, since a {{VideoTrackGenerator}} can in principle produce
+Note also that, since a {{VideoTrackSource}} can in principle produce
 media data with any setting for the supported constrainable properties,
 an {{MediaStreamTrack/applyConstraints}} call on a track
-backed by a {{VideoTrackGenerator}} will generally not fail with
+backed by a {{VideoTrackSource}} will generally not fail with
 {{OverconstrainedError}} unless the given constraints
 are outside the system-supported range, as reported by
 {{MediaStreamTrack/getCapabilities}}.
 
 #### Events and attributes #### {#generator-events-attributes}
 Events and attributes work the same as for any {{MediaStreamTrack}}.
-It is relevant to note that if the {{VideoTrackGenerator/writable}}
-stream of a {{VideoTrackGenerator}} is closed, all the live
+It is relevant to note that if the {{VideoTrackSource/writable}}
+stream of a {{VideoTrackSource}} is closed, all the live
 tracks connected to it are ended and the `ended` event is fired on them.
 
 # Examples # {#examples}
@@ -539,7 +539,7 @@ effects on video elements.
 const stream = await getUserMedia({video:true});
 const videoTrack = stream.getVideoTracks()[0];
 const processor = new MediaStreamTrackProcessor({track: videoTrack});
-const generator = new VideoTrackGenerator();
+const generator = new VideoTrackSource();
 const transformer = new TransformStream({
    async transform(videoFrame, controller) {
       let facePosition = await detectFace(videoFrame);
@@ -563,7 +563,7 @@ The same example using a worker:
 const stream = await getUserMedia({video:true});
 const videoTrack = stream.getVideoTracks()[0];
 const processor = new MediaStreamTrackProcessor({track: videoTrack});
-const generator = new VideoTrackGenerator();
+const generator = new VideoTrackSource();
 const worker = new Worker('worker.js');
 worker.postMessage(
   {readable: processor.readable, writable: generator.writable},
@@ -607,7 +607,7 @@ is not desired, instantianting multiple {{MediaStreamTrackProcessor}} objects is
 
 For cases where both consumers intend to convert the result of a processing step into a
 {{MediaStreamTrack}}
-using a {{VideoTrackGenerator}}, for example when feeding a processed stream
+using a {{VideoTrackSource}}, for example when feeding a processed stream
 to both a &lt;video&gt& tag and an {{RTCPeerConnection}}, attaching the resulting {{MediaStreamTrack}}
 to multiple sinks may be the most appropriate mechanism.
 
@@ -648,8 +648,8 @@ more appropriate to the use case should be used.
 # Security and Privacy considerations # {#security-considerations}
 
 This API defines a {{MediaStreamTrack}} source and a {{MediaStreamTrack}} sink.
-The security and privacy of the source ({{VideoTrackGenerator}}) relies
-on the same-origin policy. That is, the data {{VideoTrackGenerator}} can
+The security and privacy of the source ({{VideoTrackSource}}) relies
+on the same-origin policy. That is, the data {{VideoTrackSource}} can
 make available in the form of a {{MediaStreamTrack}} must be visible to
 the document before a {{VideoFrame}} or {{AudioData}} object can be constructed
 and pushed into the {{MediaStreamTrackGenerator}}. Any attempt to create
@@ -666,7 +666,7 @@ of {{MediaStreamTrackProcessor}} relies on the security and privacy of the
 is connected. For example, camera, microphone and screen-capture tracks
 rely on explicit use authorization via permission dialogs (see
 [[MEDIACAPTURE-STREAMS]] and [[MEDIACAPTURE-SCREEN-SHARE]]),
-while element capture and {{VideoTrackGenerator}}
+while element capture and {{VideoTrackSource}}
 rely on the same-origin policy.
 
 A potential issue with {{MediaStreamTrackProcessor}} is resource exhaustion.
@@ -677,7 +677,7 @@ hold. This can be achieved by reducing the maximum number of buffered frames
 and by refusing to deliver more frames to {{MediaStreamTrackProcessor/readable}}
 once the budget limit is reached. Accidental exhaustion is also mitigated by
 automatic closing of {{VideoFrame}} and {{AudioData}} objects once they
-are written to a {{VideoTrackGenerator}}.
+are written to a {{VideoTrackSource}}.
 
 # Backwards compatibility with earlier proposals # {#backwards-compatibility]}
 
@@ -699,7 +699,7 @@ dictionary MediaStreamTrackGeneratorInit {
 This interface had the generator for the MediaStreamTrack being an instance of
 a MediaStreamTrack rather than containing one.
 
-This interface can be shimmed on top of VideoTrackGenerator like this:
+This interface can be shimmed on top of VideoTrackSource like this:
 
 <pre>
 
@@ -707,7 +707,7 @@ Javascript goes here when written
 
 </pre>
 
-The VideoTrackGenerator can be shimmed on top of MediaStreamTrackGenerator like this:
+The VideoTrackSource can be shimmed on top of MediaStreamTrackGenerator like this:
 
 <pre>
 
