@@ -688,6 +688,7 @@ This section is informative.
 
 Previous proposals for this interface had an API like this:
 
+<div class="example">
 <pre class="idl">
 [Exposed=Window,DedicatedWorker]
 interface MediaStreamTrackGenerator : MediaStreamTrack {
@@ -699,12 +700,13 @@ dictionary MediaStreamTrackGeneratorInit {
   required DOMString kind;
 };
 </pre>
+</div>
 This interface had the generator for the MediaStreamTrack being an instance of
 a MediaStreamTrack rather than containing one.
 
 The VideoTrackGenerator can be shimmed on top of MediaStreamTrackGenerator like this:
 
-<pre>
+<pre class="example">
 
 // Not tested, unlikely to work as written!
 class VideoTrackGenerator {
