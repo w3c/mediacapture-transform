@@ -536,60 +536,125 @@ returns a new VideoFrame similar to the given `videoFrame`, but with the
 non-face parts blurred. The example also shows the video before and after
 effects on video elements.
 
-<pre class="example">
-const stream = await getUserMedia({video:true});
-const videoTrack = stream.getVideoTracks()[0];
-const processor = new MediaStreamTrackProcessor({track: videoTrack});
-const generator = new VideoTrackGenerator();
-const transformer = new TransformStream({
-   async transform(videoFrame, controller) {
-      let facePosition = await detectFace(videoFrame);
-      let newFrame = blurBackground(videoFrame, facePosition);
-      videoFrame.close();
-      controller.enqueue(newFrame);
-  }
-});
-
-processor.readable.pipeThrough(transformer).pipeTo(generator.writable);
-const videoBefore = document.getElementById('video-before');
-const videoAfter = document.getElementById('video-after');
-videoBefore.srcObject = stream;
-const streamAfter = new MediaStream([generator]);
-videoAfter.srcObject = streamAfter;
-</pre>
-
-The same example using a worker:
-<pre class="example">
+<pre class="example" highlight="js">
 // main.js
-const stream = await getUserMedia({video:true});
-const videoTrack = stream.getVideoTracks()[0];
-const processor = new MediaStreamTrackProcessor({track: videoTrack});
-const generator = new VideoTrackGenerator();
-const worker = new Worker('worker.js');
-worker.postMessage(
-  {readable: processor.readable, writable: generator.writable},
-  [processor.readable, generator.writable]);
+
+const stream = await navigator.mediaDevices.getUserMedia({video:true});
 const videoBefore = document.getElementById('video-before');
 const videoAfter = document.getElementById('video-after');
-videoBefore.srcObject = stream;
-const streamAfter = new MediaStream([generator]);
-videoAfter.srcObject = streamAfter;
+videoBefore.srcObject = stream.clone();
+
+const [track] = stream.getVideoTracks();
+const worker = new Worker('worker.js');
+worker.postMessage({track}, [track]);
+
+const {data} = await new Promise(r => worker.onmessage);
+videoAfter.srcObject = new MediaStream([data.track]);
 
 // worker.js
-self.onmessage = async function(e) {
+
+self.onmessage = async ({data: {track}}) => {
+  const source = new VideoTrackGenerator();
+  parent.postMessage({track: source.track}, [source.track]);
+
+  const {readable} = new MediaStreamTrackProcessor({track});
   const transformer = new TransformStream({
-    async transform(videoFrame, controller) {
-        const facePosition = await detectFace(videoFrame);
-        const newFrame = blurBackground(videoFrame, facePosition);
-        videoFrame.close();
-        controller.enqueue(newFrame);
+    async transform(frame, controller) {
+      const facePosition = await detectFace(frame);
+      const newFrame = blurBackground(frame, facePosition);
+      frame.close();
+      controller.enqueue(newFrame);
     }
   });
-
-  e.data.readable.pipeThrough(transformer).pipeTo(e.data.writable);
-}
+  await readable.pipeThrough(transformer).pipeTo(source.writable);
+};
 </pre>
 
+## Multi-consumer post-processing with constraints
+A common use case is to remove the background from live camera video fed into a
+video conference, with a live self-view showing the result. It's desirable for
+the self-view to have a high frame rate even if the frame rate used for actual
+sending may dip lower due to back pressure from bandwidth constraints. This can
+be achieved by applying constraints to a track clone, avoiding having to process
+twice.
+
+<pre class="example" highlight="js">
+// main.js
+
+const stream = await navigator.mediaDevices.getUserMedia({video:true});
+const [track] = stream.getVideoTracks();
+const worker = new Worker('worker.js');
+worker.postMessage({track}, [track]);
+
+const {data} = await new Promise(r => worker.onmessage);
+const selfView = document.getElementById('video-self');
+selfView.srcObject = new MediaStream([data.track.clone()]); // 60 fps
+
+await data.track.applyConstraints({width: 320, height: 200, frameRate: 30});
+const pc = new RTCPeerConnection(config);
+pc.addTrack(data.track); // 30 fps
+
+// worker.js
+
+self.onmessage = async ({data: {track}}) => {
+  const source = new VideoTrackGenerator();
+  parent.postMessage({track: source.track}, [source.track]);
+
+  const {readable} = new MediaStreamTrackProcessor({track});
+  const transformer = new TransformStream({transform: myRemoveBackgroundFromVideo});
+  await readable.pipeThrough(transformer).pipeTo(source.writable);
+};
+</pre>
+
+## Multi-consumer post-processing with constraints in a worker
+Being able to show a higher frame-rate self-view is also relevant when sending
+video frames over WebTransport in a worker. The same technique above may be used
+here, except constraints are applied to a track clone in the worker.
+
+<pre class="example" highlight="js">
+// main.js
+
+const stream = await navigator.mediaDevices.getUserMedia({video:true});
+const [track] = stream.getVideoTracks();
+const worker = new Worker('worker.js');
+worker.postMessage({track}, [track]);
+
+const {data} = await new Promise(r => worker.onmessage);
+const selfView = document.getElementById('video-self');
+selfView.srcObject = new MediaStream([data.track]); // 60 fps
+
+// worker.js
+
+self.onmessage = async ({data: {track}}) => {
+  const source = new VideoTrackGenerator();
+  const sendTrack = source.track.clone();
+  parent.postMessage({track: source.track}, [source.track]);
+
+  await sendTrack.applyConstraints({width: 320, height: 200, frameRate: 30});
+
+  const wt = new WebTransport("https://webtransport.org:8080/up");
+
+  const {readable} = new MediaStreamTrackProcessor({track});
+  const transformer = new TransformStream({transform: myRemoveBackgroundFromVideo});
+  await readable.pipeThrough(transformer)
+    .pipeThrough({writable: source.writable, readable: sendTrack.readable}),
+    .pipeThrough(createMyEncodeVideoStream({
+      codec: "vp8",
+      width: 640,
+      height: 480,
+      bitrate: 1000000,
+    }))
+    .pipeThrough(new TransformStream({transform: mySerializer}));
+    .pipeTo(wt.createUnidirectionalStream()); // 30 fps
+};
+</pre>
+<div class="note">
+<p>The above example avoids using the `tee()` function to serve multiple
+consumers, due to its issues with real-time streams.</p>
+<p>For brevity, the example also over-simplifies using a WebCodecs wrapper to
+encode and send video frames over a single WebTransport stream (incurring
+head-of-line blocking).</p>
+</div>
 
 # Implementation advice # {#implementation-advice}
 
