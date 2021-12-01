@@ -642,6 +642,8 @@ NOT AN ADOPTED WORKING GROUP DOCUMENT.</p>
      <a href="#examples"><span class="secno">3</span> <span class="content">Examples</span></a>
      <ol class="toc">
       <li><a href="#video-processing"><span class="secno">3.1</span> <span class="content">Video Processing</span></a>
+      <li><a href="#multi-consumer-post-processing-with-constraints"><span class="secno">3.2</span> <span class="content">Multi-consumer post-processing with constraints</span></a>
+      <li><a href="#multi-consumer-post-processing-with-constraints-in-a-worker"><span class="secno">3.3</span> <span class="content">Multi-consumer post-processing with constraints in a worker</span></a>
      </ol>
     <li>
      <a href="#implementation-advice"><span class="secno">4</span> <span class="content">Implementation advice</span></a>
@@ -1072,56 +1074,118 @@ tracks connected to it are ended and the <code>ended</code> event is fired on th
 returns a new VideoFrame similar to the given <code>videoFrame</code>, but with the
 non-face parts blurred. The example also shows the video before and after
 effects on video elements. 
-<pre class="example" id="example-9bc660c4"><a class="self-link" href="#example-9bc660c4"></a>const stream = await getUserMedia({video:true});
-const videoTrack = stream.getVideoTracks()[0];
-const processor = new MediaStreamTrackProcessor({track: videoTrack});
-const generator = new VideoTrackGenerator();
-const transformer = new TransformStream({
-   async transform(videoFrame, controller) {
-      let facePosition = await detectFace(videoFrame);
-      let newFrame = blurBackground(videoFrame, facePosition);
-      videoFrame.close();
-      controller.enqueue(newFrame);
-  }
-});
+<pre class="example highlight" id="example-b482e2d8"><a class="self-link" href="#example-b482e2d8"></a><c- c1>// main.js</c->
 
-processor.readable.pipeThrough(transformer).pipeTo(generator.writable);
-const videoBefore = document.getElementById('video-before');
-const videoAfter = document.getElementById('video-after');
-videoBefore.srcObject = stream;
-const streamAfter = new MediaStream([generator]);
-videoAfter.srcObject = streamAfter;
+<c- a>const</c-> stream <c- o>=</c-> <c- k>await</c-> navigator<c- p>.</c->mediaDevices<c- p>.</c->getUserMedia<c- p>({</c->video<c- o>:</c-><c- kc>true</c-><c- p>});</c->
+<c- a>const</c-> videoBefore <c- o>=</c-> document<c- p>.</c->getElementById<c- p>(</c-><c- t>'video-before'</c-><c- p>);</c->
+<c- a>const</c-> videoAfter <c- o>=</c-> document<c- p>.</c->getElementById<c- p>(</c-><c- t>'video-after'</c-><c- p>);</c->
+videoBefore<c- p>.</c->srcObject <c- o>=</c-> stream<c- p>.</c->clone<c- p>();</c->
+
+<c- a>const</c-> <c- p>[</c->track<c- p>]</c-> <c- o>=</c-> stream<c- p>.</c->getVideoTracks<c- p>();</c->
+<c- a>const</c-> worker <c- o>=</c-> <c- k>new</c-> Worker<c- p>(</c-><c- t>'worker.js'</c-><c- p>);</c->
+worker<c- p>.</c->postMessage<c- p>({</c->track<c- p>},</c-> <c- p>[</c->track<c- p>]);</c->
+
+<c- a>const</c-> <c- p>{</c->data<c- p>}</c-> <c- o>=</c-> <c- k>await</c-> <c- k>new</c-> Promise<c- p>(</c->r <c- p>=></c-> worker<c- p>.</c->onmessage<c- p>);</c->
+videoAfter<c- p>.</c->srcObject <c- o>=</c-> <c- k>new</c-> MediaStream<c- p>([</c->data<c- p>.</c->track<c- p>]);</c->
+
+<c- c1>// worker.js</c->
+
+self<c- p>.</c->onmessage <c- o>=</c-> <c- k>async</c-> <c- p>({</c->data<c- o>:</c-> <c- p>{</c->track<c- p>}})</c-> <c- p>=></c-> <c- p>{</c->
+  <c- a>const</c-> source <c- o>=</c-> <c- k>new</c-> VideoTrackGenerator<c- p>();</c->
+  parent<c- p>.</c->postMessage<c- p>({</c->track<c- o>:</c-> source<c- p>.</c->track<c- p>},</c-> <c- p>[</c->source<c- p>.</c->track<c- p>]);</c->
+
+  <c- a>const</c-> <c- p>{</c->readable<c- p>}</c-> <c- o>=</c-> <c- k>new</c-> MediaStreamTrackProcessor<c- p>({</c->track<c- p>});</c->
+  <c- a>const</c-> transformer <c- o>=</c-> <c- k>new</c-> TransformStream<c- p>({</c->
+    <c- k>async</c-> transform<c- p>(</c->frame<c- p>,</c-> controller<c- p>)</c-> <c- p>{</c->
+      <c- a>const</c-> facePosition <c- o>=</c-> <c- k>await</c-> detectFace<c- p>(</c->frame<c- p>);</c->
+      <c- a>const</c-> newFrame <c- o>=</c-> blurBackground<c- p>(</c->frame<c- p>,</c-> facePosition<c- p>);</c->
+      frame<c- p>.</c->close<c- p>();</c->
+      controller<c- p>.</c->enqueue<c- p>(</c->newFrame<c- p>);</c->
+    <c- p>}</c->
+  <c- p>});</c->
+  <c- k>await</c-> readable<c- p>.</c->pipeThrough<c- p>(</c->transformer<c- p>).</c->pipeTo<c- p>(</c->source<c- p>.</c->writable<c- p>);</c->
+<c- p>};</c->
 </pre>
-   <p>The same example using a worker:</p>
-<pre class="example" id="example-bfcefc4e"><a class="self-link" href="#example-bfcefc4e"></a>// main.js
-const stream = await getUserMedia({video:true});
-const videoTrack = stream.getVideoTracks()[0];
-const processor = new MediaStreamTrackProcessor({track: videoTrack});
-const generator = new VideoTrackGenerator();
-const worker = new Worker('worker.js');
-worker.postMessage(
-  {readable: processor.readable, writable: generator.writable},
-  [processor.readable, generator.writable]);
-const videoBefore = document.getElementById('video-before');
-const videoAfter = document.getElementById('video-after');
-videoBefore.srcObject = stream;
-const streamAfter = new MediaStream([generator]);
-videoAfter.srcObject = streamAfter;
+   <h3 class="heading settled" data-level="3.2" id="multi-consumer-post-processing-with-constraints"><span class="secno">3.2. </span><span class="content">Multi-consumer post-processing with constraints</span><a class="self-link" href="#multi-consumer-post-processing-with-constraints"></a></h3>
+    A common use case is to remove the background from live camera video fed into a
+video conference, with a live self-view showing the result. It’s desirable for
+the self-view to have a high frame rate even if the frame rate used for actual
+sending may dip lower due to back pressure from bandwidth constraints. This can
+be achieved by applying constraints to a track clone, avoiding having to process
+twice. 
+<pre class="example highlight" id="example-b49a6910"><a class="self-link" href="#example-b49a6910"></a><c- c1>// main.js</c->
 
-// worker.js
-self.onmessage = async function(e) {
-  const transformer = new TransformStream({
-    async transform(videoFrame, controller) {
-        const facePosition = await detectFace(videoFrame);
-        const newFrame = blurBackground(videoFrame, facePosition);
-        videoFrame.close();
-        controller.enqueue(newFrame);
-    }
-  });
+<c- a>const</c-> stream <c- o>=</c-> <c- k>await</c-> navigator<c- p>.</c->mediaDevices<c- p>.</c->getUserMedia<c- p>({</c->video<c- o>:</c-><c- kc>true</c-><c- p>});</c->
+<c- a>const</c-> <c- p>[</c->track<c- p>]</c-> <c- o>=</c-> stream<c- p>.</c->getVideoTracks<c- p>();</c->
+<c- a>const</c-> worker <c- o>=</c-> <c- k>new</c-> Worker<c- p>(</c-><c- t>'worker.js'</c-><c- p>);</c->
+worker<c- p>.</c->postMessage<c- p>({</c->track<c- p>},</c-> <c- p>[</c->track<c- p>]);</c->
 
-  e.data.readable.pipeThrough(transformer).pipeTo(e.data.writable);
-}
+<c- a>const</c-> <c- p>{</c->data<c- p>}</c-> <c- o>=</c-> <c- k>await</c-> <c- k>new</c-> Promise<c- p>(</c->r <c- p>=></c-> worker<c- p>.</c->onmessage<c- p>);</c->
+<c- a>const</c-> selfView <c- o>=</c-> document<c- p>.</c->getElementById<c- p>(</c-><c- t>'video-self'</c-><c- p>);</c->
+selfView<c- p>.</c->srcObject <c- o>=</c-> <c- k>new</c-> MediaStream<c- p>([</c->data<c- p>.</c->track<c- p>.</c->clone<c- p>()]);</c-> <c- c1>// 60 fps</c->
+
+<c- k>await</c-> data<c- p>.</c->track<c- p>.</c->applyConstraints<c- p>({</c->width<c- o>:</c-> <c- mf>320</c-><c- p>,</c-> height<c- o>:</c-> <c- mf>200</c-><c- p>,</c-> frameRate<c- o>:</c-> <c- mf>30</c-><c- p>});</c->
+<c- a>const</c-> pc <c- o>=</c-> <c- k>new</c-> RTCPeerConnection<c- p>(</c->config<c- p>);</c->
+pc<c- p>.</c->addTrack<c- p>(</c->data<c- p>.</c->track<c- p>);</c-> <c- c1>// 30 fps</c->
+
+<c- c1>// worker.js</c->
+
+self<c- p>.</c->onmessage <c- o>=</c-> <c- k>async</c-> <c- p>({</c->data<c- o>:</c-> <c- p>{</c->track<c- p>}})</c-> <c- p>=></c-> <c- p>{</c->
+  <c- a>const</c-> source <c- o>=</c-> <c- k>new</c-> VideoTrackGenerator<c- p>();</c->
+  parent<c- p>.</c->postMessage<c- p>({</c->track<c- o>:</c-> source<c- p>.</c->track<c- p>},</c-> <c- p>[</c->source<c- p>.</c->track<c- p>]);</c->
+
+  <c- a>const</c-> <c- p>{</c->readable<c- p>}</c-> <c- o>=</c-> <c- k>new</c-> MediaStreamTrackProcessor<c- p>({</c->track<c- p>});</c->
+  <c- a>const</c-> transformer <c- o>=</c-> <c- k>new</c-> TransformStream<c- p>({</c->transform<c- o>:</c-> myRemoveBackgroundFromVideo<c- p>});</c->
+  <c- k>await</c-> readable<c- p>.</c->pipeThrough<c- p>(</c->transformer<c- p>).</c->pipeTo<c- p>(</c->source<c- p>.</c->writable<c- p>);</c->
+<c- p>};</c->
 </pre>
+   <h3 class="heading settled" data-level="3.3" id="multi-consumer-post-processing-with-constraints-in-a-worker"><span class="secno">3.3. </span><span class="content">Multi-consumer post-processing with constraints in a worker</span><a class="self-link" href="#multi-consumer-post-processing-with-constraints-in-a-worker"></a></h3>
+    Being able to show a higher frame-rate self-view is also relevant when sending
+video frames over WebTransport in a worker. The same technique above may be used
+here, except constraints are applied to a track clone in the worker. 
+<pre class="example highlight" id="example-d7741017"><a class="self-link" href="#example-d7741017"></a><c- c1>// main.js</c->
+
+<c- a>const</c-> stream <c- o>=</c-> <c- k>await</c-> navigator<c- p>.</c->mediaDevices<c- p>.</c->getUserMedia<c- p>({</c->video<c- o>:</c-><c- kc>true</c-><c- p>});</c->
+<c- a>const</c-> <c- p>[</c->track<c- p>]</c-> <c- o>=</c-> stream<c- p>.</c->getVideoTracks<c- p>();</c->
+<c- a>const</c-> worker <c- o>=</c-> <c- k>new</c-> Worker<c- p>(</c-><c- t>'worker.js'</c-><c- p>);</c->
+worker<c- p>.</c->postMessage<c- p>({</c->track<c- p>},</c-> <c- p>[</c->track<c- p>]);</c->
+
+<c- a>const</c-> <c- p>{</c->data<c- p>}</c-> <c- o>=</c-> <c- k>await</c-> <c- k>new</c-> Promise<c- p>(</c->r <c- p>=></c-> worker<c- p>.</c->onmessage<c- p>);</c->
+<c- a>const</c-> selfView <c- o>=</c-> document<c- p>.</c->getElementById<c- p>(</c-><c- t>'video-self'</c-><c- p>);</c->
+selfView<c- p>.</c->srcObject <c- o>=</c-> <c- k>new</c-> MediaStream<c- p>([</c->data<c- p>.</c->track<c- p>]);</c-> <c- c1>// 60 fps</c->
+
+<c- c1>// worker.js</c->
+
+self<c- p>.</c->onmessage <c- o>=</c-> <c- k>async</c-> <c- p>({</c->data<c- o>:</c-> <c- p>{</c->track<c- p>}})</c-> <c- p>=></c-> <c- p>{</c->
+  <c- a>const</c-> source <c- o>=</c-> <c- k>new</c-> VideoTrackGenerator<c- p>();</c->
+  <c- a>const</c-> sendTrack <c- o>=</c-> source<c- p>.</c->track<c- p>.</c->clone<c- p>();</c->
+  parent<c- p>.</c->postMessage<c- p>({</c->track<c- o>:</c-> source<c- p>.</c->track<c- p>},</c-> <c- p>[</c->source<c- p>.</c->track<c- p>]);</c->
+
+  <c- k>await</c-> sendTrack<c- p>.</c->applyConstraints<c- p>({</c->width<c- o>:</c-> <c- mf>320</c-><c- p>,</c-> height<c- o>:</c-> <c- mf>200</c-><c- p>,</c-> frameRate<c- o>:</c-> <c- mf>30</c-><c- p>});</c->
+
+  <c- a>const</c-> wt <c- o>=</c-> <c- k>new</c-> WebTransport<c- p>(</c-><c- u>"https://webtransport.org:8080/up"</c-><c- p>);</c->
+
+  <c- a>const</c-> <c- p>{</c->readable<c- p>}</c-> <c- o>=</c-> <c- k>new</c-> MediaStreamTrackProcessor<c- p>({</c->track<c- p>});</c->
+  <c- a>const</c-> transformer <c- o>=</c-> <c- k>new</c-> TransformStream<c- p>({</c->transform<c- o>:</c-> myRemoveBackgroundFromVideo<c- p>});</c->
+  <c- k>await</c-> readable<c- p>.</c->pipeThrough<c- p>(</c->transformer<c- p>)</c->
+    <c- p>.</c->pipeThrough<c- p>({</c->writable<c- o>:</c-> source<c- p>.</c->writable<c- p>,</c-> readable<c- o>:</c-> sendTrack<c- p>.</c->readable<c- p>}),</c->
+    <c- p>.</c->pipeThrough<c- p>(</c->createMyEncodeVideoStream<c- p>({</c->
+      codec<c- o>:</c-> <c- u>"vp8"</c-><c- p>,</c->
+      width<c- o>:</c-> <c- mf>640</c-><c- p>,</c->
+      height<c- o>:</c-> <c- mf>480</c-><c- p>,</c->
+      bitrate<c- o>:</c-> <c- mf>1000000</c-><c- p>,</c->
+    <c- p>}))</c->
+    <c- p>.</c->pipeThrough<c- p>(</c-><c- k>new</c-> TransformStream<c- p>({</c->transform<c- o>:</c-> mySerializer<c- p>}));</c->
+    <c- p>.</c->pipeTo<c- p>(</c->wt<c- p>.</c->createUnidirectionalStream<c- p>());</c-> <c- c1>// 30 fps</c->
+<c- p>};</c->
+</pre>
+   <div class="note" role="note">
+    <p>The above example avoids using the <code>tee()</code> function to serve multiple
+consumers, due to its issues with real-time streams.</p>
+    <p>For brevity, the example also over-simplifies using a WebCodecs wrapper to
+encode and send video frames over a single WebTransport stream (incurring
+head-of-line blocking).</p>
+   </div>
    <h2 class="heading settled" data-level="4" id="implementation-advice"><span class="secno">4. </span><span class="content">Implementation advice</span><a class="self-link" href="#implementation-advice"></a></h2>
    <p>This section is informative.</p>
    <h3 class="heading settled" data-level="4.1" id="use-with-multiple-consumers"><span class="secno">4.1. </span><span class="content">Use with multiple consumers</span><a class="self-link" href="#use-with-multiple-consumers"></a></h3>
