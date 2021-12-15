@@ -712,7 +712,7 @@ once the budget limit is reached. Accidental exhaustion is also mitigated by
 automatic closing of {{VideoFrame}} and {{AudioData}} objects once they
 are written to a {{VideoTrackGenerator}}.
 
-# Backwards compatibility with earlier proposals # {#backwards-compatibility]}
+# Backwards compatibility with earlier proposals # {#backwards-compatibility}
 
 This section is informative.
 
