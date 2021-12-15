@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version cace53f8c, updated Tue Dec 7 12:12:54 2021 -0800" name="generator">
   <link href="https://w3c.github.io/mediacapture-insertable-streams/" rel="canonical">
-  <meta content="bc7490ae40124454979e76f2b673fa88c674ab4c" name="document-revision">
+  <meta content="3eebc37da1afdbade0d399f9b43d61cf63ef99ce" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -645,14 +645,14 @@ NOT AN ADOPTED WORKING GROUP DOCUMENT.</p>
     <li>
      <a href="#examples"><span class="secno">3</span> <span class="content">Examples</span></a>
      <ol class="toc">
-      <li><a href="#video-processing"><span class="secno">3.1</span> <span class="content">Video Processing {#video-processing}</span></a>
-      <li><a href="#multi-consumer-constraints"><span class="secno">3.2</span> <span class="content">Multi-consumer post-processing with constraints {#multi-consumer-constraints}</span></a>
-      <li><a href="#multi-consumer-worker"><span class="secno">3.3</span> <span class="content">Multi-consumer post-processing with constraints in a worker {#multi-consumer-worker}</span></a>
+      <li><a href="#video-processing"><span class="secno">3.1</span> <span class="content">Video Processing</span></a>
+      <li><a href="#multi-consumer-constraints"><span class="secno">3.2</span> <span class="content">Multi-consumer post-processing with constraints</span></a>
+      <li><a href="#multi-consumer-worker"><span class="secno">3.3</span> <span class="content">Multi-consumer post-processing with constraints in a worker</span></a>
      </ol>
     <li>
      <a href="#implementation-advice"><span class="secno">4</span> <span class="content">Implementation advice</span></a>
      <ol class="toc">
-      <li><a href="#multi-consumers"><span class="secno">4.1</span> <span class="content">Use with multiple consumers {#multi-consumers}</span></a>
+      <li><a href="#multi-consumers"><span class="secno">4.1</span> <span class="content">Use with multiple consumers</span></a>
      </ol>
     <li><a href="#security-considerations"><span class="secno">5</span> <span class="content">Security and Privacy considerations</span></a>
     <li><a href="#backwards-compatibility"><span class="secno">6</span> <span class="content">Backwards compatibility with earlier proposals</span></a>
@@ -933,7 +933,7 @@ There is no WG consensus on whether or not it should be exposed on Window.</p>
     <li data-md>
      <p>Let <var>generator</var> be a new <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator③">VideoTrackGenerator</a></code> object.</p>
     <li data-md>
-     <p>Let <var>track</var> be a newly <a data-link-type="dfn">created</a> <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack①⑥">MediaStreamTrack</a></code> with <var>source of <var>generator</var> and <var>tieSourceToContext</var> set <code>false</code>.</var></p>
+     <p>Let <var>track</var> be a newly <a data-link-type="dfn">created</a> <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack①⑥">MediaStreamTrack</a></code> with <var>source</var> set to <var>generator</var> and <var>tieSourceToContext</var> set to <code>false</code>.</p>
     <li data-md>
      <p>Initialize <var>generator</var>.<code class="idl"><a data-link-type="idl" href="#dom-videotrackgenerator-track" id="ref-for-dom-videotrackgenerator-track④">track</a></code> to <var>track</var>.</p>
     <li data-md>
@@ -1070,7 +1070,7 @@ are outside the system-supported range, as reported by <code class="idl"><a data
 It is relevant to note that if the <code class="idl"><a data-link-type="idl" href="#dom-videotrackgenerator-writable" id="ref-for-dom-videotrackgenerator-writable⑨">writable</a></code> stream of a <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator①⑤">VideoTrackGenerator</a></code> is closed, all the live
 tracks connected to it are ended and the <code>ended</code> event is fired on them. 
    <h2 class="heading settled" data-level="3" id="examples"><span class="secno">3. </span><span class="content">Examples</span><a class="self-link" href="#examples"></a></h2>
-   <h3 class="heading settled" data-level="3.1" id="video-processing"><span class="secno">3.1. </span><span class="content">Video Processing {#video-processing}</span><a class="self-link" href="#video-processing"></a></h3>
+   <h3 class="heading settled" data-level="3.1" id="video-processing"><span class="secno">3.1. </span><span class="content">Video Processing</span><a class="self-link" href="#video-processing"></a></h3>
     Consider a face recognition function <code>detectFace(videoFrame)</code> that returns a face position
 (in some format), and a manipulation function <code>blurBackground(videoFrame, facePosition)</code> that
 returns a new VideoFrame similar to the given <code>videoFrame</code>, but with the
@@ -1108,7 +1108,7 @@ self<c- p>.</c->onmessage <c- o>=</c-> <c- k>async</c-> <c- p>({</c->data<c- o>:
   <c- k>await</c-> readable<c- p>.</c->pipeThrough<c- p>(</c->transformer<c- p>).</c->pipeTo<c- p>(</c->source<c- p>.</c->writable<c- p>);</c->
 <c- p>};</c->
 </pre>
-   <h3 class="heading settled" data-level="3.2" id="multi-consumer-constraints"><span class="secno">3.2. </span><span class="content">Multi-consumer post-processing with constraints {#multi-consumer-constraints}</span><a class="self-link" href="#multi-consumer-constraints"></a></h3>
+   <h3 class="heading settled" data-level="3.2" id="multi-consumer-constraints"><span class="secno">3.2. </span><span class="content">Multi-consumer post-processing with constraints</span><a class="self-link" href="#multi-consumer-constraints"></a></h3>
     A common use case is to remove the background from live camera video fed into a
 video conference, with a live self-view showing the result. It’s desirable for
 the self-view to have a high frame rate even if the frame rate used for actual
@@ -1141,7 +1141,7 @@ self<c- p>.</c->onmessage <c- o>=</c-> <c- k>async</c-> <c- p>({</c->data<c- o>:
   <c- k>await</c-> readable<c- p>.</c->pipeThrough<c- p>(</c->transformer<c- p>).</c->pipeTo<c- p>(</c->source<c- p>.</c->writable<c- p>);</c->
 <c- p>};</c->
 </pre>
-   <h3 class="heading settled" data-level="3.3" id="multi-consumer-worker"><span class="secno">3.3. </span><span class="content">Multi-consumer post-processing with constraints in a worker {#multi-consumer-worker}</span><a class="self-link" href="#multi-consumer-worker"></a></h3>
+   <h3 class="heading settled" data-level="3.3" id="multi-consumer-worker"><span class="secno">3.3. </span><span class="content">Multi-consumer post-processing with constraints in a worker</span><a class="self-link" href="#multi-consumer-worker"></a></h3>
     Being able to show a higher frame-rate self-view is also relevant when sending
 video frames over WebTransport in a worker. The same technique above may be used
 here, except constraints are applied to a track clone in the worker. 
@@ -1190,7 +1190,7 @@ head-of-line blocking).</p>
    </div>
    <h2 class="heading settled" data-level="4" id="implementation-advice"><span class="secno">4. </span><span class="content">Implementation advice</span><a class="self-link" href="#implementation-advice"></a></h2>
    <p>This section is informative.</p>
-   <h3 class="heading settled" data-level="4.1" id="multi-consumers"><span class="secno">4.1. </span><span class="content">Use with multiple consumers {#multi-consumers}</span><a class="self-link" href="#multi-consumers"></a></h3>
+   <h3 class="heading settled" data-level="4.1" id="multi-consumers"><span class="secno">4.1. </span><span class="content">Use with multiple consumers</span><a class="self-link" href="#multi-consumers"></a></h3>
    <p>There are use cases where the programmer may desire that a single stream of frames
 is consumed by multiple consumers.</p>
    <p>Examples include the case where the result of a background blurring function should
@@ -1461,7 +1461,7 @@ we have finished moving repos about.</p>
     <li><a href="#ref-for-mediastreamtrack①⑨">2.2.5. Specialization of MediaStreamTrack behavior</a> <a href="#ref-for-mediastreamtrack②⓪">(2)</a>
     <li><a href="#ref-for-mediastreamtrack②①">2.2.5.2. Constrainable properties</a> <a href="#ref-for-mediastreamtrack②②">(2)</a>
     <li><a href="#ref-for-mediastreamtrack②③">2.2.5.3. Events and attributes</a>
-    <li><a href="#ref-for-mediastreamtrack②④">4.1. Use with multiple consumers {#multi-consumers}</a> <a href="#ref-for-mediastreamtrack②⑤">(2)</a>
+    <li><a href="#ref-for-mediastreamtrack②④">4.1. Use with multiple consumers</a> <a href="#ref-for-mediastreamtrack②⑤">(2)</a>
     <li><a href="#ref-for-mediastreamtrack②⑥">5. Security and Privacy considerations</a> <a href="#ref-for-mediastreamtrack②⑦">(2)</a> <a href="#ref-for-mediastreamtrack②⑧">(3)</a> <a href="#ref-for-mediastreamtrack②⑨">(4)</a> <a href="#ref-for-mediastreamtrack③⓪">(5)</a> <a href="#ref-for-mediastreamtrack③①">(6)</a> <a href="#ref-for-mediastreamtrack③②">(7)</a>
    </ul>
   </aside>
@@ -1641,7 +1641,7 @@ we have finished moving repos about.</p>
   <aside class="dfn-panel" data-for="term-for-videoencoder">
    <a href="https://wicg.github.io/web-codecs/#videoencoder">https://wicg.github.io/web-codecs/#videoencoder</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-videoencoder">4.1. Use with multiple consumers {#multi-consumers}</a>
+    <li><a href="#ref-for-videoencoder">4.1. Use with multiple consumers</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-videoframe">
@@ -1705,7 +1705,7 @@ we have finished moving repos about.</p>
    <a href="https://www.w3.org/TR/webrtc/#dom-rtcpeerconnection">https://www.w3.org/TR/webrtc/#dom-rtcpeerconnection</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-rtcpeerconnection">1. Introduction</a>
-    <li><a href="#ref-for-dom-rtcpeerconnection①">4.1. Use with multiple consumers {#multi-consumers}</a>
+    <li><a href="#ref-for-dom-rtcpeerconnection①">4.1. Use with multiple consumers</a>
    </ul>
   </aside>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
@@ -1852,7 +1852,7 @@ we have finished moving repos about.</p>
     <li><a href="#ref-for-mediastreamtrackprocessor⑧">2.1.2. Internal slots</a> <a href="#ref-for-mediastreamtrackprocessor⑨">(2)</a> <a href="#ref-for-mediastreamtrackprocessor①⓪">(3)</a>
     <li><a href="#ref-for-mediastreamtrackprocessor①①">2.1.3. Constructor</a>
     <li><a href="#ref-for-mediastreamtrackprocessor①②">2.1.5. Handling interaction with the track</a> <a href="#ref-for-mediastreamtrackprocessor①③">(2)</a>
-    <li><a href="#ref-for-mediastreamtrackprocessor①④">4.1. Use with multiple consumers {#multi-consumers}</a>
+    <li><a href="#ref-for-mediastreamtrackprocessor①④">4.1. Use with multiple consumers</a>
     <li><a href="#ref-for-mediastreamtrackprocessor①⑤">5. Security and Privacy considerations</a> <a href="#ref-for-mediastreamtrackprocessor①⑥">(2)</a> <a href="#ref-for-mediastreamtrackprocessor①⑦">(3)</a> <a href="#ref-for-mediastreamtrackprocessor①⑧">(4)</a>
    </ul>
   </aside>
@@ -1930,7 +1930,7 @@ we have finished moving repos about.</p>
     <li><a href="#ref-for-videotrackgenerator⑧">2.2.5.1. stop</a> <a href="#ref-for-videotrackgenerator⑨">(2)</a>
     <li><a href="#ref-for-videotrackgenerator①⓪">2.2.5.2. Constrainable properties</a> <a href="#ref-for-videotrackgenerator①①">(2)</a> <a href="#ref-for-videotrackgenerator①②">(3)</a> <a href="#ref-for-videotrackgenerator①③">(4)</a> <a href="#ref-for-videotrackgenerator①④">(5)</a>
     <li><a href="#ref-for-videotrackgenerator①⑤">2.2.5.3. Events and attributes</a>
-    <li><a href="#ref-for-videotrackgenerator①⑥">4.1. Use with multiple consumers {#multi-consumers}</a>
+    <li><a href="#ref-for-videotrackgenerator①⑥">4.1. Use with multiple consumers</a>
     <li><a href="#ref-for-videotrackgenerator①⑦">5. Security and Privacy considerations</a> <a href="#ref-for-videotrackgenerator①⑧">(2)</a> <a href="#ref-for-videotrackgenerator①⑨">(3)</a> <a href="#ref-for-videotrackgenerator②⓪">(4)</a> <a href="#ref-for-videotrackgenerator②①">(5)</a> <a href="#ref-for-videotrackgenerator②②">(6)</a>
    </ul>
   </aside>
