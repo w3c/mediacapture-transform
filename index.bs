@@ -309,7 +309,7 @@ There is no WG consensus on whether or not it should be exposed on Window.
   VideoTrackGenerator()
 </dfn>
 1. Let |generator| be a new {{VideoTrackGenerator}} object.
-1. Let |track| be a newly [=Create a MediaStreamTrack|created=] {{MediaStreamTrack}} with <var>source</source> of |generator| and <var>tieSourceToContext</var> set <code>false</code>.
+1. Let |track| be a newly [=Create a MediaStreamTrack|created=] {{MediaStreamTrack}} with <var>source</var> set to |generator| and <var>tieSourceToContext</var> set to <code>false</code>.
 1. Initialize |generator|.{{VideoTrackGenerator/track}} to |track|.
 4. Return |generator|.
 
@@ -494,7 +494,7 @@ stream of a {{VideoTrackGenerator}} is closed, all the live
 tracks connected to it are ended and the `ended` event is fired on them.
 
 # Examples # {#examples}
-## Video Processing {#video-processing}
+## Video Processing ## {#video-processing}
 Consider a face recognition function `detectFace(videoFrame)` that returns a face position
 (in some format), and a manipulation function `blurBackground(videoFrame, facePosition)` that
 returns a new VideoFrame similar to the given `videoFrame`, but with the
@@ -535,7 +535,7 @@ self.onmessage = async ({data: {track}}) => {
 };
 </pre>
 
-## Multi-consumer post-processing with constraints {#multi-consumer-constraints}
+## Multi-consumer post-processing with constraints ## {#multi-consumer-constraints}
 A common use case is to remove the background from live camera video fed into a
 video conference, with a live self-view showing the result. It's desirable for
 the self-view to have a high frame rate even if the frame rate used for actual
@@ -571,7 +571,7 @@ self.onmessage = async ({data: {track}}) => {
 };
 </pre>
 
-## Multi-consumer post-processing with constraints in a worker {#multi-consumer-worker}
+## Multi-consumer post-processing with constraints in a worker ## {#multi-consumer-worker}
 Being able to show a higher frame-rate self-view is also relevant when sending
 video frames over WebTransport in a worker. The same technique above may be used
 here, except constraints are applied to a track clone in the worker.
@@ -625,7 +625,7 @@ head-of-line blocking).</p>
 
 This section is informative.
 
-## Use with multiple consumers {#multi-consumers}
+## Use with multiple consumers ## {#multi-consumers}
 
 There are use cases where the programmer may desire that a single stream of frames
 is consumed by multiple consumers.
