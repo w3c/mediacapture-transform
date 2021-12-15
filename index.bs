@@ -685,9 +685,9 @@ The security and privacy of the source ({{VideoTrackGenerator}}) relies
 on the same-origin policy. That is, the data {{VideoTrackGenerator}} can
 make available in the form of a {{MediaStreamTrack}} must be visible to
 the document before a {{VideoFrame}} or {{AudioData}} object can be constructed
-and pushed into the {{MediaStreamTrackGenerator}}. Any attempt to create
+and pushed into the {{VideoTrackGenerator}}. Any attempt to create
 {{VideoFrame}} or {{AudioData}} objects using cross-origin data will fail.
-Therefore, {{MediaStreamTrackGenerator}} does not introduce any new
+Therefore, {{VideoTrackGenerator}} does not introduce any new
 fingerprinting surface.
 
 The {{MediaStreamTrack}} sink introduced by this API ({{MediaStreamTrackProcessor}})
