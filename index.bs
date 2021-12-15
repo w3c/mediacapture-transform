@@ -387,8 +387,8 @@ a {{VideoTrackGenerator}}:
   </thead>
   <tbody>
     <tr id="def-constraint-width">
-      <td data-tests="">
-        <dfn>width</dfn>
+      <td>
+        width
       </td>
       <td>
         {{ConstrainULong}}
@@ -402,8 +402,8 @@ a {{VideoTrackGenerator}}:
       </td>
     </tr>
     <tr id="def-constraint-height">
-      <td data-tests="">
-        <dfn>height</dfn>
+      <td>
+        height
       </td>
       <td>
         {{ConstrainULong}}
@@ -417,8 +417,8 @@ a {{VideoTrackGenerator}}:
       </td>
     </tr>
     <tr id="def-constraint-frameRate">
-      <td data-tests="">
-        <dfn>frameRate</dfn>
+      <td>
+        frameRate
       </td>
       <td>
         {{ConstrainDouble}}
@@ -431,8 +431,8 @@ a {{VideoTrackGenerator}}:
       </td>
     </tr>
     <tr id="def-constraint-aspect">
-      <td data-tests="">
-        <dfn>aspectRatio</dfn>
+      <td>
+        aspectRatio
       </td>
       <td>
         {{ConstrainDouble}}
@@ -448,8 +448,8 @@ a {{VideoTrackGenerator}}:
       </td>
     </tr>
     <tr id="def-constraint-resizeMode">
-      <td data-tests="">
-        <dfn>resizeMode</dfn>
+      <td>
+        resizeMode
       </td>
       <td>
         {{ConstrainDOMString}}
