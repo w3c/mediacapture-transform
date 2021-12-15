@@ -38,40 +38,6 @@ url: https://www.w3.org/TR/mediacapture-streams/#dom-overconstrainederror; text:
 url: https://infra.spec.whatwg.org/#list-empty; text: Empty; for: List; type: typedef; spec: INFRA
 url: https://infra.spec.whatwg.org/#list-remove; text: remove; for: List; type: typedef; spec: INFRA
 </pre>
-<pre class=biblio>
-{
-  "WEBCODECS": {
-     "href":
-     "https://wicg.github.io/web-codecs/",
-     "title": "WebCodecs"
-   },
-  "MEDIACAPTURE-SCREEN-SHARE": {
-    "href": "https://w3c.github.io/mediacapture-screen-share/",
-    "title": "Screen Capture"
-  },
-  "MEDIACAPTURE-STREAMS": {
-    "href": "https://www.w3.org/TR/mediacapture-streams/",
-    "title": "Media Capture and Streams"
-  },
-  "INFRA": {
-    "href": "https://https://infra.spec.whatwg.org",
-    "title": "Infra"
-  },
-  "STREAMS": {
-    "href": "https://streams.spec.whatwg.org",
-    "title": "Streams"
-  },
-  "WEBAUDIO": {
-    "href": "https://www.w3.org/TR/webaudio/",
-    "title": "Web Audio API"
-  },
-  "WEBTRANSPORT": {
-    "href": "https://www.w3.org/TR/webtransport/",
-    "title": "WebTransport"
-  }
-
-}
-</pre>
 <pre class=link-defaults>
 spec:streams; type:interface; text:WritableStream
 </pre>
@@ -733,7 +699,7 @@ of {{MediaStreamTrackProcessor}} relies on the security and privacy of the
 {{MediaStreamTrack}} sources of the tracks to which {{MediaStreamTrackProcessor}}
 is connected. For example, camera, microphone and screen-capture tracks
 rely on explicit use authorization via permission dialogs (see
-[[MEDIACAPTURE-STREAMS]] and [[MEDIACAPTURE-SCREEN-SHARE]]),
+[[MEDIACAPTURE-STREAMS]] and [[SCREEN-CAPTURE]]),
 while element capture and {{VideoTrackGenerator}}
 rely on the same-origin policy.
 
