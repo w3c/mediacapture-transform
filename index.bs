@@ -162,19 +162,19 @@ There is no WG consensus on whether or not the interface should not be exposed o
 
 ### Internal slots ### {#internal-slots-processor}
 <dl>
-<dt><dfn for=MediaStreamTrackProcessor>`[[track]]`</dfn></dt>
+<dt><dfn attribute for=MediaStreamTrackProcessor>`[[track]]`</dfn></dt>
 <dd>Track whose raw data is to be exposed by the {{MediaStreamTrackProcessor}}.</dd>
-<dt><dfn for=MediaStreamTrackProcessor>`[[maxBufferSize]]`</dfn></dt>
+<dt><dfn attribute for=MediaStreamTrackProcessor>`[[maxBufferSize]]`</dfn></dt>
 <dd>The maximum number of media frames to be buffered by the {{MediaStreamTrackProcessor}}
 as specified by the application. It may have no value if the application does
 not provide it. Its minimum valid value is 1.</dd>
-<dt><dfn for=MediaStreamTrackProcessor>`[[queue]]`</dfn></dt>
+<dt><dfn attribute for=MediaStreamTrackProcessor>`[[queue]]`</dfn></dt>
 <dd>A {{Queue|queue}} used to buffer media frames not yet read by the application</dd>
-<dt><dfn for=MediaStreamTrackProcessor>`[[numPendingReads]]`</dfn></dt>
+<dt><dfn attribute for=MediaStreamTrackProcessor>`[[numPendingReads]]`</dfn></dt>
 <dd>An integer whose value represents the number of read requests issued by the
 application that have not yet been handled.
 </dd>
-<dt><dfn for=MediaStreamTrackProcessor>`[[isClosed]]`</dfn></dt>
+<dt><dfn attribute for=MediaStreamTrackProcessor>`[[isClosed]]`</dfn></dt>
 <dd>An boolean whose value indicates if the {{MediaStreamTrackProcessor}} is closed.
 </dd>
 </dl>
@@ -195,7 +195,7 @@ application that have not yet been handled.
 
 ### Attributes ### {#attributes-processor}
 <dl>
-<dt><dfn for=MediaStreamTrackProcessor>readable</dfn></dt>
+<dt><dfn attribute for=MediaStreamTrackProcessor>readable</dfn></dt>
 <dd>Allows reading the frames delivered by the {{MediaStreamTrack}} stored
 in the `[[track]]` internal slot. This attribute is created the first time it is invoked
 according to the following steps:
@@ -296,9 +296,9 @@ There is no WG consensus on whether or not it should be exposed on Window.
 
 ### Internal slots ### {#internal-slots}
 <dl>
-<dt><dfn for=VideoTrackGenerator>`[[track]]`</dfn></dt>
+<dt><dfn attribute for=VideoTrackGenerator>`[[track]]`</dfn></dt>
 <dd>The {{MediaStreamTrack}} output of this source</dd>
-<dt><dfn for=VideoTrackGenerator>`[[isMuted]]`</dfn></dt>
+<dt><dfn attribute for=VideoTrackGenerator>`[[isMuted]]`</dfn></dt>
 <dd>A boolean whose value indicates whether this source and all the
 {{MediaStreamTrack}}s it sources, are currently {{MediaStreamTrack/muted}} or not.
 </dd>
