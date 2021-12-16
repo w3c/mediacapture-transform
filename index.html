@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version cace53f8c, updated Tue Dec 7 12:12:54 2021 -0800" name="generator">
   <link href="https://w3c.github.io/mediacapture-insertable-streams/" rel="canonical">
-  <meta content="a7bca30a90a2daee26391c367e5841474a633c91" name="document-revision">
+  <meta content="d1946a8c9a4b02f650e37707058f86ff58fa9702" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -579,7 +579,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">MediaStreamTrack Insertable Media Processing using Streams</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#ED">Editor’s Draft</a>, <time class="dt-updated" datetime="2021-12-15">15 December 2021</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#ED">Editor’s Draft</a>, <time class="dt-updated" datetime="2021-12-16">16 December 2021</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -949,7 +949,7 @@ There is no WG consensus on whether or not it should be exposed on Window.</p>
     <li data-md>
      <p>Let <var>generator</var> be a new <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator③">VideoTrackGenerator</a></code> object.</p>
     <li data-md>
-     <p>Let <var>track</var> be a newly <a data-link-type="dfn">created</a> <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack①⑥">MediaStreamTrack</a></code> with <var>source</var> set to <var>generator</var> and <var>tieSourceToContext</var> set to <code>false</code>.</p>
+     <p>Let <var>track</var> be a newly <a data-link-type="dfn" href="https://www.w3.org/TR/mediacapture-streams/#dfn-create-a-mediastreamtrack" id="ref-for-dfn-create-a-mediastreamtrack">created</a> <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack①⑥">MediaStreamTrack</a></code> with <var>source</var> set to <var>generator</var> and <var>tieSourceToContext</var> set to <code>false</code>.</p>
     <li data-md>
      <p>Initialize <var>generator</var>.<code class="idl"><a data-link-type="idl" href="#dom-videotrackgenerator-track" id="ref-for-dom-videotrackgenerator-track④">track</a></code> to <var>track</var>.</p>
     <li data-md>
@@ -1511,6 +1511,12 @@ we have finished moving repos about.</p>
     <li><a href="#ref-for-dom-mediastreamtrack-clone">2.2. VideoTrackGenerator</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-dfn-create-a-mediastreamtrack">
+   <a href="https://www.w3.org/TR/mediacapture-streams/#dfn-create-a-mediastreamtrack">https://www.w3.org/TR/mediacapture-streams/#dfn-create-a-mediastreamtrack</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dfn-create-a-mediastreamtrack">2.2.3. Constructor</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-idl-def-VideoResizeModeEnum.right">
    <a href="https://w3c.github.io/mediacapture-main/#idl-def-VideoResizeModeEnum.right">https://w3c.github.io/mediacapture-main/#idl-def-VideoResizeModeEnum.right</a><b>Referenced in:</b>
    <ul>
@@ -1754,6 +1760,7 @@ we have finished moving repos about.</p>
      <li><span class="dfn-paneled" id="term-for-dom-videoresizemodeenum">VideoResizeModeEnum</span>
      <li><span class="dfn-paneled" id="term-for-dom-mediastreamtrack-applyconstraints">applyConstraints</span>
      <li><span class="dfn-paneled" id="term-for-dom-mediastreamtrack-clone">clone</span>
+     <li><span class="dfn-paneled" id="term-for-dfn-create-a-mediastreamtrack">create a mediastreamtrack</span>
      <li><span class="dfn-paneled" id="term-for-idl-def-VideoResizeModeEnum.right">crop-and-scale</span>
      <li><span class="dfn-paneled" id="term-for-dom-mediastreamtrack-getcapabilities">getCapabilities</span>
      <li><span class="dfn-paneled" id="term-for-dom-mediastreamtrack-muted">muted</span>
@@ -1817,7 +1824,7 @@ we have finished moving repos about.</p>
    <dt id="biblio-infra">[INFRA]
    <dd>Anne van Kesteren; Domenic Denicola. <a href="https://infra.spec.whatwg.org/"><cite>Infra Standard</cite></a>. Living Standard. URL: <a href="https://infra.spec.whatwg.org/">https://infra.spec.whatwg.org/</a>
    <dt id="biblio-mediacapture-streams">[MEDIACAPTURE-STREAMS]
-   <dd>Cullen Jennings; et al. <a href="https://www.w3.org/TR/mediacapture-streams/"><cite>Media Capture and Streams</cite></a>. 9 December 2021. CR. URL: <a href="https://www.w3.org/TR/mediacapture-streams/">https://www.w3.org/TR/mediacapture-streams/</a>
+   <dd>Cullen Jennings; et al. <a href="https://www.w3.org/TR/mediacapture-streams/"><cite>Media Capture and Streams</cite></a>. 15 December 2021. CR. URL: <a href="https://www.w3.org/TR/mediacapture-streams/">https://www.w3.org/TR/mediacapture-streams/</a>
    <dt id="biblio-rfc2119">[RFC2119]
    <dd>S. Bradner. <a href="https://datatracker.ietf.org/doc/html/rfc2119"><cite>Key words for use in RFCs to Indicate Requirement Levels</cite></a>. March 1997. Best Current Practice. URL: <a href="https://datatracker.ietf.org/doc/html/rfc2119">https://datatracker.ietf.org/doc/html/rfc2119</a>
    <dt id="biblio-streams">[STREAMS]
@@ -1825,7 +1832,7 @@ we have finished moving repos about.</p>
    <dt id="biblio-webaudio">[WEBAUDIO]
    <dd>Paul Adenot; Hongchan Choi. <a href="https://www.w3.org/TR/webaudio/"><cite>Web Audio API</cite></a>. 17 June 2021. REC. URL: <a href="https://www.w3.org/TR/webaudio/">https://www.w3.org/TR/webaudio/</a>
    <dt id="biblio-webcodecs">[WEBCODECS]
-   <dd>Chris Cunningham; Paul Adenot; Bernard Aboba. <a href="https://www.w3.org/TR/webcodecs/"><cite>WebCodecs</cite></a>. 29 November 2021. WD. URL: <a href="https://www.w3.org/TR/webcodecs/">https://www.w3.org/TR/webcodecs/</a>
+   <dd>Chris Cunningham; Paul Adenot; Bernard Aboba. <a href="https://www.w3.org/TR/webcodecs/"><cite>WebCodecs</cite></a>. 16 December 2021. WD. URL: <a href="https://www.w3.org/TR/webcodecs/">https://www.w3.org/TR/webcodecs/</a>
    <dt id="biblio-webidl">[WEBIDL]
    <dd>Edgar Chen; Timothy Gu. <a href="https://webidl.spec.whatwg.org/"><cite>Web IDL Standard</cite></a>. Living Standard. URL: <a href="https://webidl.spec.whatwg.org/">https://webidl.spec.whatwg.org/</a>
    <dt id="biblio-webrtc-1">[WEBRTC-1]
