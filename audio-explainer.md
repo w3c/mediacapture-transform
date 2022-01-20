@@ -34,7 +34,7 @@ Under "Use cases supported", include:
 
 Under 'MediaStreamTrackProcessor', include:
 
-if the track is an audio track, the chunks will be {{AudioData}} objects.
+If the track is an audio track, the chunks will be {{AudioData}} objects.
 
 Under "Security and Privacy considerations", include AudioData as an alternative
 to VideoFrame.

@@ -69,6 +69,9 @@ This specification explicitly aims to support the following use cases:
 
 Note: There is no WG consensus on whether or not audio use cases should be supported.
 
+Note: The WG expects that the Streams spec will adopt the solutions outlined in
+[the relevant explainer](https://github.com/whatwg/streams/blob/main/streams-for-raw-video-explainer.md), to solve some issues with the current Streams specification.
+
 # Specification # {#specification}
 
 This specification shows the IDL extensions for [[MEDIACAPTURE-STREAMS]].
