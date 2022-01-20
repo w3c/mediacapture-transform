@@ -65,6 +65,7 @@ RTCPeerConnection, canvas or MediaRecorder.
 This specification explicitly aims to support the following use cases:
 - *Video processing*: This is the "Funny Hats" use case, where the input is a single video track and the output is a transformed video track.
   - *Custom video sink*: In this use case, the purpose is not producing a processed {{MediaStreamTrack}}, but to consume the media in a different way. For example, an application could use [[WEBCODECS]] and [[WEBTRANSPORT]] to create an {{RTCPeerConnection}}-like sink, but using different codec configuration and networking protocols.
+  - *Multi-source processing*: In this use case, two or more tracks are combined into one. For example, a presentation containing a live weather map and a camera track with the speaker can be combined to produce a weather report application.
 
 Note: There is no WG consensus on whether or not audio use cases should be supported.
 
