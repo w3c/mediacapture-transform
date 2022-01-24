@@ -39,14 +39,3 @@ If the track is an audio track, the chunks will be {{AudioData}} objects.
 Under "Security and Privacy considerations", include AudioData as an alternative
 to VideoFrame.
 
-The additional IDL would be:
-
-<pre class="idl">
-[Exposed=DedicatedWorker]
-interface AudioTrackGenerator {
-  constructor();
-  readonly attribute WritableStream writable;
-  attribute boolean muted;
-  readonly attribute MediaStreamTrack track;
-};
-</pre>
