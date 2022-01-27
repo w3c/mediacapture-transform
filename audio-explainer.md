@@ -4,7 +4,25 @@ This document contains arguments for including audio processing in the Breakout
 Box mechanism, and preserves pieces of text that have been removed from the spec
 because there is no WG consensus on including audio.
 
+This is a supporting document for [issue #29](https://github.com/w3c/mediacapture-transform/issues/29).
+
+# Examples of processing where audio support would be helpful
+
+TBD
+
+
 # Spec changes needed
+
+These spec changes are included here because the text contains information
+that was present in earlier versions of the specification, but were deleted
+when the decision was made to not document stuff that did not have WG consensus.
+
+In addition, the text below contains changes that are required to align the
+audio processing API with the presently proposed video processing API.
+
+Markup included is intended to be consumed by Bikeshed.
+
+## Detailed changes
 
 Include &lt;audio&gt; tags as a possible destination
 
@@ -39,7 +57,11 @@ If the track is an audio track, the chunks will be {{AudioData}} objects.
 Under "Security and Privacy considerations", include AudioData as an alternative
 to VideoFrame.
 
-The additional IDL would be:
+TODO: Include consideration of constraints for audio tracks.
+
+## Additional IDL for AudioTrackGenerator
+This IDL is intended to parallel that for VideoTrackGenerator. In previous
+proposals, both versions were included in MediaStreamTrackGenerator.
 
 <pre class="idl">
 [Exposed=DedicatedWorker]
