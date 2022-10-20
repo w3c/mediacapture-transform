@@ -14,30 +14,12 @@ Abstract: {{MediaStreamTrack}}s carrying raw data.
 Markup Shorthands: css no, markdown yes
 </pre>
 <pre class=anchors>
-url: https://wicg.github.io/web-codecs/#videoframe; text: VideoFrame; type: interface; spec: WEBCODECS
-url: https://wicg.github.io/web-codecs/#videoencoder; text: VideoEncoder; type: interface; spec: WEBCODECS
-url: https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack; text: MediaStreamTrack; type: interface; spec: MEDIACAPTURE-STREAMS
-url: https://www.w3.org/TR/mediacapture-streams/#dom-constrainulong; text: ConstrainULong; type: typedef; spec: MEDIACAPTURE-STREAMS
-url: https://www.w3.org/TR/mediacapture-streams/#dom-constraindouble; text: ConstrainDouble; type: typedef; spec: MEDIACAPTURE-STREAMS
-url: https://www.w3.org/TR/mediacapture-streams/#dom-constraindomstring; text: ConstrainDOMString; type: typedef; spec: MEDIACAPTURE-STREAMS
-url: https://www.w3.org/TR/mediacapture-streams/#dom-videoresizemodeenum; text: VideoResizeModeEnum; type: enum; spec: MEDIACAPTURE-STREAMS
-url: https://w3c.github.io/mediacapture-main/#idl-def-VideoResizeModeEnum.user; text: none; for: VideoResizeModeEnum; type: enum; spec: MEDIACAPTURE-STREAMS
-url: https://w3c.github.io/mediacapture-main/#idl-def-VideoResizeModeEnum.right; text: crop-and-scale; for: VideoResizeModeEnum; type: enum; spec: MEDIACAPTURE-STREAMS
-url: https://infra.spec.whatwg.org/#queues; text: Queue; type: typedef; spec: INFRA
-url: https://infra.spec.whatwg.org/#queue-enqueue; text: enqueue; for: Queue; type: typedef; spec: INFRA
-url: https://infra.spec.whatwg.org/#queue-dequeue; text: dequeue; for: Queue; type: typedef; spec: INFRA
-url: https://infra.spec.whatwg.org/#list-is-empty; text: empty; for: Queue; type: typedef; spec: INFRA
-url: https://infra.spec.whatwg.org/#booleans; text: Boolean; type: typedef; spec: INFRA
-url: https://www.w3.org/TR/mediacapture-streams/#source-stopped; text: StopSource; type: typedef; spec: MEDIACAPTURE-STREAM
-url: https://www.w3.org/TR/mediacapture-streams/#track-ended; text: TrackEnded; type: typedef; spec: MEDIACAPTURE-STREAMS
-url: https://streams.spec.whatwg.org/#readable-stream-default-controller-close; text: ReadableStreamDefaultControllerClose; type: typedef; spec: STREAMS
-url: https://streams.spec.whatwg.org/#readablestream-controller; text: ReadableStreamControllerSlot; type: typedef; spec: STREAMS
-url: https://www.w3.org/TR/mediacapture-streams/#ends-nostop; text: EndTrack; type: typedef; spec: MEDIACAPTURE-STREAMS
-url: https://www.w3.org/TR/mediacapture-streams/#dom-overconstrainederror; text: OverconstrainedError; type: typedef; spec: MEDIACAPTURE-STREAMS
-url: https://infra.spec.whatwg.org/#list-empty; text: Empty; for: List; type: typedef; spec: INFRA
-url: https://infra.spec.whatwg.org/#list-remove; text: remove; for: List; type: typedef; spec: INFRA
+url: https://w3c.github.io/webcodecs/#videoframe; text: VideoFrame; type: interface; spec: WEBCODECS
+url: https://w3c.github.io/webcodecs/#videoencoder; text: VideoEncoder; type: interface; spec: WEBCODECS
+url: https://streams.spec.whatwg.org/#readablestream-controller; text: [[controller]]; for: ReadableStream; type: dfn; spec: STREAMS
 </pre>
 <pre class=link-defaults>
+spec:infra; type:dfn; text:queue
 spec:streams; type:interface; text:WritableStream
 </pre>
 
@@ -154,7 +136,7 @@ There is no WG consensus on whether or not the interface should not be exposed o
 as specified by the application. It may have no value if the application does
 not provide it. Its minimum valid value is 1.</dd>
 <dt><dfn attribute for=MediaStreamTrackProcessor>`[[queue]]`</dfn></dt>
-<dd>A {{Queue|queue}} used to buffer media frames not yet read by the application</dd>
+<dd>A [=queue=] used to buffer media frames not yet read by the application</dd>
 <dt><dfn attribute for=MediaStreamTrackProcessor>`[[numPendingReads]]`</dfn></dt>
 <dd>An integer whose value represents the number of read requests issued by the
 application that have not yet been handled.
@@ -173,7 +155,7 @@ application that have not yet been handled.
 2. Let |processor| be a new {{MediaStreamTrackProcessor}} object.
 3. Assign |init|.{{MediaStreamTrackProcessorInit/track}} to |processor|.`[[track]]`.
 4. If |init|.{{MediaStreamTrackProcessorInit/maxBufferSize}} has a integer value greater than or equal to 1, assign it to |processor|.`[[maxBufferSize]]`.
-6. Set the `[[queue]]` internal slot of |processor| to an empty {{Queue}}.
+6. Set the `[[queue]]` internal slot of |processor| to an empty [=queue=].
 7. Set |processor|.`[[numPendingReads]]` to 0.
 8. Set |processor|.`[[isClosed]]` to false.
 9. Return |processor|.
@@ -193,9 +175,9 @@ The <dfn>processorPull</dfn> algorithm is given a |processor| as input. It is de
 3. Return  [=a promise resolved with=] undefined.
 
 The <dfn>maybeReadFrame</dfn> algorithm is given a |processor| as input. It is defined by the following steps:
-1. If |processor|.`[[queue]]` is {{Queue/empty}}, abort these steps.
+1. If |processor|.`[[queue]]` is [=queue/empty=], abort these steps.
 2. If |processor|.`[[numPendingReads]]` equals zero, abort these steps.
-3. {{Queue/dequeue}} a frame from |processor|.`[[queue]]` and [=ReadableStream/Enqueue=] it in |processor|.{{MediaStreamTrackProcessor/readable}}.
+3. [=queue/Dequeue=] a frame from |processor|.`[[queue]]` and [=ReadableStream/Enqueue=] it in |processor|.{{MediaStreamTrackProcessor/readable}}.
 4. Decrement |processor|.`[[numPendingReads]]` by 1.
 5. Go to step 1.
 
@@ -208,8 +190,8 @@ The <dfn>processorClose</dfn> algorithm is given a |processor| as input.
 It is defined by running the following steps:
 1. If |processor|.`[[isClosed]]` is true, abort these steps.
 2. Disconnect |processor| from |processor|.`[[track]]`. The mechanism to do this is UA specific and the result is that |processor| is no longer a sink of |processor|.`[[track]]`.
-3. {{ReadableStreamDefaultControllerClose|Close}} |processor|.{{MediaStreamTrackProcessor/readable}}.{{ReadableStreamControllerSlot|[[controller]]}}.
-4. {{List/Empty}} |processor|.`[[queue]]`.
+3. [$ReadableStreamDefaultControllerClose|Close$] |processor|.{{MediaStreamTrackProcessor/readable}}.[=ReadableStream/[[controller]]=].
+4. [=list/Empty=] |processor|.`[[queue]]`.
 5. Set |processor|.`[[isClosed]]` to true.
 
 </dd>
@@ -222,11 +204,11 @@ with |processor| as parameter.
 
 The <dfn>handleNewFrame</dfn> algorithm is given a |processor| as input.
 It is defined by running the following steps:
-1. If |processor|.`[[maxBufferSize]]` has a value and |processor|.`[[queue]]` has |processor|.`[[maxBufferSize]]` elements, {{Queue/dequeue}} an item from |processor|.`[[queue]]`.
-2. {{Queue/enqueue}} the new frame in |processor|.`[[queue]]`.
+1. If |processor|.`[[maxBufferSize]]` has a value and |processor|.`[[queue]]` has |processor|.`[[maxBufferSize]]` elements, [=queue/dequeue=] an item from |processor|.`[[queue]]`.
+2. [=queue/Enqueue=] the new frame in |processor|.`[[queue]]`.
 3. [=Queue a task=] to run the [=maybeReadFrame=] algorithm with |processor| as parameter.
 
-At any time, the UA MAY {{List/remove}} any frame from |processor|.`[[queue]]`.
+At any time, the UA MAY [=list/remove=] any frame from |processor|.`[[queue]]`.
 The UA may decide to remove frames from |processor|.`[[queue]]`, for example,
 to prevent resource exhaustion or to improve performance in certain situations.
 </dd>
@@ -238,7 +220,7 @@ is a gap in the timestamps of the frames.
 </dl>
 
 When the `[[track]]` of a {{MediaStreamTrackProcessor}} |processor|
-{{TrackEnded|ends}}, the [=processorClose=] algorithm must be
+[=track|ends=], the [=processorClose=] algorithm must be
 executed with |processor| as parameter.
 
 
@@ -321,7 +303,7 @@ different version of the media data depending on its constraints.
 
 The <dfn>closeWritable</dfn> algorithm is given a |generator| as input.
 It is defined by running the following steps.
-1. For each track `t` sourced from |generator|, {{EndTrack|end}} `t`.
+1. For each track `t` sourced from |generator|, [=track|end=] `t`.
 2. Return [=a promise resolved with=] undefined.
 
 </dd>
