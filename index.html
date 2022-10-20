@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version b0de3432c, updated Thu Oct 13 09:16:59 2022 -0700" name="generator">
   <link href="https://www.w3.org/TR/mediacapture-transform/" rel="canonical">
-  <meta content="92ff206f6d3fa9e2c90861cc70585797af9121e6" name="document-revision">
+  <meta content="444de8446dd9557c4153328e6d6a7b5bf51d0590" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -603,7 +603,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   </div>
   <div class="p-summary" data-fill-with="abstract">
    <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
-   <p>This API defines an API surface for manipulating the bits on <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack">MediaStreamTrack</a></code>s carrying raw data.</p>
+   <p>This API defines an API surface for manipulating the bits on <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack">MediaStreamTrack</a></code>s carrying raw data.</p>
   </div>
   <h2 class="no-num no-toc no-ref heading settled" id="sotd"><span class="content">Status of this document</span></h2>
   <div data-fill-with="status">
@@ -722,7 +722,7 @@ RTCPeerConnection, canvas or MediaRecorder.</p>
     <li data-md>
      <p><em>Video processing</em>: This is the "Funny Hats" use case, where the input is a single video track and the output is a transformed video track.</p>
     <li data-md>
-     <p><em>Custom video sink</em>: In this use case, the purpose is not producing a processed <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack①">MediaStreamTrack</a></code>, but to consume the media in a different way. For example, an application could use <a data-link-type="biblio" href="#biblio-webcodecs">[WEBCODECS]</a> and <a data-link-type="biblio" href="#biblio-webtransport">[WEBTRANSPORT]</a> to create an <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webrtc/#dom-rtcpeerconnection" id="ref-for-dom-rtcpeerconnection">RTCPeerConnection</a></code>-like sink, but using different codec configuration and networking protocols.</p>
+     <p><em>Custom video sink</em>: In this use case, the purpose is not producing a processed <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack①">MediaStreamTrack</a></code>, but to consume the media in a different way. For example, an application could use <a data-link-type="biblio" href="#biblio-webcodecs">[WEBCODECS]</a> and <a data-link-type="biblio" href="#biblio-webtransport">[WEBTRANSPORT]</a> to create an <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webrtc/#dom-rtcpeerconnection" id="ref-for-dom-rtcpeerconnection">RTCPeerConnection</a></code>-like sink, but using different codec configuration and networking protocols.</p>
     <li data-md>
      <p><em>Multi-source processing</em>: In this use case, two or more tracks are combined into one. For example, a presentation containing a live weather map and a camera track with the speaker can be combined to produce a weather report application.</p>
    </ul>
@@ -730,16 +730,16 @@ RTCPeerConnection, canvas or MediaRecorder.</p>
    <p class="note" role="note"><span>Note:</span> The WG expects that the Streams spec will adopt the solutions outlined in <a href="https://github.com/whatwg/streams/blob/main/streams-for-raw-video-explainer.md">the relevant explainer</a>, to solve some issues with the current Streams specification.</p>
    <h2 class="heading settled" data-level="2" id="specification"><span class="secno">2. </span><span class="content">Specification</span><a class="self-link" href="#specification"></a></h2>
    <p>This specification shows the IDL extensions for <a data-link-type="biblio" href="#biblio-mediacapture-streams">[MEDIACAPTURE-STREAMS]</a>.
-It defines some new objects that inherit the <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack②">MediaStreamTrack</a></code> interface, and
-can be constructed from a <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack③">MediaStreamTrack</a></code>.</p>
+It defines some new objects that inherit the <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack②">MediaStreamTrack</a></code> interface, and
+can be constructed from a <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack③">MediaStreamTrack</a></code>.</p>
    <p>The API consists of two elements. One is a track sink that is
 capable of exposing the unencoded media frames from the track to a ReadableStream.
 The other one is the inverse of that: it provides a track source that takes
 media frames as input.</p>
    <h3 class="heading settled" data-level="2.1" id="track-processor"><span class="secno">2.1. </span><span class="content">MediaStreamTrackProcessor</span><a class="self-link" href="#track-processor"></a></h3>
    <p>A <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor">MediaStreamTrackProcessor</a></code> allows the creation of a <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#readablestream" id="ref-for-readablestream">ReadableStream</a></code> that can expose the media flowing through
-a given <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack④">MediaStreamTrack</a></code>. If the <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack⑤">MediaStreamTrack</a></code> is a video track,
-the chunks exposed by the stream will be <code class="idl"><a data-link-type="idl" href="https://wicg.github.io/web-codecs/#videoframe" id="ref-for-videoframe">VideoFrame</a></code> objects.</p>
+a given <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack④">MediaStreamTrack</a></code>. If the <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack⑤">MediaStreamTrack</a></code> is a video track,
+the chunks exposed by the stream will be <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoframe" id="ref-for-videoframe">VideoFrame</a></code> objects.</p>
    <p>This makes <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①">MediaStreamTrackProcessor</a></code> effectively a sink in the <a href="https://www.w3.org/TR/mediacapture-streams/#the-model-sources-sinks-constraints-and-settings"> MediaStream model</a>.</p>
    <p>A <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor②">MediaStreamTrackProcessor</a></code> internally contains a circular queue
 that allows buffering incoming media frames delivered by the track it
@@ -772,7 +772,7 @@ does not give the UA enough flexibility to choose the buffering policy.</p>
 };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-mediastreamtrackprocessorinit"><code><c- g>MediaStreamTrackProcessorInit</c-></code></dfn> {
-  <c- b>required</c-> <a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack⑥"><c- n>MediaStreamTrack</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackProcessorInit" data-dfn-type="dict-member" data-export data-type="MediaStreamTrack " id="dom-mediastreamtrackprocessorinit-track"><code><c- g>track</c-></code></dfn>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack⑥"><c- n>MediaStreamTrack</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackProcessorInit" data-dfn-type="dict-member" data-export data-type="MediaStreamTrack " id="dom-mediastreamtrackprocessorinit-track"><code><c- g>track</c-></code></dfn>;
   [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#EnforceRange" id="ref-for-EnforceRange"><c- g>EnforceRange</c-></a>] <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-short" id="ref-for-idl-unsigned-short"><c- b>unsigned</c-> <c- b>short</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackProcessorInit" data-dfn-type="dict-member" data-export data-type="unsigned short " id="dom-mediastreamtrackprocessorinit-maxbuffersize"><code><c- g>maxBufferSize</c-></code></dfn>;
 };
 </pre>
@@ -786,7 +786,7 @@ There is no WG consensus on whether or not the interface should not be exposed o
     <dd>The maximum number of media frames to be buffered by the <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor⑨">MediaStreamTrackProcessor</a></code> as specified by the application. It may have no value if the application does
 not provide it. Its minimum valid value is 1.
     <dt><dfn class="idl-code" data-dfn-for="MediaStreamTrackProcessor" data-dfn-type="attribute" data-export id="dom-mediastreamtrackprocessor-queue-slot"><code>[[queue]]</code><a class="self-link" href="#dom-mediastreamtrackprocessor-queue-slot"></a></dfn>
-    <dd>A <code class="idl"><a data-link-type="idl" href="https://infra.spec.whatwg.org/#queues" id="ref-for-queues">queue</a></code> used to buffer media frames not yet read by the application
+    <dd>A <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#queue" id="ref-for-queue">queue</a> used to buffer media frames not yet read by the application
     <dt><dfn class="idl-code" data-dfn-for="MediaStreamTrackProcessor" data-dfn-type="attribute" data-export id="dom-mediastreamtrackprocessor-numpendingreads-slot"><code>[[numPendingReads]]</code><a class="self-link" href="#dom-mediastreamtrackprocessor-numpendingreads-slot"></a></dfn>
     <dd>An integer whose value represents the number of read requests issued by the
 application that have not yet been handled. 
@@ -797,7 +797,7 @@ application that have not yet been handled.
     <dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackProcessor" data-dfn-type="constructor" data-export data-lt="MediaStreamTrackProcessor(init)|constructor(init)" id="dom-mediastreamtrackprocessor-mediastreamtrackprocessor" title="MediaStreamTrackProcessor(init)"><code> MediaStreamTrackProcessor(<var>init</var>) </code></dfn> 
    <ol>
     <li data-md>
-     <p>If <var>init</var>.<code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessorinit-track" id="ref-for-dom-mediastreamtrackprocessorinit-track">track</a></code> is not a valid <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack⑦">MediaStreamTrack</a></code>,
+     <p>If <var>init</var>.<code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessorinit-track" id="ref-for-dom-mediastreamtrackprocessorinit-track">track</a></code> is not a valid <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack⑦">MediaStreamTrack</a></code>,
 throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror">TypeError</a></code>.</p>
     <li data-md>
      <p>Let <var>processor</var> be a new <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①①">MediaStreamTrackProcessor</a></code> object.</p>
@@ -806,7 +806,7 @@ throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.what
     <li data-md>
      <p>If <var>init</var>.<code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessorinit-maxbuffersize" id="ref-for-dom-mediastreamtrackprocessorinit-maxbuffersize">maxBufferSize</a></code> has a integer value greater than or equal to 1, assign it to <var>processor</var>.<code>[[maxBufferSize]]</code>.</p>
     <li data-md>
-     <p>Set the <code>[[queue]]</code> internal slot of <var>processor</var> to an empty <code class="idl"><a data-link-type="idl" href="https://infra.spec.whatwg.org/#queues" id="ref-for-queues①">Queue</a></code>.</p>
+     <p>Set the <code>[[queue]]</code> internal slot of <var>processor</var> to an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#queue" id="ref-for-queue①">queue</a>.</p>
     <li data-md>
      <p>Set <var>processor</var>.<code>[[numPendingReads]]</code> to 0.</p>
     <li data-md>
@@ -818,7 +818,7 @@ throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.what
    <dl>
     <dt><dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackProcessor" data-dfn-type="attribute" data-export id="dom-mediastreamtrackprocessor-readable"><code>readable</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://streams.spec.whatwg.org/#readablestream" id="ref-for-readablestream⑤">ReadableStream</a></span>
     <dd>
-     Allows reading the frames delivered by the <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack⑧">MediaStreamTrack</a></code> stored
+     Allows reading the frames delivered by the <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack⑧">MediaStreamTrack</a></code> stored
 in the <code>[[track]]</code> internal slot. This attribute is created the first time it is invoked
 according to the following steps: 
      <ol>
@@ -839,11 +839,11 @@ according to the following steps:
      <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="maybereadframe">maybeReadFrame</dfn> algorithm is given a <var>processor</var> as input. It is defined by the following steps:</p>
      <ol>
       <li data-md>
-       <p>If <var>processor</var>.<code>[[queue]]</code> is <code class="idl"><a data-link-type="idl" href="https://infra.spec.whatwg.org/#list-is-empty" id="ref-for-list-is-empty">empty</a></code>, abort these steps.</p>
+       <p>If <var>processor</var>.<code>[[queue]]</code> is <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-empty" id="ref-for-list-empty">empty</a>, abort these steps.</p>
       <li data-md>
        <p>If <var>processor</var>.<code>[[numPendingReads]]</code> equals zero, abort these steps.</p>
       <li data-md>
-       <p><code class="idl"><a data-link-type="idl" href="https://infra.spec.whatwg.org/#queue-dequeue" id="ref-for-queue-dequeue">dequeue</a></code> a frame from <var>processor</var>.<code>[[queue]]</code> and <a data-link-type="dfn" href="https://streams.spec.whatwg.org/#readablestream-enqueue" id="ref-for-readablestream-enqueue">Enqueue</a> it in <var>processor</var>.<code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-readable" id="ref-for-dom-mediastreamtrackprocessor-readable③">readable</a></code>.</p>
+       <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#queue-dequeue" id="ref-for-queue-dequeue">Dequeue</a> a frame from <var>processor</var>.<code>[[queue]]</code> and <a data-link-type="dfn" href="https://streams.spec.whatwg.org/#readablestream-enqueue" id="ref-for-readablestream-enqueue">Enqueue</a> it in <var>processor</var>.<code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-readable" id="ref-for-dom-mediastreamtrackprocessor-readable③">readable</a></code>.</p>
       <li data-md>
        <p>Decrement <var>processor</var>.<code>[[numPendingReads]]</code> by 1.</p>
       <li data-md>
@@ -865,9 +865,9 @@ It is defined by running the following steps:</p>
       <li data-md>
        <p>Disconnect <var>processor</var> from <var>processor</var>.<code>[[track]]</code>. The mechanism to do this is UA specific and the result is that <var>processor</var> is no longer a sink of <var>processor</var>.<code>[[track]]</code>.</p>
       <li data-md>
-       <p><code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#readable-stream-default-controller-close" id="ref-for-readable-stream-default-controller-close">Close</a></code> <var>processor</var>.<code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-readable" id="ref-for-dom-mediastreamtrackprocessor-readable④">readable</a></code>.<code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#readablestream-controller" id="ref-for-readablestream-controller">[[controller]]</a></code>.</p>
+       <p><a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#readable-stream-default-controller-close" id="ref-for-readable-stream-default-controller-close">Close</a> <var>processor</var>.<code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-readable" id="ref-for-dom-mediastreamtrackprocessor-readable④">readable</a></code>.<a data-link-type="dfn" href="https://streams.spec.whatwg.org/#readablestream-controller" id="ref-for-readablestream-controller">[[controller]]</a>.</p>
       <li data-md>
-       <p><code class="idl"><a data-link-type="idl" href="https://infra.spec.whatwg.org/#list-empty" id="ref-for-list-empty">Empty</a></code> <var>processor</var>.<code>[[queue]]</code>.</p>
+       <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-empty" id="ref-for-list-empty①">Empty</a> <var>processor</var>.<code>[[queue]]</code>.</p>
       <li data-md>
        <p>Set <var>processor</var>.<code>[[isClosed]]</code> to true.</p>
      </ol>
@@ -880,27 +880,27 @@ with <var>processor</var> as parameter.
 It is defined by running the following steps:</p>
    <ol>
     <li data-md>
-     <p>If <var>processor</var>.<code>[[maxBufferSize]]</code> has a value and <var>processor</var>.<code>[[queue]]</code> has <var>processor</var>.<code>[[maxBufferSize]]</code> elements, <code class="idl"><a data-link-type="idl" href="https://infra.spec.whatwg.org/#queue-dequeue" id="ref-for-queue-dequeue①">dequeue</a></code> an item from <var>processor</var>.<code>[[queue]]</code>.</p>
+     <p>If <var>processor</var>.<code>[[maxBufferSize]]</code> has a value and <var>processor</var>.<code>[[queue]]</code> has <var>processor</var>.<code>[[maxBufferSize]]</code> elements, <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#queue-dequeue" id="ref-for-queue-dequeue①">dequeue</a> an item from <var>processor</var>.<code>[[queue]]</code>.</p>
     <li data-md>
-     <p><code class="idl"><a data-link-type="idl" href="https://infra.spec.whatwg.org/#queue-enqueue" id="ref-for-queue-enqueue">enqueue</a></code> the new frame in <var>processor</var>.<code>[[queue]]</code>.</p>
+     <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#queue-enqueue" id="ref-for-queue-enqueue">Enqueue</a> the new frame in <var>processor</var>.<code>[[queue]]</code>.</p>
     <li data-md>
      <p><a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#queue-a-task" id="ref-for-queue-a-task①">Queue a task</a> to run the <a data-link-type="dfn" href="#maybereadframe" id="ref-for-maybereadframe①">maybeReadFrame</a> algorithm with <var>processor</var> as parameter.</p>
    </ol>
-   <p>At any time, the UA MAY <code class="idl"><a data-link-type="idl" href="https://infra.spec.whatwg.org/#list-remove" id="ref-for-list-remove">remove</a></code> any frame from <var>processor</var>.<code>[[queue]]</code>.
+   <p>At any time, the UA MAY <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-remove" id="ref-for-list-remove">remove</a> any frame from <var>processor</var>.<code>[[queue]]</code>.
 The UA may decide to remove frames from <var>processor</var>.<code>[[queue]]</code>, for example,
 to prevent resource exhaustion or to improve performance in certain situations.</p>
    <p class="note" role="note"> The application may detect that frames have been dropped by noticing that there
 is a gap in the timestamps of the frames. </p>
-   <p>When the <code>[[track]]</code> of a <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①③">MediaStreamTrackProcessor</a></code> <var>processor</var> <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#track-ended" id="ref-for-track-ended">ends</a></code>, the <a data-link-type="dfn" href="#processorclose" id="ref-for-processorclose①">processorClose</a> algorithm must be
+   <p>When the <code>[[track]]</code> of a <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①③">MediaStreamTrackProcessor</a></code> <var>processor</var> <a data-link-type="dfn" href="https://drafts.csswg.org/css-text-4/#tracking" id="ref-for-tracking">ends</a>, the <a data-link-type="dfn" href="#processorclose" id="ref-for-processorclose①">processorClose</a> algorithm must be
 executed with <var>processor</var> as parameter.</p>
    <h3 class="heading settled" data-level="2.2" id="video-track-generator"><span class="secno">2.2. </span><span class="content">VideoTrackGenerator</span><a class="self-link" href="#video-track-generator"></a></h3>
-    A <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator">VideoTrackGenerator</a></code> allows the creation of a video source for a <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack⑨">MediaStreamTrack</a></code> in the <a href="https://www.w3.org/TR/mediacapture-streams/#the-model-sources-sinks-constraints-and-settings"> MediaStream model</a> that generates its frames from a Stream of <code class="idl"><a data-link-type="idl" href="https://wicg.github.io/web-codecs/#videoframe" id="ref-for-videoframe①">VideoFrame</a></code> objects. It has two readonly
-attributes: a <code class="idl"><a data-link-type="idl" href="#dom-videotrackgenerator-writable" id="ref-for-dom-videotrackgenerator-writable">writable</a></code> <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#writablestream" id="ref-for-writablestream">WritableStream</a></code> and a <code class="idl"><a data-link-type="idl" href="#dom-videotrackgenerator-track" id="ref-for-dom-videotrackgenerator-track">track</a></code> <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack①⓪">MediaStreamTrack</a></code>. 
+    A <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator">VideoTrackGenerator</a></code> allows the creation of a video source for a <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack⑨">MediaStreamTrack</a></code> in the <a href="https://www.w3.org/TR/mediacapture-streams/#the-model-sources-sinks-constraints-and-settings"> MediaStream model</a> that generates its frames from a Stream of <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoframe" id="ref-for-videoframe①">VideoFrame</a></code> objects. It has two readonly
+attributes: a <code class="idl"><a data-link-type="idl" href="#dom-videotrackgenerator-writable" id="ref-for-dom-videotrackgenerator-writable">writable</a></code> <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#writablestream" id="ref-for-writablestream">WritableStream</a></code> and a <code class="idl"><a data-link-type="idl" href="#dom-videotrackgenerator-track" id="ref-for-dom-videotrackgenerator-track">track</a></code> <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack①⓪">MediaStreamTrack</a></code>. 
    <p>The <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator①">VideoTrackGenerator</a></code> is the underlying sink] of its <code class="idl"><a data-link-type="idl" href="#dom-videotrackgenerator-writable" id="ref-for-dom-videotrackgenerator-writable①">writable</a></code> attribute. The <code class="idl"><a data-link-type="idl" href="#dom-videotrackgenerator-track" id="ref-for-dom-videotrackgenerator-track①">track</a></code> attribute
 is the output. Further tracks connected to the same <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator②">VideoTrackGenerator</a></code> can be
 created using the <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack-clone" id="ref-for-dom-mediastreamtrack-clone">clone</a></code> method on the <code class="idl"><a data-link-type="idl" href="#dom-videotrackgenerator-track" id="ref-for-dom-videotrackgenerator-track②">track</a></code> attribute.</p>
-   <p>The <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#writablestream" id="ref-for-writablestream①">WritableStream</a></code> accepts <code class="idl"><a data-link-type="idl" href="https://wicg.github.io/web-codecs/#videoframe" id="ref-for-videoframe②">VideoFrame</a></code> objects.
-When a <code class="idl"><a data-link-type="idl" href="https://wicg.github.io/web-codecs/#videoframe" id="ref-for-videoframe③">VideoFrame</a></code> is written to <code class="idl"><a data-link-type="idl" href="#dom-videotrackgenerator-writable" id="ref-for-dom-videotrackgenerator-writable②">writable</a></code>,
+   <p>The <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#writablestream" id="ref-for-writablestream①">WritableStream</a></code> accepts <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoframe" id="ref-for-videoframe②">VideoFrame</a></code> objects.
+When a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoframe" id="ref-for-videoframe③">VideoFrame</a></code> is written to <code class="idl"><a data-link-type="idl" href="#dom-videotrackgenerator-writable" id="ref-for-dom-videotrackgenerator-writable②">writable</a></code>,
 the frame’s <code>close()</code> method is automatically invoked, so that its internal
 resources are no longer accessible from JavaScript.</p>
    <p class="note" role="note"><span>Note:</span> There is consensus in the WG that a source capable of generating a MediaStreamTrack of kind "video" should exist.
@@ -911,7 +911,7 @@ There is no WG consensus on whether or not a source capable of generating a Medi
   <a class="idl-code" data-link-type="constructor" href="#dom-videotrackgenerator-videotrackgenerator" id="ref-for-dom-videotrackgenerator-videotrackgenerator"><c- g>constructor</c-></a>();
   <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://streams.spec.whatwg.org/#writablestream" id="ref-for-writablestream②"><c- n>WritableStream</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="WritableStream" href="#dom-videotrackgenerator-writable" id="ref-for-dom-videotrackgenerator-writable③"><c- g>writable</c-></a>;
   <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-boolean" id="ref-for-idl-boolean"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-type="boolean" href="#dom-videotrackgenerator-muted" id="ref-for-dom-videotrackgenerator-muted"><c- g>muted</c-></a>;
-  <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack①①"><c- n>MediaStreamTrack</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="MediaStreamTrack" href="#dom-videotrackgenerator-track" id="ref-for-dom-videotrackgenerator-track③"><c- g>track</c-></a>;
+  <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack①①"><c- n>MediaStreamTrack</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="MediaStreamTrack" href="#dom-videotrackgenerator-track" id="ref-for-dom-videotrackgenerator-track③"><c- g>track</c-></a>;
 };
 </pre>
    <p class="note" role="note"><span>Note:</span> There is WG consensus that this interface should be exposed on DedicatedWorker.
@@ -919,9 +919,9 @@ There is no WG consensus on whether or not it should be exposed on Window.</p>
    <h4 class="heading settled" data-level="2.2.2" id="internal-slots"><span class="secno">2.2.2. </span><span class="content">Internal slots</span><a class="self-link" href="#internal-slots"></a></h4>
    <dl>
     <dt><dfn class="idl-code" data-dfn-for="VideoTrackGenerator" data-dfn-type="attribute" data-export id="dom-videotrackgenerator-track-slot"><code>[[track]]</code><a class="self-link" href="#dom-videotrackgenerator-track-slot"></a></dfn>
-    <dd>The <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack①②">MediaStreamTrack</a></code> output of this source
+    <dd>The <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack①②">MediaStreamTrack</a></code> output of this source
     <dt><dfn class="idl-code" data-dfn-for="VideoTrackGenerator" data-dfn-type="attribute" data-export id="dom-videotrackgenerator-ismuted-slot"><code>[[isMuted]]</code><a class="self-link" href="#dom-videotrackgenerator-ismuted-slot"></a></dfn>
-    <dd>A boolean whose value indicates whether this source and all the <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack①③">MediaStreamTrack</a></code>s it sources, are currently <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack-muted" id="ref-for-dom-mediastreamtrack-muted">muted</a></code> or not. 
+    <dd>A boolean whose value indicates whether this source and all the <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack①③">MediaStreamTrack</a></code>s it sources, are currently <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack-muted" id="ref-for-dom-mediastreamtrack-muted">muted</a></code> or not. 
    </dl>
    <h4 class="heading settled" data-level="2.2.3" id="video-generator-constructor"><span class="secno">2.2.3. </span><span class="content">Constructor</span><a class="self-link" href="#video-generator-constructor"></a></h4>
     <dfn class="dfn-paneled idl-code" data-dfn-for="VideoTrackGenerator" data-dfn-type="constructor" data-export data-lt="VideoTrackGenerator()|constructor()" id="dom-videotrackgenerator-videotrackgenerator" title="VideoTrackGenerator(init)"><code> VideoTrackGenerator() </code></dfn> 
@@ -929,7 +929,7 @@ There is no WG consensus on whether or not it should be exposed on Window.</p>
     <li data-md>
      <p>Let <var>generator</var> be a new <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator③">VideoTrackGenerator</a></code> object.</p>
     <li data-md>
-     <p>Let <var>track</var> be a newly <a data-link-type="dfn" href="https://www.w3.org/TR/mediacapture-streams/#dfn-create-a-mediastreamtrack" id="ref-for-dfn-create-a-mediastreamtrack">created</a> <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack①④">MediaStreamTrack</a></code> with <var>source</var> set to <var>generator</var> and <var>tieSourceToContext</var> set to <code>false</code>.</p>
+     <p>Let <var>track</var> be a newly <a data-link-type="dfn" href="https://www.w3.org/TR/mediacapture-streams/#dfn-create-a-mediastreamtrack" id="ref-for-dfn-create-a-mediastreamtrack">created</a> <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack①④">MediaStreamTrack</a></code> with <var>source</var> set to <var>generator</var> and <var>tieSourceToContext</var> set to <code>false</code>.</p>
     <li data-md>
      <p>Initialize <var>generator</var>.<code class="idl"><a data-link-type="idl" href="#dom-videotrackgenerator-track" id="ref-for-dom-videotrackgenerator-track④">track</a></code> to <var>track</var>.</p>
     <li data-md>
@@ -950,7 +950,7 @@ is accessed for the first time, it MUST be initialized with the following steps:
      <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="writeframe">writeFrame</dfn> algorithm is given a <var>generator</var> and a <var>frame</var> as input. It is defined by running the following steps:</p>
      <ol>
       <li data-md>
-       <p>If <var>frame</var> is not a <code class="idl"><a data-link-type="idl" href="https://wicg.github.io/web-codecs/#videoframe" id="ref-for-videoframe④">VideoFrame</a></code> object, return [=a promise rejected with= a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①">TypeError</a></code>.</p>
+       <p>If <var>frame</var> is not a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoframe" id="ref-for-videoframe④">VideoFrame</a></code> object, return [=a promise rejected with= a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①">TypeError</a></code>.</p>
       <li data-md>
        <p>If <var>generator</var>.<code>[[isMuted]]</code> is false, send the media data backing <var>frame</var> to all live tracks sourced from <var>generator</var>.</p>
       <li data-md>
@@ -966,7 +966,7 @@ different version of the media data depending on its constraints. </p>
 It is defined by running the following steps.</p>
      <ol>
       <li data-md>
-       <p>For each track <code>t</code> sourced from <var>generator</var>, <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#ends-nostop" id="ref-for-ends-nostop">end</a></code> <code>t</code>.</p>
+       <p>For each track <code>t</code> sourced from <var>generator</var>, <a data-link-type="dfn" href="https://drafts.csswg.org/css-text-4/#tracking" id="ref-for-tracking①">end</a> <code>t</code>.</p>
       <li data-md>
        <p>Return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-promise-resolved-with" id="ref-for-a-promise-resolved-with③">a promise resolved with</a> undefined.</p>
      </ol>
@@ -987,17 +987,17 @@ It is defined by running the following steps.</p>
          <p>For each live track sourced by <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①⓪">this</a>, <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#queue-a-task" id="ref-for-queue-a-task③">queue a task</a> to <a data-link-type="dfn" href="https://w3c.github.io/mediacapture-main/#set-track-muted" id="ref-for-set-track-muted">set a track’s muted state</a> to <var>settledValue</var>.</p>
        </ol>
      </ol>
-    <dt><dfn class="dfn-paneled idl-code" data-dfn-for="VideoTrackGenerator" data-dfn-type="attribute" data-export id="dom-videotrackgenerator-track"><code>track</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack①⑤">MediaStreamTrack</a>, readonly</span>
-    <dd>The <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack①⑥">MediaStreamTrack</a></code> output. The getter steps are to return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①①">this</a>.<code>[[track]]</code>. 
+    <dt><dfn class="dfn-paneled idl-code" data-dfn-for="VideoTrackGenerator" data-dfn-type="attribute" data-export id="dom-videotrackgenerator-track"><code>track</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack①⑤">MediaStreamTrack</a>, readonly</span>
+    <dd>The <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack①⑥">MediaStreamTrack</a></code> output. The getter steps are to return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①①">this</a>.<code>[[track]]</code>. 
    </dl>
    <h4 class="heading settled" data-level="2.2.5" id="video-generator-as-track"><span class="secno">2.2.5. </span><span class="content">Specialization of MediaStreamTrack behavior</span><a class="self-link" href="#video-generator-as-track"></a></h4>
-    A <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator⑥">VideoTrackGenerator</a></code> acts as the source for one or more <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack①⑦">MediaStreamTrack</a></code>s.
-This section adds clarifications on how a <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack①⑧">MediaStreamTrack</a></code> sourced from a <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator⑦">VideoTrackGenerator</a></code> behaves. 
+    A <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator⑥">VideoTrackGenerator</a></code> acts as the source for one or more <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack①⑦">MediaStreamTrack</a></code>s.
+This section adds clarifications on how a <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack①⑧">MediaStreamTrack</a></code> sourced from a <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator⑦">VideoTrackGenerator</a></code> behaves. 
    <h5 class="heading settled" data-level="2.2.5.1" id="video-generator-stop"><span class="secno">2.2.5.1. </span><span class="content">stop</span><a class="self-link" href="#video-generator-stop"></a></h5>
     The <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack-stop" id="ref-for-dom-mediastreamtrack-stop">stop</a></code> method stops the track. When the last track
 sourced from a <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator⑧">VideoTrackGenerator</a></code> ends, that <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator⑨">VideoTrackGenerator</a></code>'s <code class="idl"><a data-link-type="idl" href="#dom-videotrackgenerator-writable" id="ref-for-dom-videotrackgenerator-writable⑥">writable</a></code> is <a data-link-type="dfn" href="https://streams.spec.whatwg.org/#writablestream-close" id="ref-for-writablestream-close">closed</a>. 
    <h5 class="heading settled" data-level="2.2.5.2" id="generator-constrainable-properties"><span class="secno">2.2.5.2. </span><span class="content">Constrainable properties</span><a class="self-link" href="#generator-constrainable-properties"></a></h5>
-   <p>The following constrainable properties are defined for any <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack①⑨">MediaStreamTrack</a></code>s sourced from
+   <p>The following constrainable properties are defined for any <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack①⑨">MediaStreamTrack</a></code>s sourced from
 a <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator①⓪">VideoTrackGenerator</a></code>:</p>
    <table>
     <thead>
@@ -1012,15 +1012,15 @@ a <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-
       <td> As a setting, this is the width, in pixels, of the latest
         frame received by the track.
         As a capability, <code>max</code> MUST reflect the
-        largest width a <code class="idl"><a data-link-type="idl" href="https://wicg.github.io/web-codecs/#videoframe" id="ref-for-videoframe⑤">VideoFrame</a></code> may have, and <code>min</code> MUST reflect the smallest width a <code class="idl"><a data-link-type="idl" href="https://wicg.github.io/web-codecs/#videoframe" id="ref-for-videoframe⑥">VideoFrame</a></code> may have. 
+        largest width a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoframe" id="ref-for-videoframe⑤">VideoFrame</a></code> may have, and <code>min</code> MUST reflect the smallest width a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoframe" id="ref-for-videoframe⑥">VideoFrame</a></code> may have. 
      <tr id="def-constraint-height">
       <td> height 
       <td> <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-constrainulong" id="ref-for-dom-constrainulong①">ConstrainULong</a></code> 
       <td> As a setting, this is the height, in pixels, of the latest
         frame received by the track.
         As a capability, <code>max</code> MUST reflect the largest height
-        a <code class="idl"><a data-link-type="idl" href="https://wicg.github.io/web-codecs/#videoframe" id="ref-for-videoframe⑦">VideoFrame</a></code> may have, and <code>min</code> MUST reflect
-        the smallest height a <code class="idl"><a data-link-type="idl" href="https://wicg.github.io/web-codecs/#videoframe" id="ref-for-videoframe⑧">VideoFrame</a></code> may have. 
+        a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoframe" id="ref-for-videoframe⑦">VideoFrame</a></code> may have, and <code>min</code> MUST reflect
+        the smallest height a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoframe" id="ref-for-videoframe⑧">VideoFrame</a></code> may have. 
      <tr id="def-constraint-frameRate">
       <td> frameRate 
       <td> <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-constraindouble" id="ref-for-dom-constraindouble">ConstrainDouble</a></code> 
@@ -1034,26 +1034,26 @@ a <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-
         delivered by the track;
         this is the width in pixels divided by height in pixels as a
         double rounded to the tenth decimal place. As a capability, <code>min</code> MUST be the
-        smallest aspect ratio supported by a <code class="idl"><a data-link-type="idl" href="https://wicg.github.io/web-codecs/#videoframe" id="ref-for-videoframe⑨">VideoFrame</a></code>, and <code>max</code> MUST be
-        the largest aspect ratio supported by a <code class="idl"><a data-link-type="idl" href="https://wicg.github.io/web-codecs/#videoframe" id="ref-for-videoframe①⓪">VideoFrame</a></code>. 
+        smallest aspect ratio supported by a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoframe" id="ref-for-videoframe⑨">VideoFrame</a></code>, and <code>max</code> MUST be
+        the largest aspect ratio supported by a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoframe" id="ref-for-videoframe①⓪">VideoFrame</a></code>. 
      <tr id="def-constraint-resizeMode">
       <td> resizeMode 
       <td> <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-constraindomstring" id="ref-for-dom-constraindomstring">ConstrainDOMString</a></code> 
-      <td> As a setting, this string should be one of the members of <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-videoresizemodeenum" id="ref-for-dom-videoresizemodeenum">VideoResizeModeEnum</a></code>. The value "<code class="idl"><a data-link-type="idl" href="https://w3c.github.io/mediacapture-main/#idl-def-VideoResizeModeEnum.user" id="ref-for-idl-def-VideoResizeModeEnum.user">none</a></code>"
+      <td> As a setting, this string should be one of the members of <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-videoresizemodeenum" id="ref-for-dom-videoresizemodeenum">VideoResizeModeEnum</a></code>. The value "<code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#idl-def-VideoResizeModeEnum.user" id="ref-for-idl-def-VideoResizeModeEnum.user">none</a></code>"
         means that the frames output by the MediaStreamTrack are unmodified
         versions of the frames written to the <code class="idl"><a data-link-type="idl" href="#dom-videotrackgenerator-writable" id="ref-for-dom-videotrackgenerator-writable⑦">writable</a></code> backing
         the track, regardless of any constraints.
-        The value "<code class="idl"><a data-link-type="idl" href="https://w3c.github.io/mediacapture-main/#idl-def-VideoResizeModeEnum.right" id="ref-for-idl-def-VideoResizeModeEnum.right">crop-and-scale</a></code>" means
+        The value "<code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#idl-def-VideoResizeModeEnum.right" id="ref-for-idl-def-VideoResizeModeEnum.right">crop-and-scale</a></code>" means
         that the frames output by the MediaStreamTrack may be cropped and/or
         downscaled versions
         of the source frames, based on the values of the width, height and
         aspectRatio constraints of the track.
-        As a capability, the values "<code class="idl"><a data-link-type="idl" href="https://w3c.github.io/mediacapture-main/#idl-def-VideoResizeModeEnum.user" id="ref-for-idl-def-VideoResizeModeEnum.user①">none</a></code>" and
-        "<code class="idl"><a data-link-type="idl" href="https://w3c.github.io/mediacapture-main/#idl-def-VideoResizeModeEnum.right" id="ref-for-idl-def-VideoResizeModeEnum.right①">crop-and-scale</a></code>" both MUST be present. 
+        As a capability, the values "<code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#idl-def-VideoResizeModeEnum.user" id="ref-for-idl-def-VideoResizeModeEnum.user①">none</a></code>" and
+        "<code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#idl-def-VideoResizeModeEnum.right" id="ref-for-idl-def-VideoResizeModeEnum.right①">crop-and-scale</a></code>" both MUST be present. 
    </table>
-   <p>The <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack-applyconstraints" id="ref-for-dom-mediastreamtrack-applyconstraints">applyConstraints</a></code> method applied to a video <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack②⓪">MediaStreamTrack</a></code> sourced from a <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator①①">VideoTrackGenerator</a></code> supports the properties defined above.
+   <p>The <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack-applyconstraints" id="ref-for-dom-mediastreamtrack-applyconstraints">applyConstraints</a></code> method applied to a video <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack②⓪">MediaStreamTrack</a></code> sourced from a <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator①①">VideoTrackGenerator</a></code> supports the properties defined above.
 It can be used, for example, to resize frames or adjust the frame rate of the track.
-Note that these constraints have no effect on the <code class="idl"><a data-link-type="idl" href="https://wicg.github.io/web-codecs/#videoframe" id="ref-for-videoframe①①">VideoFrame</a></code> objects
+Note that these constraints have no effect on the <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoframe" id="ref-for-videoframe①①">VideoFrame</a></code> objects
 written to the <code class="idl"><a data-link-type="idl" href="#dom-videotrackgenerator-writable" id="ref-for-dom-videotrackgenerator-writable⑧">writable</a></code> of a <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator①②">VideoTrackGenerator</a></code>,
 just on the output of the track on which the constraints have been applied.
 Note also that, since a <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator①③">VideoTrackGenerator</a></code> can in principle produce
@@ -1062,7 +1062,7 @@ an <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediaca
 backed by a <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator①④">VideoTrackGenerator</a></code> will generally not fail with <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-overconstrainederror" id="ref-for-dom-overconstrainederror">OverconstrainedError</a></code> unless the given constraints
 are outside the system-supported range, as reported by <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack-getcapabilities" id="ref-for-dom-mediastreamtrack-getcapabilities">getCapabilities</a></code>.</p>
    <h5 class="heading settled" data-level="2.2.5.3" id="generator-events-attributes"><span class="secno">2.2.5.3. </span><span class="content">Events and attributes</span><a class="self-link" href="#generator-events-attributes"></a></h5>
-    Events and attributes work the same as for any <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack②①">MediaStreamTrack</a></code>.
+    Events and attributes work the same as for any <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack②①">MediaStreamTrack</a></code>.
 It is relevant to note that if the <code class="idl"><a data-link-type="idl" href="#dom-videotrackgenerator-writable" id="ref-for-dom-videotrackgenerator-writable⑨">writable</a></code> stream of a <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator①⑤">VideoTrackGenerator</a></code> is closed, all the live
 tracks connected to it are ended and the <code>ended</code> event is fired on them. 
    <h2 class="heading settled" data-level="3" id="examples"><span class="secno">3. </span><span class="content">Examples</span><a class="self-link" href="#examples"></a></h2>
@@ -1190,11 +1190,11 @@ head-of-line blocking).</p>
    <p>There are use cases where the programmer may desire that a single stream of frames
 is consumed by multiple consumers.</p>
    <p>Examples include the case where the result of a background blurring function should
-be both displayed in a self-view and encoded using a <code class="idl"><a data-link-type="idl" href="https://wicg.github.io/web-codecs/#videoencoder" id="ref-for-videoencoder">VideoEncoder</a></code>.</p>
+be both displayed in a self-view and encoded using a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoencoder" id="ref-for-videoencoder">VideoEncoder</a></code>.</p>
    <p>For cases where both consumers are consuming unprocessed frames, and synchronization
 is not desired, instantianting multiple <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①④">MediaStreamTrackProcessor</a></code> objects is a robust solution.</p>
-   <p>For cases where both consumers intend to convert the result of a processing step into a <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack②②">MediaStreamTrack</a></code> using a <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator①⑥">VideoTrackGenerator</a></code>, for example when feeding a processed stream
-to both a &lt;video>&amp; tag and an <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webrtc/#dom-rtcpeerconnection" id="ref-for-dom-rtcpeerconnection①">RTCPeerConnection</a></code>, attaching the resulting <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack②③">MediaStreamTrack</a></code> to multiple sinks may be the most appropriate mechanism.</p>
+   <p>For cases where both consumers intend to convert the result of a processing step into a <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack②②">MediaStreamTrack</a></code> using a <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator①⑥">VideoTrackGenerator</a></code>, for example when feeding a processed stream
+to both a &lt;video>&amp; tag and an <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webrtc/#dom-rtcpeerconnection" id="ref-for-dom-rtcpeerconnection①">RTCPeerConnection</a></code>, attaching the resulting <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack②③">MediaStreamTrack</a></code> to multiple sinks may be the most appropriate mechanism.</p>
    <p>For cases where the downstream processing takes frames, not streams, the frames can
 be cloned as needed and sent off to the downstream processing; "clone" is a cheap operation.</p>
    <p>When the stream is the output of some processing, and both branches need a Stream object
@@ -1232,26 +1232,26 @@ buffer pool allocated to the process is exhausted, standard tee() may be used.</
    </ul>
    <p class="note" role="note"><span>Note:</span> There are issues filed on the Streams spec where the resolution might affect this section: https://github.com/whatwg/streams/issues/1157, https://github.com/whatwg/streams/issues/1156, https://github.com/whatwg/streams/issues/401, https://github.com/whatwg/streams/issues/1186</p>
    <h2 class="heading settled" data-level="5" id="security-considerations"><span class="secno">5. </span><span class="content">Security and Privacy considerations</span><a class="self-link" href="#security-considerations"></a></h2>
-   <p>This API defines a <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack②④">MediaStreamTrack</a></code> source and a <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack②⑤">MediaStreamTrack</a></code> sink.
+   <p>This API defines a <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack②④">MediaStreamTrack</a></code> source and a <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack②⑤">MediaStreamTrack</a></code> sink.
 The security and privacy of the source (<code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator①⑦">VideoTrackGenerator</a></code>) relies
 on the same-origin policy. That is, the data <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator①⑧">VideoTrackGenerator</a></code> can
-make available in the form of a <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack②⑥">MediaStreamTrack</a></code> must be visible to
-the document before a <code class="idl"><a data-link-type="idl" href="https://wicg.github.io/web-codecs/#videoframe" id="ref-for-videoframe①②">VideoFrame</a></code> object can be constructed
-and pushed into the <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator①⑨">VideoTrackGenerator</a></code>. Any attempt to create <code class="idl"><a data-link-type="idl" href="https://wicg.github.io/web-codecs/#videoframe" id="ref-for-videoframe①③">VideoFrame</a></code> objects using cross-origin data will fail.
+make available in the form of a <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack②⑥">MediaStreamTrack</a></code> must be visible to
+the document before a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoframe" id="ref-for-videoframe①②">VideoFrame</a></code> object can be constructed
+and pushed into the <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator①⑨">VideoTrackGenerator</a></code>. Any attempt to create <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoframe" id="ref-for-videoframe①③">VideoFrame</a></code> objects using cross-origin data will fail.
 Therefore, <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator②⓪">VideoTrackGenerator</a></code> does not introduce any new
 fingerprinting surface.</p>
-   <p>The <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack②⑦">MediaStreamTrack</a></code> sink introduced by this API (<code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①⑤">MediaStreamTrackProcessor</a></code>)
-exposes <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack②⑧">MediaStreamTrack</a></code> the same data that is exposed by other <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack②⑨">MediaStreamTrack</a></code> sinks such as WebRTC peer connections, and media elements. The security and privacy
-of <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①⑥">MediaStreamTrackProcessor</a></code> relies on the security and privacy of the <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack" id="ref-for-mediastreamtrack③⓪">MediaStreamTrack</a></code> sources of the tracks to which <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①⑦">MediaStreamTrackProcessor</a></code> is connected. For example, camera, microphone and screen-capture tracks
+   <p>The <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack②⑦">MediaStreamTrack</a></code> sink introduced by this API (<code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①⑤">MediaStreamTrackProcessor</a></code>)
+exposes <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack②⑧">MediaStreamTrack</a></code> the same data that is exposed by other <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack②⑨">MediaStreamTrack</a></code> sinks such as WebRTC peer connections, and media elements. The security and privacy
+of <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①⑥">MediaStreamTrackProcessor</a></code> relies on the security and privacy of the <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack③⓪">MediaStreamTrack</a></code> sources of the tracks to which <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①⑦">MediaStreamTrackProcessor</a></code> is connected. For example, camera, microphone and screen-capture tracks
 rely on explicit use authorization via permission dialogs (see <a data-link-type="biblio" href="#biblio-mediacapture-streams">[MEDIACAPTURE-STREAMS]</a> and <a data-link-type="biblio" href="#biblio-screen-capture">[SCREEN-CAPTURE]</a>),
 while element capture and <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator②①">VideoTrackGenerator</a></code> rely on the same-origin policy.</p>
    <p>A potential issue with <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①⑧">MediaStreamTrackProcessor</a></code> is resource exhaustion.
-For example, a site might hold on to too many open <code class="idl"><a data-link-type="idl" href="https://wicg.github.io/web-codecs/#videoframe" id="ref-for-videoframe①④">VideoFrame</a></code> objects
+For example, a site might hold on to too many open <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoframe" id="ref-for-videoframe①④">VideoFrame</a></code> objects
 and deplete a system-wide pool of GPU-memory-backed frames. UAs can
 mitigate this risk by limiting the number of pool-backed frames a site can
 hold. This can be achieved by reducing the maximum number of buffered frames
 and by refusing to deliver more frames to <code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-readable" id="ref-for-dom-mediastreamtrackprocessor-readable⑤">readable</a></code> once the budget limit is reached. Accidental exhaustion is also mitigated by
-automatic closing of <code class="idl"><a data-link-type="idl" href="https://wicg.github.io/web-codecs/#videoframe" id="ref-for-videoframe①⑤">VideoFrame</a></code> objects once they
+automatic closing of <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoframe" id="ref-for-videoframe①⑤">VideoFrame</a></code> objects once they
 are written to a <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator②②">VideoTrackGenerator</a></code>.</p>
    <h2 class="heading settled" data-level="6" id="backwards-compatibility"><span class="secno">6. </span><span class="content">Backwards compatibility with earlier proposals</span><a class="self-link" href="#backwards-compatibility"></a></h2>
    <p>This section is informative.</p>
@@ -1369,25 +1369,19 @@ we have finished moving repos about.</p>
    <li><a href="#dom-videotrackgenerator-writable">writable</a><span>, in § 2.2.4</span>
    <li><a href="#writeframe">writeFrame</a><span>, in § 2.2.4</span>
   </ul>
+  <aside class="dfn-panel" data-for="term-for-tracking">
+   <a href="https://drafts.csswg.org/css-text-4/#tracking">https://drafts.csswg.org/css-text-4/#tracking</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-tracking">2.1.5. Handling interaction with the track</a>
+    <li><a href="#ref-for-tracking①">2.2.4. Attributes</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-queue-a-task">
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#queue-a-task">https://html.spec.whatwg.org/multipage/webappapis.html#queue-a-task</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-queue-a-task">2.1.4. Attributes</a>
     <li><a href="#ref-for-queue-a-task①">2.1.5. Handling interaction with the track</a>
     <li><a href="#ref-for-queue-a-task②">2.2.4. Attributes</a> <a href="#ref-for-queue-a-task③">(2)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-list-empty">
-   <a href="https://infra.spec.whatwg.org/#list-empty">https://infra.spec.whatwg.org/#list-empty</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-list-empty">2.1.4. Attributes</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-queues">
-   <a href="https://infra.spec.whatwg.org/#queues">https://infra.spec.whatwg.org/#queues</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-queues">2.1.2. Internal slots</a>
-    <li><a href="#ref-for-queues①">2.1.3. Constructor</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-queue-dequeue">
@@ -1397,16 +1391,23 @@ we have finished moving repos about.</p>
     <li><a href="#ref-for-queue-dequeue①">2.1.5. Handling interaction with the track</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-list-is-empty">
-   <a href="https://infra.spec.whatwg.org/#list-is-empty">https://infra.spec.whatwg.org/#list-is-empty</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-list-empty">
+   <a href="https://infra.spec.whatwg.org/#list-empty">https://infra.spec.whatwg.org/#list-empty</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-list-is-empty">2.1.4. Attributes</a>
+    <li><a href="#ref-for-list-empty">2.1.4. Attributes</a> <a href="#ref-for-list-empty①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-queue-enqueue">
    <a href="https://infra.spec.whatwg.org/#queue-enqueue">https://infra.spec.whatwg.org/#queue-enqueue</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-queue-enqueue">2.1.5. Handling interaction with the track</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-queue">
+   <a href="https://infra.spec.whatwg.org/#queue">https://infra.spec.whatwg.org/#queue</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-queue">2.1.2. Internal slots</a>
+    <li><a href="#ref-for-queue①">2.1.3. Constructor</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-list-remove">
@@ -1433,44 +1434,32 @@ we have finished moving repos about.</p>
     <li><a href="#ref-for-dom-constrainulong">2.2.5.2. Constrainable properties</a> <a href="#ref-for-dom-constrainulong①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-ends-nostop">
-   <a href="https://www.w3.org/TR/mediacapture-streams/#ends-nostop">https://www.w3.org/TR/mediacapture-streams/#ends-nostop</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-dom-mediastreamtrack">
+   <a href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack">https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-ends-nostop">2.2.4. Attributes</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-mediastreamtrack">
-   <a href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack">https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-mediastreamtrack">Unnumbered Section</a>
-    <li><a href="#ref-for-mediastreamtrack①">1. Introduction</a>
-    <li><a href="#ref-for-mediastreamtrack②">2. Specification</a> <a href="#ref-for-mediastreamtrack③">(2)</a>
-    <li><a href="#ref-for-mediastreamtrack④">2.1. MediaStreamTrackProcessor</a> <a href="#ref-for-mediastreamtrack⑤">(2)</a>
-    <li><a href="#ref-for-mediastreamtrack⑥">2.1.1. Interface definition</a>
-    <li><a href="#ref-for-mediastreamtrack⑦">2.1.3. Constructor</a>
-    <li><a href="#ref-for-mediastreamtrack⑧">2.1.4. Attributes</a>
-    <li><a href="#ref-for-mediastreamtrack⑨">2.2. VideoTrackGenerator</a> <a href="#ref-for-mediastreamtrack①⓪">(2)</a>
-    <li><a href="#ref-for-mediastreamtrack①①">2.2.1. Interface definition</a>
-    <li><a href="#ref-for-mediastreamtrack①②">2.2.2. Internal slots</a> <a href="#ref-for-mediastreamtrack①③">(2)</a>
-    <li><a href="#ref-for-mediastreamtrack①④">2.2.3. Constructor</a>
-    <li><a href="#ref-for-mediastreamtrack①⑤">2.2.4. Attributes</a> <a href="#ref-for-mediastreamtrack①⑥">(2)</a>
-    <li><a href="#ref-for-mediastreamtrack①⑦">2.2.5. Specialization of MediaStreamTrack behavior</a> <a href="#ref-for-mediastreamtrack①⑧">(2)</a>
-    <li><a href="#ref-for-mediastreamtrack①⑨">2.2.5.2. Constrainable properties</a> <a href="#ref-for-mediastreamtrack②⓪">(2)</a>
-    <li><a href="#ref-for-mediastreamtrack②①">2.2.5.3. Events and attributes</a>
-    <li><a href="#ref-for-mediastreamtrack②②">4.1. Use with multiple consumers</a> <a href="#ref-for-mediastreamtrack②③">(2)</a>
-    <li><a href="#ref-for-mediastreamtrack②④">5. Security and Privacy considerations</a> <a href="#ref-for-mediastreamtrack②⑤">(2)</a> <a href="#ref-for-mediastreamtrack②⑥">(3)</a> <a href="#ref-for-mediastreamtrack②⑦">(4)</a> <a href="#ref-for-mediastreamtrack②⑧">(5)</a> <a href="#ref-for-mediastreamtrack②⑨">(6)</a> <a href="#ref-for-mediastreamtrack③⓪">(7)</a>
+    <li><a href="#ref-for-dom-mediastreamtrack">Unnumbered Section</a>
+    <li><a href="#ref-for-dom-mediastreamtrack①">1. Introduction</a>
+    <li><a href="#ref-for-dom-mediastreamtrack②">2. Specification</a> <a href="#ref-for-dom-mediastreamtrack③">(2)</a>
+    <li><a href="#ref-for-dom-mediastreamtrack④">2.1. MediaStreamTrackProcessor</a> <a href="#ref-for-dom-mediastreamtrack⑤">(2)</a>
+    <li><a href="#ref-for-dom-mediastreamtrack⑥">2.1.1. Interface definition</a>
+    <li><a href="#ref-for-dom-mediastreamtrack⑦">2.1.3. Constructor</a>
+    <li><a href="#ref-for-dom-mediastreamtrack⑧">2.1.4. Attributes</a>
+    <li><a href="#ref-for-dom-mediastreamtrack⑨">2.2. VideoTrackGenerator</a> <a href="#ref-for-dom-mediastreamtrack①⓪">(2)</a>
+    <li><a href="#ref-for-dom-mediastreamtrack①①">2.2.1. Interface definition</a>
+    <li><a href="#ref-for-dom-mediastreamtrack①②">2.2.2. Internal slots</a> <a href="#ref-for-dom-mediastreamtrack①③">(2)</a>
+    <li><a href="#ref-for-dom-mediastreamtrack①④">2.2.3. Constructor</a>
+    <li><a href="#ref-for-dom-mediastreamtrack①⑤">2.2.4. Attributes</a> <a href="#ref-for-dom-mediastreamtrack①⑥">(2)</a>
+    <li><a href="#ref-for-dom-mediastreamtrack①⑦">2.2.5. Specialization of MediaStreamTrack behavior</a> <a href="#ref-for-dom-mediastreamtrack①⑧">(2)</a>
+    <li><a href="#ref-for-dom-mediastreamtrack①⑨">2.2.5.2. Constrainable properties</a> <a href="#ref-for-dom-mediastreamtrack②⓪">(2)</a>
+    <li><a href="#ref-for-dom-mediastreamtrack②①">2.2.5.3. Events and attributes</a>
+    <li><a href="#ref-for-dom-mediastreamtrack②②">4.1. Use with multiple consumers</a> <a href="#ref-for-dom-mediastreamtrack②③">(2)</a>
+    <li><a href="#ref-for-dom-mediastreamtrack②④">5. Security and Privacy considerations</a> <a href="#ref-for-dom-mediastreamtrack②⑤">(2)</a> <a href="#ref-for-dom-mediastreamtrack②⑥">(3)</a> <a href="#ref-for-dom-mediastreamtrack②⑦">(4)</a> <a href="#ref-for-dom-mediastreamtrack②⑧">(5)</a> <a href="#ref-for-dom-mediastreamtrack②⑨">(6)</a> <a href="#ref-for-dom-mediastreamtrack③⓪">(7)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-overconstrainederror">
    <a href="https://www.w3.org/TR/mediacapture-streams/#dom-overconstrainederror">https://www.w3.org/TR/mediacapture-streams/#dom-overconstrainederror</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-overconstrainederror">2.2.5.2. Constrainable properties</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-track-ended">
-   <a href="https://www.w3.org/TR/mediacapture-streams/#track-ended">https://www.w3.org/TR/mediacapture-streams/#track-ended</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-track-ended">2.1.5. Handling interaction with the track</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-videoresizemodeenum">
@@ -1498,7 +1487,7 @@ we have finished moving repos about.</p>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-def-VideoResizeModeEnum.right">
-   <a href="https://w3c.github.io/mediacapture-main/#idl-def-VideoResizeModeEnum.right">https://w3c.github.io/mediacapture-main/#idl-def-VideoResizeModeEnum.right</a><b>Referenced in:</b>
+   <a href="https://www.w3.org/TR/mediacapture-streams/#idl-def-VideoResizeModeEnum.right">https://www.w3.org/TR/mediacapture-streams/#idl-def-VideoResizeModeEnum.right</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-idl-def-VideoResizeModeEnum.right">2.2.5.2. Constrainable properties</a> <a href="#ref-for-idl-def-VideoResizeModeEnum.right①">(2)</a>
    </ul>
@@ -1516,7 +1505,7 @@ we have finished moving repos about.</p>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-def-VideoResizeModeEnum.user">
-   <a href="https://w3c.github.io/mediacapture-main/#idl-def-VideoResizeModeEnum.user">https://w3c.github.io/mediacapture-main/#idl-def-VideoResizeModeEnum.user</a><b>Referenced in:</b>
+   <a href="https://www.w3.org/TR/mediacapture-streams/#idl-def-VideoResizeModeEnum.user">https://www.w3.org/TR/mediacapture-streams/#idl-def-VideoResizeModeEnum.user</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-idl-def-VideoResizeModeEnum.user">2.2.5.2. Constrainable properties</a> <a href="#ref-for-idl-def-VideoResizeModeEnum.user①">(2)</a>
    </ul>
@@ -1541,12 +1530,6 @@ we have finished moving repos about.</p>
     <li><a href="#ref-for-readablestream⑤">2.1.4. Attributes</a> <a href="#ref-for-readablestream⑥">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-readablestream-controller">
-   <a href="https://streams.spec.whatwg.org/#readablestream-controller">https://streams.spec.whatwg.org/#readablestream-controller</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-readablestream-controller">2.1.4. Attributes</a>
-   </ul>
-  </aside>
   <aside class="dfn-panel" data-for="term-for-readable-stream-default-controller-close">
    <a href="https://streams.spec.whatwg.org/#readable-stream-default-controller-close">https://streams.spec.whatwg.org/#readable-stream-default-controller-close</a><b>Referenced in:</b>
    <ul>
@@ -1559,6 +1542,12 @@ we have finished moving repos about.</p>
     <li><a href="#ref-for-writablestream">2.2. VideoTrackGenerator</a> <a href="#ref-for-writablestream①">(2)</a>
     <li><a href="#ref-for-writablestream②">2.2.1. Interface definition</a>
     <li><a href="#ref-for-writablestream③">2.2.4. Attributes</a> <a href="#ref-for-writablestream④">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-readablestream-controller">
+   <a href="https://streams.spec.whatwg.org/#readablestream-controller">https://streams.spec.whatwg.org/#readablestream-controller</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-readablestream-controller">2.1.4. Attributes</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-writablestream-set-up-abortalgorithm">
@@ -1622,13 +1611,13 @@ we have finished moving repos about.</p>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-videoencoder">
-   <a href="https://wicg.github.io/web-codecs/#videoencoder">https://wicg.github.io/web-codecs/#videoencoder</a><b>Referenced in:</b>
+   <a href="https://w3c.github.io/webcodecs/#videoencoder">https://w3c.github.io/webcodecs/#videoencoder</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-videoencoder">4.1. Use with multiple consumers</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-videoframe">
-   <a href="https://wicg.github.io/web-codecs/#videoframe">https://wicg.github.io/web-codecs/#videoframe</a><b>Referenced in:</b>
+   <a href="https://w3c.github.io/webcodecs/#videoframe">https://w3c.github.io/webcodecs/#videoframe</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-videoframe">2.1. MediaStreamTrackProcessor</a>
     <li><a href="#ref-for-videoframe①">2.2. VideoTrackGenerator</a> <a href="#ref-for-videoframe②">(2)</a> <a href="#ref-for-videoframe③">(3)</a>
@@ -1694,6 +1683,11 @@ we have finished moving repos about.</p>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="index">
    <li>
+    <a data-link-type="biblio">[CSS-TEXT-4]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="term-for-tracking">tracking</span>
+    </ul>
+   <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-queue-a-task">queue a task</span>
@@ -1701,11 +1695,10 @@ we have finished moving repos about.</p>
    <li>
     <a data-link-type="biblio">[INFRA]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-list-empty">Empty</span>
-     <li><span class="dfn-paneled" id="term-for-queues">Queue</span>
      <li><span class="dfn-paneled" id="term-for-queue-dequeue">dequeue</span>
-     <li><span class="dfn-paneled" id="term-for-list-is-empty">empty</span>
+     <li><span class="dfn-paneled" id="term-for-list-empty">empty</span>
      <li><span class="dfn-paneled" id="term-for-queue-enqueue">enqueue</span>
+     <li><span class="dfn-paneled" id="term-for-queue">queue</span>
      <li><span class="dfn-paneled" id="term-for-list-remove">remove</span>
     </ul>
    <li>
@@ -1714,10 +1707,8 @@ we have finished moving repos about.</p>
      <li><span class="dfn-paneled" id="term-for-dom-constraindomstring">ConstrainDOMString</span>
      <li><span class="dfn-paneled" id="term-for-dom-constraindouble">ConstrainDouble</span>
      <li><span class="dfn-paneled" id="term-for-dom-constrainulong">ConstrainULong</span>
-     <li><span class="dfn-paneled" id="term-for-ends-nostop">EndTrack</span>
-     <li><span class="dfn-paneled" id="term-for-mediastreamtrack">MediaStreamTrack</span>
+     <li><span class="dfn-paneled" id="term-for-dom-mediastreamtrack">MediaStreamTrack</span>
      <li><span class="dfn-paneled" id="term-for-dom-overconstrainederror">OverconstrainedError</span>
-     <li><span class="dfn-paneled" id="term-for-track-ended">TrackEnded</span>
      <li><span class="dfn-paneled" id="term-for-dom-videoresizemodeenum">VideoResizeModeEnum</span>
      <li><span class="dfn-paneled" id="term-for-dom-mediastreamtrack-applyconstraints">applyConstraints</span>
      <li><span class="dfn-paneled" id="term-for-dom-mediastreamtrack-clone">clone</span>
@@ -1733,9 +1724,9 @@ we have finished moving repos about.</p>
     <a data-link-type="biblio">[STREAMS]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-readablestream">ReadableStream</span>
-     <li><span class="dfn-paneled" id="term-for-readablestream-controller">ReadableStreamControllerSlot</span>
      <li><span class="dfn-paneled" id="term-for-readable-stream-default-controller-close">ReadableStreamDefaultControllerClose</span>
      <li><span class="dfn-paneled" id="term-for-writablestream">WritableStream</span>
+     <li><span class="dfn-paneled" id="term-for-readablestream-controller">[[controller]]</span>
      <li><span class="dfn-paneled" id="term-for-writablestream-set-up-abortalgorithm">abortalgorithm</span>
      <li><span class="dfn-paneled" id="term-for-readablestream-set-up-cancelalgorithm">cancelalgorithm</span>
      <li><span class="dfn-paneled" id="term-for-writablestream-set-up-closealgorithm">closealgorithm</span>
@@ -1773,6 +1764,8 @@ we have finished moving repos about.</p>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
+   <dt id="biblio-css-text-4">[CSS-TEXT-4]
+   <dd>Elika Etemad; et al. <a href="https://drafts.csswg.org/css-text-4/"><cite>CSS Text Module Level 4</cite></a>. URL: <a href="https://drafts.csswg.org/css-text-4/">https://drafts.csswg.org/css-text-4/</a>
    <dt id="biblio-html">[HTML]
    <dd>Anne van Kesteren; et al. <a href="https://html.spec.whatwg.org/multipage/"><cite>HTML Standard</cite></a>. Living Standard. URL: <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
    <dt id="biblio-infra">[INFRA]
@@ -1807,7 +1800,7 @@ we have finished moving repos about.</p>
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-mediastreamtrackprocessorinit"><code><c- g>MediaStreamTrackProcessorInit</c-></code></a> {
-  <c- b>required</c-> <a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack"><c- n>MediaStreamTrack</c-></a> <a data-type="MediaStreamTrack " href="#dom-mediastreamtrackprocessorinit-track"><code><c- g>track</c-></code></a>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack"><c- n>MediaStreamTrack</c-></a> <a data-type="MediaStreamTrack " href="#dom-mediastreamtrackprocessorinit-track"><code><c- g>track</c-></code></a>;
   [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#EnforceRange"><c- g>EnforceRange</c-></a>] <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-short"><c- b>unsigned</c-> <c- b>short</c-></a> <a data-type="unsigned short " href="#dom-mediastreamtrackprocessorinit-maxbuffersize"><code><c- g>maxBufferSize</c-></code></a>;
 };
 
@@ -1816,7 +1809,7 @@ we have finished moving repos about.</p>
   <a class="idl-code" data-link-type="constructor" href="#dom-videotrackgenerator-videotrackgenerator"><c- g>constructor</c-></a>();
   <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://streams.spec.whatwg.org/#writablestream"><c- n>WritableStream</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="WritableStream" href="#dom-videotrackgenerator-writable"><c- g>writable</c-></a>;
   <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-boolean"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-type="boolean" href="#dom-videotrackgenerator-muted"><c- g>muted</c-></a>;
-  <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#mediastreamtrack"><c- n>MediaStreamTrack</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="MediaStreamTrack" href="#dom-videotrackgenerator-track"><c- g>track</c-></a>;
+  <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack"><c- n>MediaStreamTrack</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="MediaStreamTrack" href="#dom-videotrackgenerator-track"><c- g>track</c-></a>;
 };
 
 </pre>
