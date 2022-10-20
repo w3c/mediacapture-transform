@@ -6,9 +6,9 @@
   <meta content="ED" name="w3c-status">
   <link href="https://www.w3.org/StyleSheets/TR/2021/W3C-ED" rel="stylesheet">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="Bikeshed version 2e3c4c68b, updated Fri Jan 14 14:49:00 2022 -0800" name="generator">
-  <link href="https://w3c.github.io/mediacapture-insertable-streams/" rel="canonical">
-  <meta content="76a324b2bf48f7c77cd5960c6080adc6953b3c11" name="document-revision">
+  <meta content="Bikeshed version b0de3432c, updated Thu Oct 13 09:16:59 2022 -0700" name="generator">
+  <link href="https://www.w3.org/TR/mediacapture-transform/" rel="canonical">
+  <meta content="92ff206f6d3fa9e2c90861cc70585797af9121e6" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -579,20 +579,21 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">MediaStreamTrack Insertable Media Processing using Streams</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#ED">Editor’s Draft</a>, <time class="dt-updated" datetime="2022-01-24">24 January 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#ED">Editor’s Draft</a>, <time class="dt-updated" datetime="2022-10-20">20 October 2022</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
      <dl>
       <dt>This version:
-      <dd><a class="u-url" href="https://w3c.github.io/mediacapture-insertable-streams/">https://w3c.github.io/mediacapture-insertable-streams/</a>
+      <dd><a class="u-url" href="https://w3c.github.io/mediacapture-transform/">https://w3c.github.io/mediacapture-transform/</a>
+      <dt>Latest published version:
+      <dd><a href="https://www.w3.org/TR/mediacapture-transform/">https://www.w3.org/TR/mediacapture-transform/</a>
       <dt>Feedback:
-      <dd><span><a href="mailto:public-webrtc@w3.org?subject=%5Bmediacapture-insertable-streams%5D%20YOUR%20TOPIC%20HERE">public-webrtc@w3.org</a> with subject line “<kbd>[mediacapture-insertable-streams] <i data-lt>… message topic …</i></kbd>” (<a href="https://lists.w3.org/Archives/Public/public-webrtc/" rel="discussion">archives</a>)</span>
-      <dt>Issue Tracking:
-      <dd><a href="https://github.com/w3c/mediacapture-insertable-streams/issues/">GitHub</a>
+      <dd><span><a href="mailto:public-webrtc@w3.org?subject=%5Bmediacapture-transform%5D%20YOUR%20TOPIC%20HERE">public-webrtc@w3.org</a> with subject line “<kbd>[mediacapture-transform] <i data-lt>… message topic …</i></kbd>” (<a href="https://lists.w3.org/Archives/Public/public-webrtc/" rel="discussion">archives</a>)</span>
+      <dd><a href="https://github.com/w3c/mediacapture-transform/issues/">GitHub</a>
       <dt class="editor">Editors:
-      <dd class="editor p-author h-card vcard"><a class="p-name fn u-email email" href="mailto:hta@google.com">Harald Alvestrand</a> (<a class="p-org org" href="https://google.com">Google</a>)
-      <dd class="editor p-author h-card vcard"><a class="p-name fn u-email email" href="mailto:guidou@google.com">Guido Urdaneta</a> (<a class="p-org org" href="https://google.com">Google</a>)
+      <dd class="editor p-author h-card vcard" data-editor-id="24610"><a class="p-name fn u-email email" href="mailto:hta@google.com">Harald Alvestrand</a> (<a class="p-org org" href="https://google.com">Google</a>)
+      <dd class="editor p-author h-card vcard" data-editor-id="84810"><a class="p-name fn u-email email" href="mailto:guidou@google.com">Guido Urdaneta</a> (<a class="p-org org" href="https://google.com">Google</a>)
      </dl>
     </div>
    </details>
@@ -610,11 +611,11 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 	It is provided for discussion only and may change at any moment.
 	Its publication here does not imply endorsement of its contents by W3C.
 	Don’t cite this document other than as work in progress. </p>
-   <p> If you wish to make comments regarding this document, please send them to <a href="mailto:public-webrtc@w3.org?Subject=%5Bmediacapture-insertable-streams%5D%20PUT%20SUBJECT%20HERE">public-webrtc@w3.org</a> (<a href="mailto:public-webrtc-request@w3.org?subject=subscribe">subscribe</a>, <a href="https://lists.w3.org/Archives/Public/public-webrtc/">archives</a>).
+   <p> If you wish to make comments regarding this document, please send them to <a href="mailto:public-webrtc@w3.org?Subject=%5Bmediacapture-transform%5D%20PUT%20SUBJECT%20HERE">public-webrtc@w3.org</a> (<a href="mailto:public-webrtc-request@w3.org?subject=subscribe">subscribe</a>, <a href="https://lists.w3.org/Archives/Public/public-webrtc/">archives</a>).
 	When sending e-mail,
-	please put the text “mediacapture-insertable-streams” in the subject,
+	please put the text “mediacapture-transform” in the subject,
 	preferably like this:
-	“[mediacapture-insertable-streams] <em>…summary of comment…</em>”.
+	“[mediacapture-transform] <em>…summary of comment…</em>”.
 	All comments are welcome. </p>
    <p> This document was produced by the <a href="https://www.w3.org/groups/wg/webrtc">Web Real-Time Communications Working Group</a>. </p>
    <p> This document was produced by a group operating under
@@ -1079,20 +1080,20 @@ effects on video elements.
 videoBefore<c- p>.</c->srcObject <c- o>=</c-> stream<c- p>.</c->clone<c- p>();</c->
 
 <c- a>const</c-> <c- p>[</c->track<c- p>]</c-> <c- o>=</c-> stream<c- p>.</c->getVideoTracks<c- p>();</c->
-<c- a>const</c-> worker <c- o>=</c-> <c- k>new</c-> Worker<c- p>(</c-><c- t>'worker.js'</c-><c- p>);</c->
+<c- a>const</c-> worker <c- o>=</c-> <c- ow>new</c-> Worker<c- p>(</c-><c- t>'worker.js'</c-><c- p>);</c->
 worker<c- p>.</c->postMessage<c- p>({</c->track<c- p>},</c-> <c- p>[</c->track<c- p>]);</c->
 
-<c- a>const</c-> <c- p>{</c->data<c- p>}</c-> <c- o>=</c-> <c- k>await</c-> <c- k>new</c-> Promise<c- p>(</c->r <c- p>=></c-> worker<c- p>.</c->onmessage<c- p>);</c->
-videoAfter<c- p>.</c->srcObject <c- o>=</c-> <c- k>new</c-> MediaStream<c- p>([</c->data<c- p>.</c->track<c- p>]);</c->
+<c- a>const</c-> <c- p>{</c->data<c- p>}</c-> <c- o>=</c-> <c- k>await</c-> <c- ow>new</c-> Promise<c- p>(</c->r <c- p>=></c-> worker<c- p>.</c->onmessage<c- p>);</c->
+videoAfter<c- p>.</c->srcObject <c- o>=</c-> <c- ow>new</c-> MediaStream<c- p>([</c->data<c- p>.</c->track<c- p>]);</c->
 
 <c- c1>// worker.js</c->
 
 self<c- p>.</c->onmessage <c- o>=</c-> <c- k>async</c-> <c- p>({</c->data<c- o>:</c-> <c- p>{</c->track<c- p>}})</c-> <c- p>=></c-> <c- p>{</c->
-  <c- a>const</c-> source <c- o>=</c-> <c- k>new</c-> VideoTrackGenerator<c- p>();</c->
+  <c- a>const</c-> source <c- o>=</c-> <c- ow>new</c-> VideoTrackGenerator<c- p>();</c->
   parent<c- p>.</c->postMessage<c- p>({</c->track<c- o>:</c-> source<c- p>.</c->track<c- p>},</c-> <c- p>[</c->source<c- p>.</c->track<c- p>]);</c->
 
-  <c- a>const</c-> <c- p>{</c->readable<c- p>}</c-> <c- o>=</c-> <c- k>new</c-> MediaStreamTrackProcessor<c- p>({</c->track<c- p>});</c->
-  <c- a>const</c-> transformer <c- o>=</c-> <c- k>new</c-> TransformStream<c- p>({</c->
+  <c- a>const</c-> <c- p>{</c->readable<c- p>}</c-> <c- o>=</c-> <c- ow>new</c-> MediaStreamTrackProcessor<c- p>({</c->track<c- p>});</c->
+  <c- a>const</c-> transformer <c- o>=</c-> <c- ow>new</c-> TransformStream<c- p>({</c->
     <c- k>async</c-> transform<c- p>(</c->frame<c- p>,</c-> controller<c- p>)</c-> <c- p>{</c->
       <c- a>const</c-> facePosition <c- o>=</c-> <c- k>await</c-> detectFace<c- p>(</c->frame<c- p>);</c->
       <c- a>const</c-> newFrame <c- o>=</c-> blurBackground<c- p>(</c->frame<c- p>,</c-> facePosition<c- p>);</c->
@@ -1114,25 +1115,25 @@ twice.
 
 <c- a>const</c-> stream <c- o>=</c-> <c- k>await</c-> navigator<c- p>.</c->mediaDevices<c- p>.</c->getUserMedia<c- p>({</c->video<c- o>:</c-><c- kc>true</c-><c- p>});</c->
 <c- a>const</c-> <c- p>[</c->track<c- p>]</c-> <c- o>=</c-> stream<c- p>.</c->getVideoTracks<c- p>();</c->
-<c- a>const</c-> worker <c- o>=</c-> <c- k>new</c-> Worker<c- p>(</c-><c- t>'worker.js'</c-><c- p>);</c->
+<c- a>const</c-> worker <c- o>=</c-> <c- ow>new</c-> Worker<c- p>(</c-><c- t>'worker.js'</c-><c- p>);</c->
 worker<c- p>.</c->postMessage<c- p>({</c->track<c- p>},</c-> <c- p>[</c->track<c- p>]);</c->
 
-<c- a>const</c-> <c- p>{</c->data<c- p>}</c-> <c- o>=</c-> <c- k>await</c-> <c- k>new</c-> Promise<c- p>(</c->r <c- p>=></c-> worker<c- p>.</c->onmessage<c- p>);</c->
+<c- a>const</c-> <c- p>{</c->data<c- p>}</c-> <c- o>=</c-> <c- k>await</c-> <c- ow>new</c-> Promise<c- p>(</c->r <c- p>=></c-> worker<c- p>.</c->onmessage<c- p>);</c->
 <c- a>const</c-> selfView <c- o>=</c-> document<c- p>.</c->getElementById<c- p>(</c-><c- t>'video-self'</c-><c- p>);</c->
-selfView<c- p>.</c->srcObject <c- o>=</c-> <c- k>new</c-> MediaStream<c- p>([</c->data<c- p>.</c->track<c- p>.</c->clone<c- p>()]);</c-> <c- c1>// 60 fps</c->
+selfView<c- p>.</c->srcObject <c- o>=</c-> <c- ow>new</c-> MediaStream<c- p>([</c->data<c- p>.</c->track<c- p>.</c->clone<c- p>()]);</c-> <c- c1>// 60 fps</c->
 
 <c- k>await</c-> data<c- p>.</c->track<c- p>.</c->applyConstraints<c- p>({</c->width<c- o>:</c-> <c- mf>320</c-><c- p>,</c-> height<c- o>:</c-> <c- mf>200</c-><c- p>,</c-> frameRate<c- o>:</c-> <c- mf>30</c-><c- p>});</c->
-<c- a>const</c-> pc <c- o>=</c-> <c- k>new</c-> RTCPeerConnection<c- p>(</c->config<c- p>);</c->
+<c- a>const</c-> pc <c- o>=</c-> <c- ow>new</c-> RTCPeerConnection<c- p>(</c->config<c- p>);</c->
 pc<c- p>.</c->addTrack<c- p>(</c->data<c- p>.</c->track<c- p>);</c-> <c- c1>// 30 fps</c->
 
 <c- c1>// worker.js</c->
 
 self<c- p>.</c->onmessage <c- o>=</c-> <c- k>async</c-> <c- p>({</c->data<c- o>:</c-> <c- p>{</c->track<c- p>}})</c-> <c- p>=></c-> <c- p>{</c->
-  <c- a>const</c-> source <c- o>=</c-> <c- k>new</c-> VideoTrackGenerator<c- p>();</c->
+  <c- a>const</c-> source <c- o>=</c-> <c- ow>new</c-> VideoTrackGenerator<c- p>();</c->
   parent<c- p>.</c->postMessage<c- p>({</c->track<c- o>:</c-> source<c- p>.</c->track<c- p>},</c-> <c- p>[</c->source<c- p>.</c->track<c- p>]);</c->
 
-  <c- a>const</c-> <c- p>{</c->readable<c- p>}</c-> <c- o>=</c-> <c- k>new</c-> MediaStreamTrackProcessor<c- p>({</c->track<c- p>});</c->
-  <c- a>const</c-> transformer <c- o>=</c-> <c- k>new</c-> TransformStream<c- p>({</c->transform<c- o>:</c-> myRemoveBackgroundFromVideo<c- p>});</c->
+  <c- a>const</c-> <c- p>{</c->readable<c- p>}</c-> <c- o>=</c-> <c- ow>new</c-> MediaStreamTrackProcessor<c- p>({</c->track<c- p>});</c->
+  <c- a>const</c-> transformer <c- o>=</c-> <c- ow>new</c-> TransformStream<c- p>({</c->transform<c- o>:</c-> myRemoveBackgroundFromVideo<c- p>});</c->
   <c- k>await</c-> readable<c- p>.</c->pipeThrough<c- p>(</c->transformer<c- p>).</c->pipeTo<c- p>(</c->source<c- p>.</c->writable<c- p>);</c->
 <c- p>};</c->
 </pre>
@@ -1144,26 +1145,26 @@ here, except constraints are applied to a track clone in the worker.
 
 <c- a>const</c-> stream <c- o>=</c-> <c- k>await</c-> navigator<c- p>.</c->mediaDevices<c- p>.</c->getUserMedia<c- p>({</c->video<c- o>:</c-><c- kc>true</c-><c- p>});</c->
 <c- a>const</c-> <c- p>[</c->track<c- p>]</c-> <c- o>=</c-> stream<c- p>.</c->getVideoTracks<c- p>();</c->
-<c- a>const</c-> worker <c- o>=</c-> <c- k>new</c-> Worker<c- p>(</c-><c- t>'worker.js'</c-><c- p>);</c->
+<c- a>const</c-> worker <c- o>=</c-> <c- ow>new</c-> Worker<c- p>(</c-><c- t>'worker.js'</c-><c- p>);</c->
 worker<c- p>.</c->postMessage<c- p>({</c->track<c- p>},</c-> <c- p>[</c->track<c- p>]);</c->
 
-<c- a>const</c-> <c- p>{</c->data<c- p>}</c-> <c- o>=</c-> <c- k>await</c-> <c- k>new</c-> Promise<c- p>(</c->r <c- p>=></c-> worker<c- p>.</c->onmessage<c- p>);</c->
+<c- a>const</c-> <c- p>{</c->data<c- p>}</c-> <c- o>=</c-> <c- k>await</c-> <c- ow>new</c-> Promise<c- p>(</c->r <c- p>=></c-> worker<c- p>.</c->onmessage<c- p>);</c->
 <c- a>const</c-> selfView <c- o>=</c-> document<c- p>.</c->getElementById<c- p>(</c-><c- t>'video-self'</c-><c- p>);</c->
-selfView<c- p>.</c->srcObject <c- o>=</c-> <c- k>new</c-> MediaStream<c- p>([</c->data<c- p>.</c->track<c- p>]);</c-> <c- c1>// 60 fps</c->
+selfView<c- p>.</c->srcObject <c- o>=</c-> <c- ow>new</c-> MediaStream<c- p>([</c->data<c- p>.</c->track<c- p>]);</c-> <c- c1>// 60 fps</c->
 
 <c- c1>// worker.js</c->
 
 self<c- p>.</c->onmessage <c- o>=</c-> <c- k>async</c-> <c- p>({</c->data<c- o>:</c-> <c- p>{</c->track<c- p>}})</c-> <c- p>=></c-> <c- p>{</c->
-  <c- a>const</c-> source <c- o>=</c-> <c- k>new</c-> VideoTrackGenerator<c- p>();</c->
+  <c- a>const</c-> source <c- o>=</c-> <c- ow>new</c-> VideoTrackGenerator<c- p>();</c->
   <c- a>const</c-> sendTrack <c- o>=</c-> source<c- p>.</c->track<c- p>.</c->clone<c- p>();</c->
   parent<c- p>.</c->postMessage<c- p>({</c->track<c- o>:</c-> source<c- p>.</c->track<c- p>},</c-> <c- p>[</c->source<c- p>.</c->track<c- p>]);</c->
 
   <c- k>await</c-> sendTrack<c- p>.</c->applyConstraints<c- p>({</c->width<c- o>:</c-> <c- mf>320</c-><c- p>,</c-> height<c- o>:</c-> <c- mf>200</c-><c- p>,</c-> frameRate<c- o>:</c-> <c- mf>30</c-><c- p>});</c->
 
-  <c- a>const</c-> wt <c- o>=</c-> <c- k>new</c-> WebTransport<c- p>(</c-><c- u>"https://webtransport.org:8080/up"</c-><c- p>);</c->
+  <c- a>const</c-> wt <c- o>=</c-> <c- ow>new</c-> WebTransport<c- p>(</c-><c- u>"https://webtransport.org:8080/up"</c-><c- p>);</c->
 
-  <c- a>const</c-> <c- p>{</c->readable<c- p>}</c-> <c- o>=</c-> <c- k>new</c-> MediaStreamTrackProcessor<c- p>({</c->track<c- p>});</c->
-  <c- a>const</c-> transformer <c- o>=</c-> <c- k>new</c-> TransformStream<c- p>({</c->transform<c- o>:</c-> myRemoveBackgroundFromVideo<c- p>});</c->
+  <c- a>const</c-> <c- p>{</c->readable<c- p>}</c-> <c- o>=</c-> <c- ow>new</c-> MediaStreamTrackProcessor<c- p>({</c->track<c- p>});</c->
+  <c- a>const</c-> transformer <c- o>=</c-> <c- ow>new</c-> TransformStream<c- p>({</c->transform<c- o>:</c-> myRemoveBackgroundFromVideo<c- p>});</c->
   <c- k>await</c-> readable<c- p>.</c->pipeThrough<c- p>(</c->transformer<c- p>)</c->
     <c- p>.</c->pipeThrough<c- p>({</c->writable<c- o>:</c-> source<c- p>.</c->writable<c- p>,</c-> readable<c- o>:</c-> sendTrack<c- p>.</c->readable<c- p>}),</c->
     <c- p>.</c->pipeThrough<c- p>(</c->createMyEncodeVideoStream<c- p>({</c->
@@ -1172,7 +1173,7 @@ self<c- p>.</c->onmessage <c- o>=</c-> <c- k>async</c-> <c- p>({</c->data<c- o>:
       height<c- o>:</c-> <c- mf>480</c-><c- p>,</c->
       bitrate<c- o>:</c-> <c- mf>1000000</c-><c- p>,</c->
     <c- p>}))</c->
-    <c- p>.</c->pipeThrough<c- p>(</c-><c- k>new</c-> TransformStream<c- p>({</c->transform<c- o>:</c-> mySerializer<c- p>}));</c->
+    <c- p>.</c->pipeThrough<c- p>(</c-><c- ow>new</c-> TransformStream<c- p>({</c->transform<c- o>:</c-> mySerializer<c- p>}));</c->
     <c- p>.</c->pipeTo<c- p>(</c->wt<c- p>.</c->createUnidirectionalStream<c- p>());</c-> <c- c1>// 30 fps</c->
 <c- p>};</c->
 </pre>
@@ -1312,7 +1313,7 @@ we have finished moving repos about.</p>
     and are set apart from the normative text
     with <code>class="note"</code>,
     like this: </p>
-   <p class="note" role="note">Note, this is an informative note. </p>
+   <p class="note" role="note">Note, this is an informative note.</p>
    <h3 class="no-ref no-num heading settled" id="w3c-conformant-algorithms"><span class="content">Conformant Algorithms</span><a class="self-link" href="#w3c-conformant-algorithms"></a></h3>
    <p>Requirements phrased in the imperative as part of algorithms
     (such as "strip any leading space characters"
@@ -1602,6 +1603,12 @@ we have finished moving repos about.</p>
     <li><a href="#ref-for-readablestream-set-up-pullalgorithm">2.1.4. Attributes</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-readablestream-set-up">
+   <a href="https://streams.spec.whatwg.org/#readablestream-set-up">https://streams.spec.whatwg.org/#readablestream-set-up</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-readablestream-set-up">2.1.4. Attributes</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-writablestream-set-up">
    <a href="https://streams.spec.whatwg.org/#writablestream-set-up">https://streams.spec.whatwg.org/#writablestream-set-up</a><b>Referenced in:</b>
    <ul>
@@ -1736,6 +1743,7 @@ we have finished moving repos about.</p>
      <li><span class="dfn-paneled" id="term-for-readablestream-enqueue">enqueue</span>
      <li><span class="dfn-paneled" id="term-for-readablestream-set-up-highwatermark">highwatermark</span>
      <li><span class="dfn-paneled" id="term-for-readablestream-set-up-pullalgorithm">pullalgorithm</span>
+     <li><span class="dfn-paneled" id="term-for-readablestream-set-up">set up <small>(for ReadableStream)</small></span>
      <li><span class="dfn-paneled" id="term-for-writablestream-set-up">set up <small>(for WritableStream)</small></span>
      <li><span class="dfn-paneled" id="term-for-writablestream-set-up-writealgorithm">writealgorithm</span>
     </ul>
@@ -1757,7 +1765,7 @@ we have finished moving repos about.</p>
      <li><span class="dfn-paneled" id="term-for-idl-unsigned-short">unsigned short</span>
     </ul>
    <li>
-    <a data-link-type="biblio">[webrtc-1]</a> defines the following terms:
+    <a data-link-type="biblio">[WEBRTC-1]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-dom-rtcpeerconnection">RTCPeerConnection</span>
     </ul>
@@ -1770,13 +1778,13 @@ we have finished moving repos about.</p>
    <dt id="biblio-infra">[INFRA]
    <dd>Anne van Kesteren; Domenic Denicola. <a href="https://infra.spec.whatwg.org/"><cite>Infra Standard</cite></a>. Living Standard. URL: <a href="https://infra.spec.whatwg.org/">https://infra.spec.whatwg.org/</a>
    <dt id="biblio-mediacapture-streams">[MEDIACAPTURE-STREAMS]
-   <dd>Cullen Jennings; et al. <a href="https://www.w3.org/TR/mediacapture-streams/"><cite>Media Capture and Streams</cite></a>. 20 January 2022. CR. URL: <a href="https://www.w3.org/TR/mediacapture-streams/">https://www.w3.org/TR/mediacapture-streams/</a>
+   <dd>Cullen Jennings; et al. <a href="https://w3c.github.io/mediacapture-main/"><cite>Media Capture and Streams</cite></a>. URL: <a href="https://w3c.github.io/mediacapture-main/">https://w3c.github.io/mediacapture-main/</a>
    <dt id="biblio-rfc2119">[RFC2119]
    <dd>S. Bradner. <a href="https://datatracker.ietf.org/doc/html/rfc2119"><cite>Key words for use in RFCs to Indicate Requirement Levels</cite></a>. March 1997. Best Current Practice. URL: <a href="https://datatracker.ietf.org/doc/html/rfc2119">https://datatracker.ietf.org/doc/html/rfc2119</a>
    <dt id="biblio-streams">[STREAMS]
    <dd>Adam Rice; et al. <a href="https://streams.spec.whatwg.org/"><cite>Streams Standard</cite></a>. Living Standard. URL: <a href="https://streams.spec.whatwg.org/">https://streams.spec.whatwg.org/</a>
    <dt id="biblio-webcodecs">[WEBCODECS]
-   <dd>Chris Cunningham; Paul Adenot; Bernard Aboba. <a href="https://www.w3.org/TR/webcodecs/"><cite>WebCodecs</cite></a>. 16 December 2021. WD. URL: <a href="https://www.w3.org/TR/webcodecs/">https://www.w3.org/TR/webcodecs/</a>
+   <dd>Chris Cunningham; Paul Adenot; Bernard Aboba. <a href="https://w3c.github.io/webcodecs/"><cite>WebCodecs</cite></a>. URL: <a href="https://w3c.github.io/webcodecs/">https://w3c.github.io/webcodecs/</a>
    <dt id="biblio-webidl">[WEBIDL]
    <dd>Edgar Chen; Timothy Gu. <a href="https://webidl.spec.whatwg.org/"><cite>Web IDL Standard</cite></a>. Living Standard. URL: <a href="https://webidl.spec.whatwg.org/">https://webidl.spec.whatwg.org/</a>
    <dt id="biblio-webrtc-1">[WEBRTC-1]
@@ -1785,11 +1793,11 @@ we have finished moving repos about.</p>
   <h3 class="no-num no-ref heading settled" id="informative"><span class="content">Informative References</span><a class="self-link" href="#informative"></a></h3>
   <dl>
    <dt id="biblio-screen-capture">[SCREEN-CAPTURE]
-   <dd>Martin Thomson; et al. <a href="https://www.w3.org/TR/screen-capture/"><cite>Screen Capture</cite></a>. 14 January 2022. WD. URL: <a href="https://www.w3.org/TR/screen-capture/">https://www.w3.org/TR/screen-capture/</a>
+   <dd>Martin Thomson; et al. <a href="https://w3c.github.io/mediacapture-screen-share/"><cite>Screen Capture</cite></a>. URL: <a href="https://w3c.github.io/mediacapture-screen-share/">https://w3c.github.io/mediacapture-screen-share/</a>
    <dt id="biblio-webrtc-nv-use-cases">[WEBRTC-NV-USE-CASES]
-   <dd>Bernard Aboba. <a href="https://www.w3.org/TR/webrtc-nv-use-cases/"><cite>WebRTC Next Version Use Cases</cite></a>. 23 November 2021. NOTE. URL: <a href="https://www.w3.org/TR/webrtc-nv-use-cases/">https://www.w3.org/TR/webrtc-nv-use-cases/</a>
+   <dd>Bernard Aboba. <a href="https://w3c.github.io/webrtc-nv-use-cases/"><cite>WebRTC Next Version Use Cases</cite></a>. URL: <a href="https://w3c.github.io/webrtc-nv-use-cases/">https://w3c.github.io/webrtc-nv-use-cases/</a>
    <dt id="biblio-webtransport">[WEBTRANSPORT]
-   <dd>Bernard Aboba; Victor Vasiliev; Yutaka Hirano. <a href="https://www.w3.org/TR/webtransport/"><cite>WebTransport</cite></a>. 14 October 2021. WD. URL: <a href="https://www.w3.org/TR/webtransport/">https://www.w3.org/TR/webtransport/</a>
+   <dd>Bernard Aboba; Victor Vasiliev; Yutaka Hirano. <a href="https://w3c.github.io/webtransport/"><cite>WebTransport</cite></a>. URL: <a href="https://w3c.github.io/webtransport/">https://w3c.github.io/webtransport/</a>
   </dl>
   <h2 class="no-num no-ref heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
 <pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed"><c- g>Exposed</c-></a>=<c- n>DedicatedWorker</c->]
