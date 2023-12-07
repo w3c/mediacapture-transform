@@ -11,7 +11,7 @@ This is a supporting document for [issue #29](https://github.com/w3c/mediacaptur
 TBD
 
 
-# Spec changes needed
+# Spec changes proposed
 
 These spec changes are included here because the text contains information
 that was present in earlier versions of the specification, but were deleted
