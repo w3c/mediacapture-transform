@@ -114,7 +114,7 @@ does not give the UA enough flexibility to choose the buffering policy.
 [Exposed=DedicatedWorker]
 interface MediaStreamTrackProcessor {
     constructor(MediaStreamTrackProcessorInit init);
-    attribute ReadableStream readable;
+    readonly attribute ReadableStream readable;
 };
 
 dictionary MediaStreamTrackProcessorInit {
