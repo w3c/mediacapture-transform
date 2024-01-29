@@ -293,6 +293,7 @@ is accessed for the first time, it MUST be initialized with the following steps:
 
 The <dfn>writeFrame</dfn> algorithm is given a |generator| and a |frame| as input. It is defined by running the following steps:
 1. If |frame| is not a {{VideoFrame}} object, return [=a promise rejected with=] a {{TypeError}}.
+1. If the value of |frame|’s [[Detached]] internal slot is true, return [=a promise rejected with=] a {{TypeError}}.
 1. If |generator|.`[[isMuted]]` is false, send the media data backing |frame| to all live tracks sourced from |generator|.
 1. Run the [=Close VideoFrame=] algorithm with |frame|.
 1. Return [=a promise resolved with=] undefined.
