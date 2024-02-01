@@ -14,6 +14,7 @@ Abstract: {{MediaStreamTrack}}s carrying raw data.
 Markup Shorthands: css no, markdown yes
 </pre>
 <pre class=anchors>
+url: https://w3c.github.io/webcodecs/#close-videoframe; text: Close VideoFrame; type: dfn; spec: WEBCODECS
 url: https://w3c.github.io/webcodecs/#videoframe; text: VideoFrame; type: interface; spec: WEBCODECS
 url: https://w3c.github.io/webcodecs/#videoencoder; text: VideoEncoder; type: interface; spec: WEBCODECS
 url: https://streams.spec.whatwg.org/#readablestream-controller; text: [[controller]]; for: ReadableStream; type: dfn; spec: STREAMS
@@ -291,7 +292,7 @@ is accessed for the first time, it MUST be initialized with the following steps:
 The <dfn>writeFrame</dfn> algorithm is given a |generator| and a |frame| as input. It is defined by running the following steps:
 1. If |frame| is not a {{VideoFrame}} object, return [=a promise rejected with=] a {{TypeError}}.
 1. If |generator|.`[[isMuted]]` is false, send the media data backing |frame| to all live tracks sourced from |generator|.
-1. Invoke the `close` method of |frame|.
+1. Run the [=Close VideoFrame=] algorithm with |frame|.
 1. Return [=a promise resolved with=] undefined.
 
 <p class="note">
