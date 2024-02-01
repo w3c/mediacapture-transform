@@ -127,6 +127,8 @@ dictionary MediaStreamTrackProcessorInit {
 Note: There is WG consensus that the interface should be exposed on DedicatedWorker.
 There is no WG consensus on whether or not the interface should not be exposed on Window.
 
+Note: There is consensus in the WG that creating a MediaStreamTrackProcessor from a MediaStreamTrack of kind "video" should exist.
+There is no WG consensus on whether or not creating a MediaStreamTrackProcessor from a MediaStreamTrack of kind "audio" should be supported.
 
 ### Internal slots ### {#internal-slots-processor}
 <dl>
