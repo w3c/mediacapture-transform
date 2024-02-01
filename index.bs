@@ -289,7 +289,7 @@ is accessed for the first time, it MUST be initialized with the following steps:
 2. <a dfn for="WritableStream">Set up</a> [=this=].{{VideoTrackGenerator/writable}}, with its [=WritableStream/set up/writeAlgorithm=] set to [=writeFrame=] with |this| as parameter, with [=WritableStream/set up/closeAlgorithm=] set to [=closeWritable=] with |this| as parameter and [=WritableStream/set up/abortAlgorithm=] set to [=closeWritable=] with |this| as parameter.
 
 The <dfn>writeFrame</dfn> algorithm is given a |generator| and a |frame| as input. It is defined by running the following steps:
-1. If |frame| is not a {{VideoFrame}} object, return [=a promise rejected with= a {{TypeError}}.
+1. If |frame| is not a {{VideoFrame}} object, return [=a promise rejected with=] a {{TypeError}}.
 1. If |generator|.`[[isMuted]]` is false, send the media data backing |frame| to all live tracks sourced from |generator|.
 1. Invoke the `close` method of |frame|.
 1. Return [=a promise resolved with=] undefined.
@@ -606,7 +606,7 @@ is not desired, instantianting multiple {{MediaStreamTrackProcessor}} objects is
 For cases where both consumers intend to convert the result of a processing step into a
 {{MediaStreamTrack}}
 using a {{VideoTrackGenerator}}, for example when feeding a processed stream
-to both a &lt;video&gt& tag and an {{RTCPeerConnection}}, attaching the resulting {{MediaStreamTrack}}
+to both a &lt;video&gt; tag and an {{RTCPeerConnection}}, attaching the resulting {{MediaStreamTrack}}
 to multiple sinks may be the most appropriate mechanism.
 
 For cases where the downstream processing takes frames, not streams, the frames can
