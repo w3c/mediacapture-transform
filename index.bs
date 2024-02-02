@@ -155,13 +155,21 @@ application that have not yet been handled.
 </dfn>
 1. If |init|.{{MediaStreamTrackProcessorInit/track}} is not a valid {{MediaStreamTrack}},
     throw a {{TypeError}}.
-2. Let |processor| be a new {{MediaStreamTrackProcessor}} object.
-3. Assign |init|.{{MediaStreamTrackProcessorInit/track}} to |processor|.`[[track]]`.
-4. If |init|.{{MediaStreamTrackProcessorInit/maxBufferSize}} has a integer value greater than or equal to 1, assign it to |processor|.`[[maxBufferSize]]`.
-6. Set the `[[queue]]` internal slot of |processor| to an empty [=queue=].
-7. Set |processor|.`[[numPendingReads]]` to 0.
-8. Set |processor|.`[[isClosed]]` to false.
-9. Return |processor|.
+1. Let |maxBufferSize| be 1.
+1. If |init|.{{MediaStreamTrackProcessorInit/maxBufferSize}} has an integer value greater than 1, run the following substeps:
+    1. Set |maxBufferSize| to |init|.{{MediaStreamTrackProcessorInit/maxBufferSize}}.
+    1. The user agent MAY decide to clamp |maxBufferSize| to a lower value, but no lower than 1.
+        <p class="note">
+          Clamping |maxBufferSize| can be useful for some sources like cameras, for instance in case
+          they can only use a limited number of VideoFrames at any given time.
+        </p>
+1. Let |processor| be a new {{MediaStreamTrackProcessor}} object.
+1. Set |processor|.`[[track]]` to |init|.{{MediaStreamTrackProcessorInit/track}}.
+1. Set |processor|.`[[maxBufferSize]]` to |maxBufferSize|.
+1. Set |processor|.`[[queue]]` to an empty [=queue=].
+1. Set |processor|.`[[numPendingReads]]` to 0.
+1. Set |processor|.`[[isClosed]]` to false.
+1. Return |processor|.
 
 ### Attributes ### {#attributes-processor}
 <dl>
@@ -207,7 +215,7 @@ with |processor| as parameter.
 
 The <dfn>handleNewFrame</dfn> algorithm is given a |processor| as input.
 It is defined by running the following steps:
-1. If |processor|.`[[maxBufferSize]]` has a value and |processor|.`[[queue]]` has |processor|.`[[maxBufferSize]]` elements, [=queue/dequeue=] an item from |processor|.`[[queue]]`.
+1. If |processor|.`[[queue]]` has |processor|.`[[maxBufferSize]]` elements, [=queue/dequeue=] an item from |processor|.`[[queue]]`.
 2. [=queue/Enqueue=] the new frame in |processor|.`[[queue]]`.
 3. [=Queue a task=] to run the [=maybeReadFrame=] algorithm with |processor| as parameter.
 
