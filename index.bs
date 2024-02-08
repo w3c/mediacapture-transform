@@ -186,10 +186,11 @@ The <dfn>processorPull</dfn> algorithm is given a |processor| as input. It is de
 
 The <dfn>maybeReadFrame</dfn> algorithm is given a |processor| as input. It is defined by the following steps:
 1. If |processor|.`[[queue]]` is [=queue/empty=], abort these steps.
-2. If |processor|.`[[numPendingReads]]` equals zero, abort these steps.
-3. [=queue/Dequeue=] a frame from |processor|.`[[queue]]` and [=ReadableStream/Enqueue=] it in |processor|.{{MediaStreamTrackProcessor/readable}}.
-4. Decrement |processor|.`[[numPendingReads]]` by 1.
-5. Go to step 1.
+1. If |processor|.`[[numPendingReads]]` equals zero, abort these steps.
+1. Let |frame| be the result of [=queue/Dequeueing=] a frame media data from |processor|.`[[queue]]`.
+1. [=ReadableStream/Enqueue=] |frame| in |processor|.{{MediaStreamTrackProcessor/readable}}.
+1. Decrement |processor|.`[[numPendingReads]]` by 1.
+1. Go to step 1.
 
 The <dfn>processorCancel</dfn> algorithm is given a |processor| as input.
 It is defined by running the following steps:
@@ -214,8 +215,10 @@ with |processor| as parameter.
 
 The <dfn>handleNewFrame</dfn> algorithm is given a |processor| as input.
 It is defined by running the following steps:
-1. If |processor|.`[[queue]]` has |processor|.`[[maxBufferSize]]` elements, [=queue/dequeue=] an item from |processor|.`[[queue]]`.
-2. [=queue/Enqueue=] the new frame in |processor|.`[[queue]]`.
+1. If |processor|.`[[queue]]` has |processor|.`[[maxBufferSize]]` elements, run the following steps:
+    1. Let |droppedFrame| be the result of [=queue/dequeueing=] |processor|.`[[queue]]`.
+    1. Run the [=Close VideoFrame=] algorithm with |droppedFrame|.
+2. [=queue/Enqueue=] the new frame media data in |processor|.`[[queue]]`.
 3. [=Queue a task=] to run the [=maybeReadFrame=] algorithm with |processor| as parameter.
 
 At any time, the UA MAY [=list/remove=] any frame from |processor|.`[[queue]]`.
@@ -301,7 +304,9 @@ is accessed for the first time, it MUST be initialized with the following steps:
 The <dfn>writeFrame</dfn> algorithm is given a |generator| and a |frame| as input. It is defined by running the following steps:
 1. If |frame| is not a {{VideoFrame}} object, return [=a promise rejected with=] a {{TypeError}}.
 1. If the value of |frame|’s {{platform object/[[Detached]]}} internal slot is true, return [=a promise rejected with=] a {{TypeError}}.
-1. If |generator|.`[[isMuted]]` is false, send the media data backing |frame| to all live tracks sourced from |generator|.
+1. If |generator|.`[[isMuted]]` is false, for each live track sourced from |generator|, named |track|, run the following steps:
+    1. Let |clone| be the result of running the [=Clone videoFrame=] algorithm with |frame|.
+    1. Send |clone| to |track|.
 1. Run the [=Close VideoFrame=] algorithm with |frame|.
 1. Return [=a promise resolved with=] undefined.
 
