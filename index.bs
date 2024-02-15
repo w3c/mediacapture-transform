@@ -187,7 +187,7 @@ The <dfn>processorPull</dfn> algorithm is given a |processor| as input. It is de
 The <dfn>maybeReadFrame</dfn> algorithm is given a |processor| as input. It is defined by the following steps:
 1. If |processor|.`[[queue]]` is [=queue/empty=], abort these steps.
 1. If |processor|.`[[numPendingReads]]` equals zero, abort these steps.
-1. Let |frame| be the result of [=queue/Dequeueing=] a frame media data from |processor|.`[[queue]]`.
+1. Let |frame| be the result of [=queue/dequeueing=] a frame media data from |processor|.`[[queue]]`.
 1. [=ReadableStream/Enqueue=] |frame| in |processor|.{{MediaStreamTrackProcessor/readable}}.
 1. Decrement |processor|.`[[numPendingReads]]` by 1.
 1. Go to step 1.
