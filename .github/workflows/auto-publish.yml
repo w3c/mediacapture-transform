@@ -1,7 +1,7 @@
 name: Auto-publish
 on:
-  pull_request:
-    paths: index.bs
+  workflow_dispatch:
+  pull_request: {}
   push:
     branches: [main]
     paths: index.bs
