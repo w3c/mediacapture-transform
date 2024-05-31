@@ -289,7 +289,7 @@ There is no WG consensus on whether or not it should be exposed on Window.
   VideoTrackGenerator()
 </dfn>
 1. Let |generator| be a new {{VideoTrackGenerator}} object.
-1. Let |track| be a newly [=Create a MediaStreamTrack|created=] {{MediaStreamTrack}} with <var>source</var> set to |generator| and <var>tieSourceToContext</var> set to <code>false</code>.
+1. Let |track| be a newly [$create a MediaStreamTrack|created$] {{MediaStreamTrack}} with <var>source</var> set to |generator| and <var>tieSourceToContext</var> set to <code>false</code>.
 1. Initialize |generator|.{{VideoTrackGenerator/track}} to |track|.
 4. Return |generator|.
 
@@ -330,7 +330,7 @@ It is defined by running the following steps.
 1. Set [=this=].`[[isMuted]]` to |newValue|.
 1. Unless one has been queued already this run of the event loop, [=queue a task=] to run the following steps:
     1. Let |settledValue| be [=this=].`[[isMuted]]`.
-    1. For each live track sourced by [=this=], [=queue a task=] to [=set a track's muted state=] to |settledValue|.
+    1. For each live track sourced by [=this=], [=queue a task=] to [$set a track's muted state$] to |settledValue|.
 
 </dd>
 <dt><dfn attribute for=VideoTrackGenerator>track</dfn></dt>
