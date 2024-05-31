@@ -1,6 +1,6 @@
 name: Auto-publish
 on:
-  pull_request: {}
+  pull_request:
     paths: index.bs
   push:
     branches: [main]
