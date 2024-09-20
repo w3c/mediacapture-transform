@@ -21,6 +21,10 @@ url: https://streams.spec.whatwg.org/#readablestream-controller; text: [[control
 <pre class=link-defaults>
 spec:infra; type:dfn; text:queue
 spec:streams; type:interface; text:WritableStream
+spec:mediacapture-extensions; type:dfn; text:capture timestamp
+spec:mediacapture-extensions; type:dfn; text:presentation timestamp
+spec:mediacapture-extensions; type:dfn; text:receive timestamp
+spec:mediacapture-extensions; type:dfn; text:RTP timestamp
 </pre>
 
 # Introduction # {#introduction}
@@ -218,8 +222,12 @@ It is defined by running the following steps:
 1. If |processor|.`[[queue]]` has |processor|.`[[maxBufferSize]]` elements, run the following steps:
     1. Let |droppedFrame| be the result of [=queue/dequeueing=] |processor|.`[[queue]]`.
     1. Run the [=Close VideoFrame=] algorithm with |droppedFrame|.
-2. [=queue/Enqueue=] the new frame media data in |processor|.`[[queue]]`.
-3. [=Queue a task=] to run the [=maybeReadFrame=] algorithm with |processor| as parameter.
+1. Initialize {{VideoFrame/timestamp}} from [=presentation timestamp=] if set, otherwise leave the attribute [=map/exist|not present=].
+1. Initialize {{VideoFrameMetadata/captureTime}} from [=capture timestamp=] if set, otherwise leave the attribute [=map/exist|not present=].
+1. Initialize {{VideoFrameMetadata/receiveTime}} from [=receive timestamp=] if set, otherwise leave the attribute [=map/exist|not present=].
+1. Initialize {{VideoFrameMetadata/rtpTimestamp}} from [=RTP timestamp=] if set, otherwise leave the attribute [=map/exist|not present=].
+1. [=queue/Enqueue=] the new frame media data in |processor|.`[[queue]]`.
+1. [=Queue a task=] to run the [=maybeReadFrame=] algorithm with |processor| as parameter.
 
 At any time, the UA MAY [=list/remove=] any frame from |processor|.`[[queue]]`.
 The UA may decide to remove frames from |processor|.`[[queue]]`, for example,
@@ -235,7 +243,6 @@ is a gap in the timestamps of the frames.
 When the `[[track]]` of a {{MediaStreamTrackProcessor}} |processor|
 [=track|ends=], the [=processorClose=] algorithm must be
 executed with |processor| as parameter.
-
 
 ## VideoTrackGenerator ## {#video-track-generator}
 A {{VideoTrackGenerator}} allows the creation of a video source for a
@@ -306,6 +313,10 @@ The <dfn>writeFrame</dfn> algorithm is given a |generator| and a |frame| as inpu
 1. If the value of |frame|’s {{platform object/[[Detached]]}} internal slot is true, return [=a promise rejected with=] a {{TypeError}}.
 1. If |generator|.`[[isMuted]]` is false, for each live track sourced from |generator|, named |track|, run the following steps:
     1. Let |clone| be the result of running the [=Clone videoFrame=] algorithm with |frame|.
+    1. Set [=presentation timestamp=] to the value of {{VideoFrame/timestamp}}.
+    1. Set [=capture timestamp=] to the value of {{VideoFrameMetadata/captureTime}} if [=map/exist|present=].
+    1. Set [=receive timestamp=] to the value of {{VideoFrameMetadata/receiveTime}} if [=map/exist|present=].
+    1. Set [=RTP timestamp=] to the value of {{VideoFrameMetadata/rtpTimestamp}} if [=map/exist|present=].
     1. Send |clone| to |track|.
 1. Run the [=Close VideoFrame=] algorithm with |frame|.
 1. Return [=a promise resolved with=] undefined.
