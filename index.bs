@@ -108,6 +108,12 @@ associated {{ReadableStream}} only when a read request has been issued on
 the stream. The idea is to avoid the stream's internal buffering, which
 does not give the UA enough flexibility to choose the buffering policy.
 
+<p class="note">
+Authors are encouraged to call close() on output {{VideoFrame|VideoFrames}} immediately when frames are no longer needed.
+The underlying media resources are owned by the {{MediaStreamTrack}}'s source.
+Failing to release them (or waiting for garbage collection) can cause the source to stop emiting {{VideoFrame|VideoFrames}}.
+</p>
+
 ### Interface definition ### {#track-processor-interface}
 
 <pre class="idl">
@@ -209,6 +215,8 @@ It is defined by running the following steps:
 </dl>
 
 ### Handling interaction with the track ### {#processor-handling-interaction-with-track}
+<dl>
+<dd>
 When the `[[track]]` of a {{MediaStreamTrackProcessor}} |processor| delivers a
 frame to |processor|, the UA MUST execute the [=handleNewFrame=] algorithm
 with |processor| as parameter.
