@@ -320,6 +320,7 @@ It is defined by running the following steps.
 2. Return [=a promise resolved with=] undefined.
 
 </dd>
+</dl>
 
 <p class="note">
 When the media data is sent to a track, the UA may apply processing
@@ -328,6 +329,7 @@ to the track satisfies the track's constraints. Each track may receive a
 different version of the media data depending on its constraints.
 </p>
 
+<dl>
 <dt><dfn attribute for=VideoTrackGenerator>muted</dfn></dt>
 <dd>Mutes the {{VideoTrackGenerator}}. The getter steps are to return
 [=this=].`[[isMuted]]`. The setter steps, given a value |newValue|, are as follows:
