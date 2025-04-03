@@ -108,6 +108,12 @@ associated {{ReadableStream}} only when a read request has been issued on
 the stream. The idea is to avoid the stream's internal buffering, which
 does not give the UA enough flexibility to choose the buffering policy.
 
+<p class="note">
+Authors are encouraged to call close() on output {{VideoFrame|VideoFrames}} immediately when frames are no longer needed.
+The underlying media resources are owned by the {{MediaStreamTrack}}'s source.
+Failing to release them (or waiting for garbage collection) can cause the source to stop emitting new {{VideoFrame|VideoFrames}}.
+</p>
+
 ### Interface definition ### {#track-processor-interface}
 
 <pre class="idl">
@@ -224,13 +230,11 @@ It is defined by running the following steps:
 At any time, the UA MAY [=list/remove=] any frame from |processor|.`[[queue]]`.
 The UA may decide to remove frames from |processor|.`[[queue]]`, for example,
 to prevent resource exhaustion or to improve performance in certain situations.
-</dd>
 
 <p class="note">
 The application may detect that frames have been dropped by noticing that there
 is a gap in the timestamps of the frames.
 </p>
-</dl>
 
 When the `[[track]]` of a {{MediaStreamTrackProcessor}} |processor|
 [=track|ends=], the [=processorClose=] algorithm must be
@@ -310,6 +314,14 @@ The <dfn>writeFrame</dfn> algorithm is given a |generator| and a |frame| as inpu
 1. Run the [=Close VideoFrame=] algorithm with |frame|.
 1. Return [=a promise resolved with=] undefined.
 
+The <dfn>closeWritable</dfn> algorithm is given a |generator| as input.
+It is defined by running the following steps.
+1. For each track `t` sourced from |generator|, [=track|end=] `t`.
+2. Return [=a promise resolved with=] undefined.
+
+</dd>
+</dl>
+
 <p class="note">
 When the media data is sent to a track, the UA may apply processing
 (e.g., cropping and downscaling) to ensure that the media data sent
@@ -317,12 +329,7 @@ to the track satisfies the track's constraints. Each track may receive a
 different version of the media data depending on its constraints.
 </p>
 
-The <dfn>closeWritable</dfn> algorithm is given a |generator| as input.
-It is defined by running the following steps.
-1. For each track `t` sourced from |generator|, [=track|end=] `t`.
-2. Return [=a promise resolved with=] undefined.
-
-</dd>
+<dl>
 <dt><dfn attribute for=VideoTrackGenerator>muted</dfn></dt>
 <dd>Mutes the {{VideoTrackGenerator}}. The getter steps are to return
 [=this=].`[[isMuted]]`. The setter steps, given a value |newValue|, are as follows:
