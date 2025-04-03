@@ -111,7 +111,7 @@ does not give the UA enough flexibility to choose the buffering policy.
 <p class="note">
 Authors are encouraged to call close() on output {{VideoFrame|VideoFrames}} immediately when frames are no longer needed.
 The underlying media resources are owned by the {{MediaStreamTrack}}'s source.
-Failing to release them (or waiting for garbage collection) can cause the source to stop emiting {{VideoFrame|VideoFrames}}.
+Failing to release them (or waiting for garbage collection) can cause the source to stop emitting new {{VideoFrame|VideoFrames}}.
 </p>
 
 ### Interface definition ### {#track-processor-interface}
