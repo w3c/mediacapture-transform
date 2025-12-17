@@ -167,9 +167,9 @@ application that have not yet been handled.
 1. If |init|.{{MediaStreamTrackProcessorInit/track}} is a {{MediaStreamTrack}} that is not valid,
     throw a {{TypeError}}.
 1. If |init|.{{MediaStreamTrackProcessorInit/track}} is a {{MediaStreamTrackHandle}}, run the following substeps:
-    1. If |init|.{{MediaStreamTrackProcessorInit/track}}.[[transferable]] is false, throw a {{ TypeError}}.
+    1. If |init|.{{MediaStreamTrackProcessorInit/track}}.`[[transferable]]` is false, throw a {{ TypeError}}.
     1. If |init|.{{MediaStreamTrackProcessorInit/track}}.`[[track]]` is referencing a non valid {{MediaStreamTrack}}, throw a {{TypeError}}.
-    1. Set |init|.{{MediaStreamTrackProcessorInit/track}}.[[transferable]] to false.
+    1. Set |init|.{{MediaStreamTrackProcessorInit/track}}.`[[transferable]]` to false.
 1. Let |maxBufferSize| be 1.
 1. If |init|.{{MediaStreamTrackProcessorInit/maxBufferSize}} has an integer value greater than 1, run the following substeps:
     1. Set |maxBufferSize| to |init|.{{MediaStreamTrackProcessorInit/maxBufferSize}}.
@@ -252,31 +252,31 @@ When the `[[track]]` of a {{MediaStreamTrackProcessor}} |processor|
 [=track|ends=], the [=processorClose=] algorithm must be
 executed with |processor| as parameter.
 
-### MediaStreamTrackHandle ###
+### MediaStreamTrackHandle ### {#mediastreamtrackhandle}
 
 The {{MediaStreamTrackHandle}} interface represents a proxy to a {{MediaStreamTrack}} object that is useful for making a DedicatedWorkerGlobalScope {{MediaStreamTrackProcessor}} a sink to a {{MediaStreamTrack}} living in another context.
 
 A {{MediaStreamTrackHandle}} has the following slots:
-1. A [[transferable]] internal slot that is used to ensure that once the handle object instance has been transferred, that instance cannot be transferred again.
-1. A [[track]] internal slot that is a weak reference to the proxied {{MediaStreamTrack}} object.
+1. A `[[transferable]]` internal slot that is used to ensure that once the handle object instance has been transferred, that instance cannot be transferred again.
+1. A `[[track]]` internal slot that is a weak reference to the proxied {{MediaStreamTrack}} object.
 
 ### Constructor ### {#mediastreamtrackhandle-constructor}
 <dfn constructor for=MediaStreamTrackHandle title="MediaStreamTrackHandle(track)">
   MediaStreamTrackHandle(|track|)
 </dfn>
 1. Let |handle| be a new {{MediaStreamTrackHandle}} object.
-1. Set |handle|.[[transferable]] to true.
-1. Set |handle|.[[track]] to a weak reference to |track|.
+1. Set |handle|.`[[transferable]]` to true.
+1. Set |handle|.`[[track]]` to a weak reference to |track|.
 1. Return |handle|.
 
 The {{MediaStreamTrackHandle}} [=transfer steps=], given |value| and |dataHolder|, are:
-1. If |value|.`[[transferable]]` is false, throw a {{DataCloneError|| DOMException.
+1. If |value|.`[[transferable]]` is false, throw a {{DataCloneError}} DOMException.
 1. Set |value|.`[[transferable]]` to false.
-1. Set |dataHolder|.[[Track]] to |handle|.`[[track]]`.
+1. Set |dataHolder|.`[[track]]` to |handle|.`[[track]]`.
 1. Set |value|.`[[track]]` to null.
 
 The {{MediaStreamTrackHandle}} [=transfer-receiving steps=], given |dataHolder| and |handle|, are:
-1. Set |handle|.`[[track]]` to |dataHolder|.[[Track]].
+1. Set |handle|.`[[track]]` to |dataHolder|.`[[track]]`.
 
 The {{MediaStreamTrackHandle}} can increase the lifetime of its proxied {{MediaStreamTrack}}, in particular:
 1. A {{MediaStreamTrack}} MUST not be garbage collected if it is `live` and it is referenced by a {{MediaStreamTrackHandle}} via its `[[track]]` slot.
