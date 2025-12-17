@@ -117,14 +117,20 @@ Failing to release them (or waiting for garbage collection) can cause the source
 ### Interface definition ### {#track-processor-interface}
 
 <pre class="idl">
+[Exposed=(Window,DedicatedWorker), Transferable]
+interface MediaStreamTrackHandle {
+   constructor(MediaStreamTrack track);
+};
+
 [Exposed=DedicatedWorker]
 interface MediaStreamTrackProcessor {
     constructor(MediaStreamTrackProcessorInit init);
     readonly attribute ReadableStream readable;
 };
 
+typedef (MediaStreamTrack or MediaStreamTrackHandle) MediaStreamTrackOrHandle;
 dictionary MediaStreamTrackProcessorInit {
-  required MediaStreamTrack track;
+  required MediaStreamTrackOrHandle track;
   [EnforceRange] unsigned short maxBufferSize;
 };
 </pre>
@@ -158,8 +164,12 @@ application that have not yet been handled.
 <dfn constructor for=MediaStreamTrackProcessor title="MediaStreamTrackProcessor(init)">
   MediaStreamTrackProcessor(|init|)
 </dfn>
-1. If |init|.{{MediaStreamTrackProcessorInit/track}} is not a valid {{MediaStreamTrack}},
+1. If |init|.{{MediaStreamTrackProcessorInit/track}} is a {{MediaStreamTrack}} that is not valid,
     throw a {{TypeError}}.
+1. If |init|.{{MediaStreamTrackProcessorInit/track}} is a {{MediaStreamTrackHandle}}, run the following substeps:
+    1. If |init|.{{MediaStreamTrackProcessorInit/track}}.[[transferable]] is false, throw a {{ TypeError}}.
+    1. If |init|.{{MediaStreamTrackProcessorInit/track}}.`[[track]]` is referencing a non valid {{MediaStreamTrack}}, throw a {{TypeError}}.
+    1. Set |init|.{{MediaStreamTrackProcessorInit/track}}.[[transferable]] to false.
 1. Let |maxBufferSize| be 1.
 1. If |init|.{{MediaStreamTrackProcessorInit/maxBufferSize}} has an integer value greater than 1, run the following substeps:
     1. Set |maxBufferSize| to |init|.{{MediaStreamTrackProcessorInit/maxBufferSize}}.
@@ -179,7 +189,7 @@ application that have not yet been handled.
 ### Attributes ### {#attributes-processor}
 <dl>
 <dt><dfn attribute for=MediaStreamTrackProcessor>readable</dfn></dt>
-<dd>Allows reading the frames delivered by the {{MediaStreamTrack}} stored
+<dd>Allows reading the frames delivered by the {{MediaStreamTrack}} or {{MediaStreamTrackHandle}} stored
 in the `[[track]]` internal slot. This attribute is created the first time it is invoked
 according to the following steps:
 1. Initialize [=this=].{{MediaStreamTrackProcessor/readable}} to be a new {{ReadableStream}}.
@@ -206,10 +216,12 @@ It is defined by running the following steps:
 The <dfn>processorClose</dfn> algorithm is given a |processor| as input.
 It is defined by running the following steps:
 1. If |processor|.`[[isClosed]]` is true, abort these steps.
-2. Disconnect |processor| from |processor|.`[[track]]`. The mechanism to do this is UA specific and the result is that |processor| is no longer a sink of |processor|.`[[track]]`.
-3. [$ReadableStreamDefaultControllerClose|Close$] |processor|.{{MediaStreamTrackProcessor/readable}}.[=ReadableStream/[[controller]]=].
-4. [=list/Empty=] |processor|.`[[queue]]`.
-5. Set |processor|.`[[isClosed]]` to true.
+1. Disconnect |processor| from |processor|.`[[track]]`. The mechanism to do this is UA specific and the result is that |processor| is no longer a sink of |processor|.`[[track]]`.
+1. If |processor|.`[[track]]` is a {{MediaStreamTrackHandle}}, set |processor|.`[[track]]`.`[[track]` to null.
+1. Set |processor|.`[[track]]` to null.
+1. [$ReadableStreamDefaultControllerClose|Close$] |processor|.{{MediaStreamTrackProcessor/readable}}.[=ReadableStream/[[controller]]=].
+1. [=list/Empty=] |processor|.`[[queue]]`.
+1. Set |processor|.`[[isClosed]]` to true.
 
 </dd>
 </dl>
@@ -240,6 +252,38 @@ When the `[[track]]` of a {{MediaStreamTrackProcessor}} |processor|
 [=track|ends=], the [=processorClose=] algorithm must be
 executed with |processor| as parameter.
 
+### MediaStreamTrackHandle ###
+
+The {{MediaStreamTrackHandle}} interface represents a proxy to a {{MediaStreamTrack}} object that is useful for making a DedicatedWorkerGlobalScope {{MediaStreamTrackProcessor}} a sink to a {{MediaStreamTrack}} living in another context.
+
+A {{MediaStreamTrackHandle}} has the following slots:
+1. A [[transferable]] internal slot that is used to ensure that once the handle object instance has been transferred, that instance cannot be transferred again.
+1. A [[track]] internal slot that is a weak reference to the proxied {{MediaStreamTrack}} object.
+
+### Constructor ### {#mediastreamtrackhandle-constructor}
+<dfn constructor for=MediaStreamTrackHandle title="MediaStreamTrackHandle(track)">
+  MediaStreamTrackHandle(|track|)
+</dfn>
+1. Let |handle| be a new {{MediaStreamTrackHandle}} object.
+1. Set |handle|.[[transferable]] to true.
+1. Set |handle|.[[track]] to a weak reference to |track|.
+1. Return |handle|.
+
+The {{MediaStreamTrackHandle}} [=transfer steps=], given |value| and |dataHolder|, are:
+1. If |value|.`[[transferable]]` is false, throw a {{DataCloneError|| DOMException.
+1. Set |value|.`[[transferable]]` to false.
+1. Set |dataHolder|.[[Track]] to |handle|.`[[track]]`.
+1. Set |value|.`[[track]]` to null.
+
+The {{MediaStreamTrackHandle}} [=transfer-receiving steps=], given |dataHolder| and |handle|, are:
+1. Set |handle|.`[[track]]` to |dataHolder|.[[Track]].
+
+The {{MediaStreamTrackHandle}} can increase the lifetime of its proxied {{MediaStreamTrack}}, in particular:
+1. A {{MediaStreamTrack}} MUST not be garbage collected if it is `live` and it is referenced by a {{MediaStreamTrackHandle}} via its `[[track]]` slot.
+1. The proxied {{MediaStreamTrack}} MUST not be garbage collected when a referencing {{MediaStreamTrackHandle}} is being transferred.
+
+As soon as the {{MediaStreamTrackHandle}} is created, the user agent MUST proceed as if a `ended` event listener is registered on the proxied {{MediaStreamTrack}}.
+When the {{MediaStreamTrackHandle}} is destroyed or its `[[track]]` slot is set to null, the user agent MUST proceed as if that `ended` event listener was no longer registered on the proxied {{MediaStreamTrack}}.
 
 ## VideoTrackGenerator ## {#video-track-generator}
 A {{VideoTrackGenerator}} allows the creation of a video source for a
@@ -497,22 +541,22 @@ effects on video elements.
 const stream = await navigator.mediaDevices.getUserMedia({video:true});
 const videoBefore = document.getElementById('video-before');
 const videoAfter = document.getElementById('video-after');
-videoBefore.srcObject = stream.clone();
+videoBefore.srcObject = stream;
 
-const [track] = stream.getVideoTracks();
+const trackHandle = new MediaStreamTrackHandle(stream.getVideoTracks()[0]);
 const worker = new Worker('worker.js');
-worker.postMessage({track}, [track]);
+worker.postMessage({trackHandle}, [trackHandle]);
 
 const {data} = await new Promise(r => worker.onmessage);
 videoAfter.srcObject = new MediaStream([data.track]);
 
 // worker.js
 
-self.onmessage = async ({data: {track}}) => {
+self.onmessage = async ({data: {trackHandle}}) => {
   const source = new VideoTrackGenerator();
   parent.postMessage({track: source.track}, [source.track]);
 
-  const {readable} = new MediaStreamTrackProcessor({track});
+  const {readable} = new MediaStreamTrackProcessor({track: trackHandle});
   const transformer = new TransformStream({
     async transform(frame, controller) {
       const facePosition = await detectFace(frame);
