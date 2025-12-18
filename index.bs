@@ -169,7 +169,6 @@ application that have not yet been handled.
 1. If |init|.{{MediaStreamTrackProcessorInit/track}} is a {{MediaStreamTrackHandle}}, run the following substeps:
     1. If |init|.{{MediaStreamTrackProcessorInit/track}}.`[[transferable]]` is false, throw a {{ TypeError}}.
     1. If |init|.{{MediaStreamTrackProcessorInit/track}}.`[[track]]` is referencing a non valid {{MediaStreamTrack}}, throw a {{TypeError}}.
-    1. Set |init|.{{MediaStreamTrackProcessorInit/track}}.`[[transferable]]` to false.
 1. Let |maxBufferSize| be 1.
 1. If |init|.{{MediaStreamTrackProcessorInit/maxBufferSize}} has an integer value greater than 1, run the following substeps:
     1. Set |maxBufferSize| to |init|.{{MediaStreamTrackProcessorInit/maxBufferSize}}.
@@ -211,13 +210,12 @@ The <dfn>maybeReadFrame</dfn> algorithm is given a |processor| as input. It is d
 The <dfn>processorCancel</dfn> algorithm is given a |processor| as input.
 It is defined by running the following steps:
 1. Run the [=processorClose=] algorithm with |processor| as parameter.
-3. Return  [=a promise resolved with=] undefined.
+1. Return [=a promise resolved with=] undefined.
 
 The <dfn>processorClose</dfn> algorithm is given a |processor| as input.
 It is defined by running the following steps:
 1. If |processor|.`[[isClosed]]` is true, abort these steps.
 1. Disconnect |processor| from |processor|.`[[track]]`. The mechanism to do this is UA specific and the result is that |processor| is no longer a sink of |processor|.`[[track]]`.
-1. If |processor|.`[[track]]` is a {{MediaStreamTrackHandle}}, set |processor|.`[[track]]`.`[[track]` to null.
 1. Set |processor|.`[[track]]` to null.
 1. [$ReadableStreamDefaultControllerClose|Close$] |processor|.{{MediaStreamTrackProcessor/readable}}.[=ReadableStream/[[controller]]=].
 1. [=list/Empty=] |processor|.`[[queue]]`.
@@ -278,12 +276,9 @@ The {{MediaStreamTrackHandle}} [=transfer steps=], given |value| and |dataHolder
 The {{MediaStreamTrackHandle}} [=transfer-receiving steps=], given |dataHolder| and |handle|, are:
 1. Set |handle|.`[[track]]` to |dataHolder|.`[[track]]`.
 
-The {{MediaStreamTrackHandle}} can increase the lifetime of its proxied {{MediaStreamTrack}}, in particular:
-1. A {{MediaStreamTrack}} MUST not be garbage collected if it is `live` and it is referenced by a {{MediaStreamTrackHandle}} via its `[[track]]` slot.
-1. The proxied {{MediaStreamTrack}} MUST not be garbage collected when a referencing {{MediaStreamTrackHandle}} is being transferred.
-
-As soon as the {{MediaStreamTrackHandle}} is created, the user agent MUST proceed as if a `ended` event listener is registered on the proxied {{MediaStreamTrack}}.
-When the {{MediaStreamTrackHandle}} is destroyed or its `[[track]]` slot is set to null, the user agent MUST proceed as if that `ended` event listener was no longer registered on the proxied {{MediaStreamTrack}}.
+The {{MediaStreamTrackHandle}} can increase the lifetime of its proxied {{MediaStreamTrack}}.
+In particular, a {{MediaStreamTrack}} MUST not be garbage collected if it is `live` and it is referenced by a {{MediaStreamTrackHandle}} via its `[[track]]` slot.
+Also, a {{MediaStreamTrack}} MUST not be garbage collected if it is referenced from a data holder that is being transferred.
 
 ## VideoTrackGenerator ## {#video-track-generator}
 A {{VideoTrackGenerator}} allows the creation of a video source for a
