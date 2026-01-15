@@ -264,7 +264,7 @@ A {{MediaStreamTrackHandle}} has the following slots:
 </dfn>
 1. Let |handle| be a new {{MediaStreamTrackHandle}} object.
 1. Set |handle|.`[[transferable]]` to true.
-1. Set |handle|.`[[track]]` to a weak reference to |track|.
+1. Set |handle|.`[[track]]` to an internal reference to |track|.
 1. Return |handle|.
 
 The {{MediaStreamTrackHandle}} [=transfer steps=], given |value| and |dataHolder|, are:
