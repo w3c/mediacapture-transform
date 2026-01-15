@@ -277,7 +277,7 @@ The {{MediaStreamTrackHandle}} [=transfer-receiving steps=], given |dataHolder| 
 1. Set |handle|.`[[track]]` to |dataHolder|.`[[track]]`.
 
 The {{MediaStreamTrackHandle}} can increase the lifetime of its proxied {{MediaStreamTrack}}.
-From a garbage collection point of view, it is as if a {{MediaStreamTrackHandle}} holds a strong reference to its {{MediaStreamTrack}}, as long as the referenced {{MediaStreamTrack}} is `live`.
+From a garbage collection point of view, it is as if a {{MediaStreamTrackHandle}} holds a strong reference to its {{MediaStreamTrack}}.
 Also, a {{MediaStreamTrack}} MUST not be garbage collected if it is referenced from a data holder that is being transferred.
 
 ## VideoTrackGenerator ## {#video-track-generator}
