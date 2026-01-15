@@ -215,7 +215,7 @@ It is defined by running the following steps:
 The <dfn>processorClose</dfn> algorithm is given a |processor| as input.
 It is defined by running the following steps:
 1. If |processor|.`[[isClosed]]` is true, abort these steps.
-1. Disconnect |processor| from |processor|.`[[track]]`. The mechanism to do this is UA specific and the result is that |processor| is no longer a sink of |processor|.`[[track]]`.
+1. Disconnect |processor| from |processor|.`[[track]]`. The mechanism to do this is UA specific and the result is that |processor| is no longer a sink of |processor|.`[[track]]`, or the {{MediaStreamTrack}} referenced by it.
 1. Set |processor|.`[[track]]` to null.
 1. [$ReadableStreamDefaultControllerClose|Close$] |processor|.{{MediaStreamTrackProcessor/readable}}.[=ReadableStream/[[controller]]=].
 1. [=list/Empty=] |processor|.`[[queue]]`.
@@ -277,7 +277,7 @@ The {{MediaStreamTrackHandle}} [=transfer-receiving steps=], given |dataHolder| 
 1. Set |handle|.`[[track]]` to |dataHolder|.`[[track]]`.
 
 The {{MediaStreamTrackHandle}} can increase the lifetime of its proxied {{MediaStreamTrack}}.
-In particular, a {{MediaStreamTrack}} MUST not be garbage collected if it is `live` and it is referenced by a {{MediaStreamTrackHandle}} via its `[[track]]` slot.
+From a garbage collection point of view, it is as if a {{MediaStreamTrackHandle}} holds a strong reference to its {{MediaStreamTrack}}, as long as the referenced {{MediaStreamTrack}} is `live`.
 Also, a {{MediaStreamTrack}} MUST not be garbage collected if it is referenced from a data holder that is being transferred.
 
 ## VideoTrackGenerator ## {#video-track-generator}
