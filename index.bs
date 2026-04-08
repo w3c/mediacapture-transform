@@ -126,6 +126,9 @@ interface MediaStreamTrackHandle {
 interface MediaStreamTrackProcessor {
     constructor(MediaStreamTrackProcessorInit init);
     readonly attribute ReadableStream readable;
+    readonly attribute unsigned long long droppedFrames;
+    readonly attribute unsigned long long deliveredFrames;
+    readonly attribute unsigned long long totalFrames;
 };
 
 typedef (MediaStreamTrack or MediaStreamTrackHandle) MediaStreamTrackOrHandle;
@@ -157,7 +160,12 @@ application that have not yet been handled.
 </dd>
 <dt><dfn attribute for=MediaStreamTrackProcessor>`[[isClosed]]`</dfn></dt>
 <dd>An boolean whose value indicates if the {{MediaStreamTrackProcessor}} is closed.
-</dd>
+<dt><dfn attribute for=MediaStreamTrackProcessor>`[[numDroppedFrames]]`</dfn></dt>
+<dd>The number of frames dropped by this {{MediaStreamTrackProcessor}}.</dd>
+<dt><dfn attribute for=MediaStreamTrackProcessor>`[[numDeliveredFrames]]`</dfn></dt>
+<dd>The number of frames delivered by this {{MediaStreamTrackProcessor}}.</dd>
+<dt><dfn attribute for=MediaStreamTrackProcessor>`[[numTotalFrames]]`</dfn></dt>
+<dd>The number of frames received by this {{MediaStreamTrackProcessor}}.</dd>
 </dl>
 
 ### Constructor ### {#constructor-processor}
@@ -183,6 +191,9 @@ application that have not yet been handled.
 1. Set |processor|.`[[queue]]` to an empty [=queue=].
 1. Set |processor|.`[[numPendingReads]]` to 0.
 1. Set |processor|.`[[isClosed]]` to false.
+1. Set |processor|.`[[numDroppedFrames]]` to 0.
+1. Set |processor|.`[[numDeliveredFrames]]` to 0.
+1. Set |processor|.`[[numTotalFrames]]` to 0.
 1. Return |processor|.
 
 ### Attributes ### {#attributes-processor}
@@ -205,6 +216,7 @@ The <dfn>maybeReadFrame</dfn> algorithm is given a |processor| as input. It is d
 1. Let |frame| be the result of [=queue/dequeueing=] a frame media data from |processor|.`[[queue]]`.
 1. [=ReadableStream/Enqueue=] |frame| in |processor|.{{MediaStreamTrackProcessor/readable}}.
 1. Decrement |processor|.`[[numPendingReads]]` by 1.
+1. Increment |processor|.`[[numDeliveredFrames]]` by 1.
 1. Go to step 1.
 
 The <dfn>processorCancel</dfn> algorithm is given a |processor| as input.
@@ -222,6 +234,16 @@ It is defined by running the following steps:
 1. Set |processor|.`[[isClosed]]` to true.
 
 </dd>
+
+<dt><dfn attribute for=MediaStreamTrackProcessor>droppedFrames</dfn></dt>
+<dd>Returns the value of |processor|.`[[numDroppedFrames]]`.</dd>
+
+<dt><dfn attribute for=MediaStreamTrackProcessor>deliveredFrames</dfn></dt>
+<dd>Returns the value of |processor|.`[[numDeliveredFrames]]`.</dd>
+
+<dt><dfn attribute for=MediaStreamTrackProcessor>totalFrames</dfn></dt>
+<dd>Returns the value of |processor|.`[[numTotalFrames]]`.</dd>
+
 </dl>
 
 ### Handling interaction with the track ### {#processor-handling-interaction-with-track}
@@ -234,8 +256,10 @@ It is defined by running the following steps:
 1. If |processor|.`[[queue]]` has |processor|.`[[maxBufferSize]]` elements, run the following steps:
     1. Let |droppedFrame| be the result of [=queue/dequeueing=] |processor|.`[[queue]]`.
     1. Run the [=Close VideoFrame=] algorithm with |droppedFrame|.
-2. [=queue/Enqueue=] the new frame media data in |processor|.`[[queue]]`.
-3. [=Queue a task=] to run the [=maybeReadFrame=] algorithm with |processor| as parameter.
+    1. Increment |processor|.`[[numDroppedFrames]]` by 1.
+1. [=queue/Enqueue=] the new frame media data in |processor|.`[[queue]]`.
+1. Increment |processor|.`[[numTotalFrames]]` by 1.
+1. [=Queue a task=] to run the [=maybeReadFrame=] algorithm with |processor| as parameter.
 
 At any time, the UA MAY [=list/remove=] any frame from |processor|.`[[queue]]`.
 The UA may decide to remove frames from |processor|.`[[queue]]`, for example,
