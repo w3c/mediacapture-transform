@@ -260,7 +260,8 @@ to prevent resource exhaustion or to improve performance in certain situations.
 
 <p class="note">
 The application may detect that frames have been dropped by noticing that there
-is a gap in the timestamps of the frames.
+is a gap in the timestamps of the frames or by looking at
+{{MediaStreamTrackProcessor/discardedFrames}}.
 </p>
 
 When the `[[track]]` of a {{MediaStreamTrackProcessor}} |processor|
