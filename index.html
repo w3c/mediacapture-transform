@@ -5,9 +5,9 @@
   <title>MediaStreamTrack Insertable Media Processing using Streams</title>
   <meta content="ED" name="w3c-status">
   <link href="https://www.w3.org/StyleSheets/TR/2021/W3C-ED" rel="stylesheet">
-  <meta content="Bikeshed version 3c53a5b02, updated Thu Nov 27 17:03:30 2025 +0000" name="generator">
+  <meta content="Bikeshed version 0ef803fdf, updated Tue Jan 6 11:59:39 2026 -0800" name="generator">
   <link href="https://www.w3.org/TR/mediacapture-transform/" rel="canonical">
-  <meta content="dfaaaaa0dd2efb71187d9f428813fcde8c56c4d5" name="revision">
+  <meta content="cd21bb6ce029a24eb46205edcf02c105f3b79ca9" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>/* Boilerplate: style-autolinks */
@@ -699,7 +699,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 </p>
    <h1 class="no-ref p-name" id="title">MediaStreamTrack Insertable Media Processing using Streams</h1>
    <p id="w3c-state"><a href="https://www.w3.org/standards/types/#ED">Editor’s Draft</a>,
-    <time class="dt-updated" datetime="2026-01-15">15 January 2026</time></p>
+    <time class="dt-updated" datetime="2026-04-16">16 April 2026</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -903,9 +903,10 @@ with a maximum size of 1, if there is a queued frame, it will aways be
 the most recent one.</p>
    <p>The UA is also free to remove any frames from the queue at any time. The UA
 may remove frames in order to save resources or to improve performance in
-specific situations. In all cases, frames that are not dropped
-must be made available to the <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#readablestream" id="ref-for-readablestream②">ReadableStream</a></code> in the order in which
-they arrive to the <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor⑥">MediaStreamTrackProcessor</a></code>.</p>
+specific situations. In this case, <code>[[numDiscardedFrames]]</code> MUST be incremented
+accordingly. In all cases, frames that are not dropped must be made available
+to the <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#readablestream" id="ref-for-readablestream②">ReadableStream</a></code> in the order in which they arrive to the
+<code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor⑥">MediaStreamTrackProcessor</a></code>.</p>
    <p>A <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor⑦">MediaStreamTrackProcessor</a></code> makes frames available to its
 associated <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#readablestream" id="ref-for-readablestream③">ReadableStream</a></code> only when a read request has been issued on
 the stream. The idea is to avoid the stream’s internal buffering, which
@@ -925,6 +926,8 @@ Failing to release them (or waiting for garbage collection) can cause the source
 <c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="mediastreamtrackprocessor"><code><c- g>MediaStreamTrackProcessor</c-></code></dfn> {
     <a class="idl-code" data-link-type="constructor" href="#dom-mediastreamtrackprocessor-mediastreamtrackprocessor" id="ref-for-dom-mediastreamtrackprocessor-mediastreamtrackprocessor"><c- g>constructor</c-></a>(<a data-link-type="idl-name" href="#dictdef-mediastreamtrackprocessorinit" id="ref-for-dictdef-mediastreamtrackprocessorinit"><c- n>MediaStreamTrackProcessorInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackProcessor/MediaStreamTrackProcessor(init), MediaStreamTrackProcessor/constructor(init)" data-dfn-type="argument" data-export id="dom-mediastreamtrackprocessor-mediastreamtrackprocessor-init-init"><code><c- g>init</c-></code></dfn>);
     <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://streams.spec.whatwg.org/#readablestream" id="ref-for-readablestream④"><c- n>ReadableStream</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="ReadableStream" href="#dom-mediastreamtrackprocessor-readable" id="ref-for-dom-mediastreamtrackprocessor-readable"><c- g>readable</c-></a>;
+    <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="unsigned long long" href="#dom-mediastreamtrackprocessor-discardedframes" id="ref-for-dom-mediastreamtrackprocessor-discardedframes"><c- g>discardedFrames</c-></a>;
+    <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long①"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="unsigned long long" href="#dom-mediastreamtrackprocessor-totalframes" id="ref-for-dom-mediastreamtrackprocessor-totalframes"><c- g>totalFrames</c-></a>;
 };
 
 <c- b>typedef</c-> (<a data-link-type="idl-name" href="https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack⑧"><c- n>MediaStreamTrack</c-></a> <c- b>or</c-> <a data-link-type="idl-name" href="#mediastreamtrackhandle" id="ref-for-mediastreamtrackhandle"><c- n>MediaStreamTrackHandle</c-></a>) <dfn class="dfn-paneled idl-code" data-dfn-type="typedef" data-export id="typedefdef-mediastreamtrackorhandle"><code><c- g>MediaStreamTrackOrHandle</c-></code></dfn>;
@@ -954,6 +957,10 @@ application that have not yet been handled.
     <dt><dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackProcessor" data-dfn-type="attribute" data-export id="dom-mediastreamtrackprocessor-isclosed-slot"><code>[[isClosed]]</code></dfn>
     <dd>An boolean whose value indicates if the <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①⓪">MediaStreamTrackProcessor</a></code> is closed.
 
+    <dt><dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackProcessor" data-dfn-type="attribute" data-export id="dom-mediastreamtrackprocessor-numdiscardedframes-slot"><code>[[numDiscardedFrames]]</code></dfn>
+    <dd>The number of frames discarded by this <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①①">MediaStreamTrackProcessor</a></code>.
+    <dt><dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackProcessor" data-dfn-type="attribute" data-export id="dom-mediastreamtrackprocessor-numtotalframes-slot"><code>[[numTotalFrames]]</code></dfn>
+    <dd>The number of frames received by this <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①②">MediaStreamTrackProcessor</a></code> including discarded frames.
    </dl>
    <h4 class="heading settled" data-level="2.1.3" id="constructor-processor"><span class="secno">2.1.3. </span><span class="content">Constructor</span><a class="self-link" href="#constructor-processor"></a></h4>
    
@@ -988,7 +995,7 @@ throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.what
 </p>
      </ol>
     <li data-md>
-     <p>Let <var>processor</var> be a new <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①①">MediaStreamTrackProcessor</a></code> object.</p>
+     <p>Let <var>processor</var> be a new <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①③">MediaStreamTrackProcessor</a></code> object.</p>
     <li data-md>
      <p>Set <var>processor</var>.<code>[[track]]</code> to <var>init</var>.<code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessorinit-track" id="ref-for-dom-mediastreamtrackprocessorinit-track④">track</a></code>.</p>
     <li data-md>
@@ -999,6 +1006,10 @@ throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.what
      <p>Set <var>processor</var>.<code>[[numPendingReads]]</code> to 0.</p>
     <li data-md>
      <p>Set <var>processor</var>.<code>[[isClosed]]</code> to false.</p>
+    <li data-md>
+     <p>Set <var>processor</var>.<code>[[numDiscardedFrames]]</code> to 0.</p>
+    <li data-md>
+     <p>Set <var>processor</var>.<code>[[numTotalFrames]]</code> to 0.</p>
     <li data-md>
      <p>Return <var>processor</var>.</p>
    </ol>
@@ -1064,10 +1075,14 @@ It is defined by running the following steps:</p>
       <li data-md>
        <p>Set <var>processor</var>.<code>[[isClosed]]</code> to true.</p>
      </ol>
+    <dt><dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackProcessor" data-dfn-type="attribute" data-export id="dom-mediastreamtrackprocessor-discardedframes"><code>discardedFrames</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long②">unsigned long long</a>, readonly</span>
+    <dd>Returns the value of <var>processor</var>.<code>[[numDiscardedFrames]]</code>.
+    <dt><dfn class="dfn-paneled idl-code" data-dfn-for="MediaStreamTrackProcessor" data-dfn-type="attribute" data-export id="dom-mediastreamtrackprocessor-totalframes"><code>totalFrames</code></dfn>, <span> of type <a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long③">unsigned long long</a>, readonly</span>
+    <dd>Returns the value of <var>processor</var>.<code>[[numTotalFrames]]</code>.
    </dl>
    <h4 class="heading settled" data-level="2.1.5" id="processor-handling-interaction-with-track"><span class="secno">2.1.5. </span><span class="content">Handling interaction with the track</span><a class="self-link" href="#processor-handling-interaction-with-track"></a></h4>
    
-When the <code>[[track]]</code> of a <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①②">MediaStreamTrackProcessor</a></code> <var>processor</var> delivers a
+When the <code>[[track]]</code> of a <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①④">MediaStreamTrackProcessor</a></code> <var>processor</var> delivers a
 frame to <var>processor</var>, the UA MUST execute the <a data-link-type="dfn" href="#handlenewframe" id="ref-for-handlenewframe">handleNewFrame</a> algorithm
 with <var>processor</var> as parameter.
 
@@ -1082,7 +1097,11 @@ It is defined by running the following steps:</p>
        <p>Let <var>droppedFrame</var> be the result of <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#queue-dequeue" id="ref-for-queue-dequeue①">dequeueing</a> <var>processor</var>.<code>[[queue]]</code>.</p>
       <li data-md>
        <p>Run the <a data-link-type="dfn" href="https://w3c.github.io/webcodecs/#close-videoframe" id="ref-for-close-videoframe">Close VideoFrame</a> algorithm with <var>droppedFrame</var>.</p>
+      <li data-md>
+       <p>Increment <var>processor</var>.<code>[[numDiscardedFrames]]</code> by 1.</p>
      </ol>
+    <li data-md>
+     <p>Increment <var>processor</var>.<code>[[numTotalFrames]]</code> by 1.</p>
     <li data-md>
      <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#queue-enqueue" id="ref-for-queue-enqueue">Enqueue</a> the new frame media data in <var>processor</var>.<code>[[queue]]</code>.</p>
     <li data-md>
@@ -1090,16 +1109,18 @@ It is defined by running the following steps:</p>
    </ol>
    <p>At any time, the UA MAY <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-remove" id="ref-for-list-remove">remove</a> any frame from <var>processor</var>.<code>[[queue]]</code>.
 The UA may decide to remove frames from <var>processor</var>.<code>[[queue]]</code>, for example,
-to prevent resource exhaustion or to improve performance in certain situations.</p>
+to prevent resource exhaustion or to improve performance in certain situations.
+In this case, <var>processor</var>.<code>[[numDiscardedFrames]]</code> MUST be incremented accordingly.</p>
    <p class="note" role="note">
 The application may detect that frames have been dropped by noticing that there
-is a gap in the timestamps of the frames.
+is a gap in the timestamps of the frames or by looking at
+<code class="idl"><a data-link-type="idl" href="#dom-mediastreamtrackprocessor-discardedframes" id="ref-for-dom-mediastreamtrackprocessor-discardedframes①">discardedFrames</a></code>.
 </p>
-   <p>When the <code>[[track]]</code> of a <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①③">MediaStreamTrackProcessor</a></code> <var>processor</var>
+   <p>When the <code>[[track]]</code> of a <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①⑤">MediaStreamTrackProcessor</a></code> <var>processor</var>
 <a data-link-type="dfn" href="https://drafts.csswg.org/css-text-4/#tracking" id="ref-for-tracking">ends</a>, the <a data-link-type="dfn" href="#processorclose" id="ref-for-processorclose①">processorClose</a> algorithm must be
 executed with <var>processor</var> as parameter.</p>
    <h4 class="heading settled" data-level="2.1.6" id="mediastreamtrackhandle①"><span class="secno">2.1.6. </span><span class="content">MediaStreamTrackHandle</span><a class="self-link" href="#mediastreamtrackhandle①"></a></h4>
-   <p>The <code class="idl"><a data-link-type="idl" href="#mediastreamtrackhandle" id="ref-for-mediastreamtrackhandle③">MediaStreamTrackHandle</a></code> interface represents a proxy to a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack①③">MediaStreamTrack</a></code> object that is useful for making a DedicatedWorkerGlobalScope <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①④">MediaStreamTrackProcessor</a></code> a sink to a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack①④">MediaStreamTrack</a></code> living in another context.</p>
+   <p>The <code class="idl"><a data-link-type="idl" href="#mediastreamtrackhandle" id="ref-for-mediastreamtrackhandle③">MediaStreamTrackHandle</a></code> interface represents a proxy to a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack①③">MediaStreamTrack</a></code> object that is useful for making a DedicatedWorkerGlobalScope <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①⑥">MediaStreamTrackProcessor</a></code> a sink to a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack①④">MediaStreamTrack</a></code> living in another context.</p>
    <p>A <code class="idl"><a data-link-type="idl" href="#mediastreamtrackhandle" id="ref-for-mediastreamtrackhandle④">MediaStreamTrackHandle</a></code> has the following slots:</p>
    <ol>
     <li data-md>
@@ -1539,7 +1560,7 @@ is consumed by multiple consumers.</p>
    <p>Examples include the case where the result of a background blurring function should
 be both displayed in a self-view and encoded using a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoencoder" id="ref-for-videoencoder">VideoEncoder</a></code>.</p>
    <p>For cases where both consumers are consuming unprocessed frames, and synchronization
-is not desired, instantianting multiple <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①⑤">MediaStreamTrackProcessor</a></code> objects is a robust solution.</p>
+is not desired, instantianting multiple <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①⑦">MediaStreamTrackProcessor</a></code> objects is a robust solution.</p>
    <p>For cases where both consumers intend to convert the result of a processing step into a
 <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack③②">MediaStreamTrack</a></code>
 using a <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator①⑥">VideoTrackGenerator</a></code>, for example when feeding a processed stream
@@ -1591,17 +1612,17 @@ and pushed into the <code class="idl"><a data-link-type="idl" href="#videotrackg
 <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoframe" id="ref-for-videoframe①⑤">VideoFrame</a></code> objects using cross-origin data will fail.
 Therefore, <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator②⓪">VideoTrackGenerator</a></code> does not introduce any new
 fingerprinting surface.</p>
-   <p>The <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack③⑦">MediaStreamTrack</a></code> sink introduced by this API (<code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①⑥">MediaStreamTrackProcessor</a></code>)
+   <p>The <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack③⑦">MediaStreamTrack</a></code> sink introduced by this API (<code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①⑧">MediaStreamTrackProcessor</a></code>)
 exposes <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack③⑧">MediaStreamTrack</a></code> the same data that is exposed by other
 <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack③⑨">MediaStreamTrack</a></code> sinks such as WebRTC peer connections, and media elements. The security and privacy
-of <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①⑦">MediaStreamTrackProcessor</a></code> relies on the security and privacy of the
-<code class="idl"><a data-link-type="idl" href="https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack④⓪">MediaStreamTrack</a></code> sources of the tracks to which <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①⑧">MediaStreamTrackProcessor</a></code>
+of <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①⑨">MediaStreamTrackProcessor</a></code> relies on the security and privacy of the
+<code class="idl"><a data-link-type="idl" href="https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack" id="ref-for-dom-mediastreamtrack④⓪">MediaStreamTrack</a></code> sources of the tracks to which <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor②⓪">MediaStreamTrackProcessor</a></code>
 is connected. For example, camera, microphone and screen-capture tracks
 rely on explicit use authorization via permission dialogs (see
 <a data-link-type="biblio" href="#biblio-mediacapture-streams" title="Media Capture and Streams">[MEDIACAPTURE-STREAMS]</a> and <a data-link-type="biblio" href="#biblio-screen-capture" title="Screen Capture">[SCREEN-CAPTURE]</a>),
 while element capture and <code class="idl"><a data-link-type="idl" href="#videotrackgenerator" id="ref-for-videotrackgenerator②①">VideoTrackGenerator</a></code>
 rely on the same-origin policy.</p>
-   <p>A potential issue with <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor①⑨">MediaStreamTrackProcessor</a></code> is resource exhaustion.
+   <p>A potential issue with <code class="idl"><a data-link-type="idl" href="#mediastreamtrackprocessor" id="ref-for-mediastreamtrackprocessor②①">MediaStreamTrackProcessor</a></code> is resource exhaustion.
 For example, a site might hold on to too many open <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/webcodecs/#videoframe" id="ref-for-videoframe①⑥">VideoFrame</a></code> objects
 and deplete a system-wide pool of GPU-memory-backed frames. UAs can
 mitigate this risk by limiting the number of pool-backed frames a site can
@@ -1713,6 +1734,7 @@ we have finished moving repos about.</p>
    <li><a href="#dom-videotrackgenerator-videotrackgenerator">constructor()</a><span>, in § 2.2.3</span>
    <li><a href="#dom-mediastreamtrackprocessor-mediastreamtrackprocessor">constructor(init)</a><span>, in § 2.1.3</span>
    <li><a href="#dom-mediastreamtrackhandle-mediastreamtrackhandle">constructor(track)</a><span>, in § 2.1.7</span>
+   <li><a href="#dom-mediastreamtrackprocessor-discardedframes">discardedFrames</a><span>, in § 2.1.4</span>
    <li><a href="#handlenewframe">handleNewFrame</a><span>, in § 2.1.5</span>
    <li><a href="#dom-mediastreamtrackprocessor-isclosed-slot">[[isClosed]]</a><span>, in § 2.1.2</span>
    <li><a href="#dom-videotrackgenerator-ismuted-slot">[[isMuted]]</a><span>, in § 2.2.2</span>
@@ -1726,12 +1748,15 @@ we have finished moving repos about.</p>
    <li><a href="#dom-mediastreamtrackprocessor-mediastreamtrackprocessor">MediaStreamTrackProcessor(init)</a><span>, in § 2.1.3</span>
    <li><a href="#dictdef-mediastreamtrackprocessorinit">MediaStreamTrackProcessorInit</a><span>, in § 2.1.1</span>
    <li><a href="#dom-videotrackgenerator-muted">muted</a><span>, in § 2.2.4</span>
+   <li><a href="#dom-mediastreamtrackprocessor-numdiscardedframes-slot">[[numDiscardedFrames]]</a><span>, in § 2.1.2</span>
    <li><a href="#dom-mediastreamtrackprocessor-numpendingreads-slot">[[numPendingReads]]</a><span>, in § 2.1.2</span>
+   <li><a href="#dom-mediastreamtrackprocessor-numtotalframes-slot">[[numTotalFrames]]</a><span>, in § 2.1.2</span>
    <li><a href="#processorcancel">processorCancel</a><span>, in § 2.1.4</span>
    <li><a href="#processorclose">processorClose</a><span>, in § 2.1.4</span>
    <li><a href="#processorpull">processorPull</a><span>, in § 2.1.4</span>
    <li><a href="#dom-mediastreamtrackprocessor-queue-slot">[[queue]]</a><span>, in § 2.1.2</span>
    <li><a href="#dom-mediastreamtrackprocessor-readable">readable</a><span>, in § 2.1.4</span>
+   <li><a href="#dom-mediastreamtrackprocessor-totalframes">totalFrames</a><span>, in § 2.1.4</span>
    <li>
     [[track]]
     <ul>
@@ -1830,6 +1855,7 @@ we have finished moving repos about.</p>
      <li><span class="dfn-paneled" id="8f5c2179">a promise resolved with</span>
      <li><span class="dfn-paneled" id="5372cca8">boolean</span>
      <li><span class="dfn-paneled" id="4013a022">this</span>
+     <li><span class="dfn-paneled" id="f14b47b8">unsigned long long</span>
      <li><span class="dfn-paneled" id="450958f7">unsigned short</span>
     </ul>
    <li>
@@ -1879,6 +1905,8 @@ we have finished moving repos about.</p>
 <c- b>interface</c-> <a href="#mediastreamtrackprocessor"><code><c- g>MediaStreamTrackProcessor</c-></code></a> {
     <a class="idl-code" data-link-type="constructor" href="#dom-mediastreamtrackprocessor-mediastreamtrackprocessor"><c- g>constructor</c-></a>(<a data-link-type="idl-name" href="#dictdef-mediastreamtrackprocessorinit"><c- n>MediaStreamTrackProcessorInit</c-></a> <a href="#dom-mediastreamtrackprocessor-mediastreamtrackprocessor-init-init"><code><c- g>init</c-></code></a>);
     <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://streams.spec.whatwg.org/#readablestream"><c- n>ReadableStream</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="ReadableStream" href="#dom-mediastreamtrackprocessor-readable"><c- g>readable</c-></a>;
+    <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="unsigned long long" href="#dom-mediastreamtrackprocessor-discardedframes"><c- g>discardedFrames</c-></a>;
+    <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="unsigned long long" href="#dom-mediastreamtrackprocessor-totalframes"><c- g>totalFrames</c-></a>;
 };
 
 <c- b>typedef</c-> (<a data-link-type="idl-name" href="https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack"><c- n>MediaStreamTrack</c-></a> <c- b>or</c-> <a data-link-type="idl-name" href="#mediastreamtrackhandle"><c- n>MediaStreamTrackHandle</c-></a>) <a href="#typedefdef-mediastreamtrackorhandle"><code><c- g>MediaStreamTrackOrHandle</c-></code></a>;
@@ -2151,13 +2179,17 @@ let dfnPanelData = {
 "dictdef-mediastreamtrackprocessorinit": {"dfnID":"dictdef-mediastreamtrackprocessorinit","dfnText":"MediaStreamTrackProcessorInit","external":false,"refSections":[{"refs":[{"id":"ref-for-dictdef-mediastreamtrackprocessorinit"}],"title":"2.1.1. Interface definition"}],"url":"#dictdef-mediastreamtrackprocessorinit"},
 "dom-mediastreamtrackhandle-mediastreamtrackhandle": {"dfnID":"dom-mediastreamtrackhandle-mediastreamtrackhandle","dfnText":"\n  MediaStreamTrackHandle(track)\n","external":false,"refSections":[{"refs":[{"id":"ref-for-dom-mediastreamtrackhandle-mediastreamtrackhandle"}],"title":"2.1.1. Interface definition"}],"url":"#dom-mediastreamtrackhandle-mediastreamtrackhandle"},
 "dom-mediastreamtrackhandle-mediastreamtrackhandle-track-track": {"dfnID":"dom-mediastreamtrackhandle-mediastreamtrackhandle-track-track","dfnText":"track","external":false,"refSections":[],"url":"#dom-mediastreamtrackhandle-mediastreamtrackhandle-track-track"},
+"dom-mediastreamtrackprocessor-discardedframes": {"dfnID":"dom-mediastreamtrackprocessor-discardedframes","dfnText":"discardedFrames","external":false,"refSections":[{"refs":[{"id":"ref-for-dom-mediastreamtrackprocessor-discardedframes"}],"title":"2.1.1. Interface definition"},{"refs":[{"id":"ref-for-dom-mediastreamtrackprocessor-discardedframes\u2460"}],"title":"2.1.5. Handling interaction with the track"}],"url":"#dom-mediastreamtrackprocessor-discardedframes"},
 "dom-mediastreamtrackprocessor-isclosed-slot": {"dfnID":"dom-mediastreamtrackprocessor-isclosed-slot","dfnText":"[[isClosed]]","external":false,"refSections":[],"url":"#dom-mediastreamtrackprocessor-isclosed-slot"},
 "dom-mediastreamtrackprocessor-maxbuffersize-slot": {"dfnID":"dom-mediastreamtrackprocessor-maxbuffersize-slot","dfnText":"[[maxBufferSize]]","external":false,"refSections":[],"url":"#dom-mediastreamtrackprocessor-maxbuffersize-slot"},
 "dom-mediastreamtrackprocessor-mediastreamtrackprocessor": {"dfnID":"dom-mediastreamtrackprocessor-mediastreamtrackprocessor","dfnText":"\n  MediaStreamTrackProcessor(init)\n","external":false,"refSections":[{"refs":[{"id":"ref-for-dom-mediastreamtrackprocessor-mediastreamtrackprocessor"}],"title":"2.1.1. Interface definition"}],"url":"#dom-mediastreamtrackprocessor-mediastreamtrackprocessor"},
 "dom-mediastreamtrackprocessor-mediastreamtrackprocessor-init-init": {"dfnID":"dom-mediastreamtrackprocessor-mediastreamtrackprocessor-init-init","dfnText":"init","external":false,"refSections":[],"url":"#dom-mediastreamtrackprocessor-mediastreamtrackprocessor-init-init"},
+"dom-mediastreamtrackprocessor-numdiscardedframes-slot": {"dfnID":"dom-mediastreamtrackprocessor-numdiscardedframes-slot","dfnText":"[[numDiscardedFrames]]","external":false,"refSections":[],"url":"#dom-mediastreamtrackprocessor-numdiscardedframes-slot"},
 "dom-mediastreamtrackprocessor-numpendingreads-slot": {"dfnID":"dom-mediastreamtrackprocessor-numpendingreads-slot","dfnText":"[[numPendingReads]]","external":false,"refSections":[],"url":"#dom-mediastreamtrackprocessor-numpendingreads-slot"},
+"dom-mediastreamtrackprocessor-numtotalframes-slot": {"dfnID":"dom-mediastreamtrackprocessor-numtotalframes-slot","dfnText":"[[numTotalFrames]]","external":false,"refSections":[],"url":"#dom-mediastreamtrackprocessor-numtotalframes-slot"},
 "dom-mediastreamtrackprocessor-queue-slot": {"dfnID":"dom-mediastreamtrackprocessor-queue-slot","dfnText":"[[queue]]","external":false,"refSections":[],"url":"#dom-mediastreamtrackprocessor-queue-slot"},
 "dom-mediastreamtrackprocessor-readable": {"dfnID":"dom-mediastreamtrackprocessor-readable","dfnText":"readable","external":false,"refSections":[{"refs":[{"id":"ref-for-dom-mediastreamtrackprocessor-readable"}],"title":"2.1.1. Interface definition"},{"refs":[{"id":"ref-for-dom-mediastreamtrackprocessor-readable\u2460"},{"id":"ref-for-dom-mediastreamtrackprocessor-readable\u2461"},{"id":"ref-for-dom-mediastreamtrackprocessor-readable\u2462"},{"id":"ref-for-dom-mediastreamtrackprocessor-readable\u2463"}],"title":"2.1.4. Attributes"},{"refs":[{"id":"ref-for-dom-mediastreamtrackprocessor-readable\u2464"}],"title":"5. Security and Privacy considerations"}],"url":"#dom-mediastreamtrackprocessor-readable"},
+"dom-mediastreamtrackprocessor-totalframes": {"dfnID":"dom-mediastreamtrackprocessor-totalframes","dfnText":"totalFrames","external":false,"refSections":[{"refs":[{"id":"ref-for-dom-mediastreamtrackprocessor-totalframes"}],"title":"2.1.1. Interface definition"}],"url":"#dom-mediastreamtrackprocessor-totalframes"},
 "dom-mediastreamtrackprocessor-track-slot": {"dfnID":"dom-mediastreamtrackprocessor-track-slot","dfnText":"[[track]]","external":false,"refSections":[],"url":"#dom-mediastreamtrackprocessor-track-slot"},
 "dom-mediastreamtrackprocessorinit-maxbuffersize": {"dfnID":"dom-mediastreamtrackprocessorinit-maxbuffersize","dfnText":"maxBufferSize","external":false,"refSections":[{"refs":[{"id":"ref-for-dom-mediastreamtrackprocessorinit-maxbuffersize"},{"id":"ref-for-dom-mediastreamtrackprocessorinit-maxbuffersize\u2460"}],"title":"2.1.3. Constructor"}],"url":"#dom-mediastreamtrackprocessorinit-maxbuffersize"},
 "dom-mediastreamtrackprocessorinit-track": {"dfnID":"dom-mediastreamtrackprocessorinit-track","dfnText":"track","external":false,"refSections":[{"refs":[{"id":"ref-for-dom-mediastreamtrackprocessorinit-track"},{"id":"ref-for-dom-mediastreamtrackprocessorinit-track\u2460"},{"id":"ref-for-dom-mediastreamtrackprocessorinit-track\u2461"},{"id":"ref-for-dom-mediastreamtrackprocessorinit-track\u2462"},{"id":"ref-for-dom-mediastreamtrackprocessorinit-track\u2463"}],"title":"2.1.3. Constructor"}],"url":"#dom-mediastreamtrackprocessorinit-track"},
@@ -2170,10 +2202,11 @@ let dfnPanelData = {
 "e2b69bfa": {"dfnID":"e2b69bfa","dfnText":"highWaterMark","external":true,"refSections":[{"refs":[{"id":"ref-for-readablestream-set-up-highwatermark"}],"title":"2.1.4. Attributes"}],"url":"https://streams.spec.whatwg.org/#readablestream-set-up-highwatermark"},
 "e787fb10": {"dfnID":"e787fb10","dfnText":"applyConstraints()","external":true,"refSections":[{"refs":[{"id":"ref-for-dom-mediastreamtrack-applyconstraints"},{"id":"ref-for-dom-mediastreamtrack-applyconstraints\u2460"}],"title":"2.2.5.2. Constrainable properties"}],"url":"https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack-applyconstraints"},
 "efde2358": {"dfnID":"efde2358","dfnText":"crop-and-scale","external":true,"refSections":[{"refs":[{"id":"ref-for-idl-def-VideoResizeModeEnum.cropandscale"},{"id":"ref-for-idl-def-VideoResizeModeEnum.cropandscale\u2460"}],"title":"2.2.5.2. Constrainable properties"}],"url":"https://w3c.github.io/mediacapture-main/#idl-def-VideoResizeModeEnum.cropandscale"},
+"f14b47b8": {"dfnID":"f14b47b8","dfnText":"unsigned long long","external":true,"refSections":[{"refs":[{"id":"ref-for-idl-unsigned-long-long"},{"id":"ref-for-idl-unsigned-long-long\u2460"}],"title":"2.1.1. Interface definition"},{"refs":[{"id":"ref-for-idl-unsigned-long-long\u2461"},{"id":"ref-for-idl-unsigned-long-long\u2462"}],"title":"2.1.4. Attributes"}],"url":"https://webidl.spec.whatwg.org/#idl-unsigned-long-long"},
 "handlenewframe": {"dfnID":"handlenewframe","dfnText":"handleNewFrame","external":false,"refSections":[{"refs":[{"id":"ref-for-handlenewframe"}],"title":"2.1.5. Handling interaction with the track"}],"url":"#handlenewframe"},
 "maybereadframe": {"dfnID":"maybereadframe","dfnText":"maybeReadFrame","external":false,"refSections":[{"refs":[{"id":"ref-for-maybereadframe"}],"title":"2.1.4. Attributes"},{"refs":[{"id":"ref-for-maybereadframe\u2460"}],"title":"2.1.5. Handling interaction with the track"}],"url":"#maybereadframe"},
 "mediastreamtrackhandle": {"dfnID":"mediastreamtrackhandle","dfnText":"MediaStreamTrackHandle","external":false,"refSections":[{"refs":[{"id":"ref-for-mediastreamtrackhandle"}],"title":"2.1.1. Interface definition"},{"refs":[{"id":"ref-for-mediastreamtrackhandle\u2460"}],"title":"2.1.3. Constructor"},{"refs":[{"id":"ref-for-mediastreamtrackhandle\u2461"}],"title":"2.1.4. Attributes"},{"refs":[{"id":"ref-for-mediastreamtrackhandle\u2462"},{"id":"ref-for-mediastreamtrackhandle\u2463"}],"title":"2.1.6. MediaStreamTrackHandle"},{"refs":[{"id":"ref-for-mediastreamtrackhandle\u2464"},{"id":"ref-for-mediastreamtrackhandle\u2465"},{"id":"ref-for-mediastreamtrackhandle\u2466"},{"id":"ref-for-mediastreamtrackhandle\u2467"},{"id":"ref-for-mediastreamtrackhandle\u2468"}],"title":"2.1.7. Constructor"}],"url":"#mediastreamtrackhandle"},
-"mediastreamtrackprocessor": {"dfnID":"mediastreamtrackprocessor","dfnText":"MediaStreamTrackProcessor","external":false,"refSections":[{"refs":[{"id":"ref-for-mediastreamtrackprocessor"},{"id":"ref-for-mediastreamtrackprocessor\u2460"},{"id":"ref-for-mediastreamtrackprocessor\u2461"},{"id":"ref-for-mediastreamtrackprocessor\u2462"},{"id":"ref-for-mediastreamtrackprocessor\u2463"},{"id":"ref-for-mediastreamtrackprocessor\u2464"},{"id":"ref-for-mediastreamtrackprocessor\u2465"},{"id":"ref-for-mediastreamtrackprocessor\u2466"}],"title":"2.1. MediaStreamTrackProcessor"},{"refs":[{"id":"ref-for-mediastreamtrackprocessor\u2467"},{"id":"ref-for-mediastreamtrackprocessor\u2468"},{"id":"ref-for-mediastreamtrackprocessor\u2460\u24ea"}],"title":"2.1.2. Internal slots"},{"refs":[{"id":"ref-for-mediastreamtrackprocessor\u2460\u2460"}],"title":"2.1.3. Constructor"},{"refs":[{"id":"ref-for-mediastreamtrackprocessor\u2460\u2461"},{"id":"ref-for-mediastreamtrackprocessor\u2460\u2462"}],"title":"2.1.5. Handling interaction with the track"},{"refs":[{"id":"ref-for-mediastreamtrackprocessor\u2460\u2463"}],"title":"2.1.6. MediaStreamTrackHandle"},{"refs":[{"id":"ref-for-mediastreamtrackprocessor\u2460\u2464"}],"title":"4.1. Use with multiple consumers"},{"refs":[{"id":"ref-for-mediastreamtrackprocessor\u2460\u2465"},{"id":"ref-for-mediastreamtrackprocessor\u2460\u2466"},{"id":"ref-for-mediastreamtrackprocessor\u2460\u2467"},{"id":"ref-for-mediastreamtrackprocessor\u2460\u2468"}],"title":"5. Security and Privacy considerations"}],"url":"#mediastreamtrackprocessor"},
+"mediastreamtrackprocessor": {"dfnID":"mediastreamtrackprocessor","dfnText":"MediaStreamTrackProcessor","external":false,"refSections":[{"refs":[{"id":"ref-for-mediastreamtrackprocessor"},{"id":"ref-for-mediastreamtrackprocessor\u2460"},{"id":"ref-for-mediastreamtrackprocessor\u2461"},{"id":"ref-for-mediastreamtrackprocessor\u2462"},{"id":"ref-for-mediastreamtrackprocessor\u2463"},{"id":"ref-for-mediastreamtrackprocessor\u2464"},{"id":"ref-for-mediastreamtrackprocessor\u2465"},{"id":"ref-for-mediastreamtrackprocessor\u2466"}],"title":"2.1. MediaStreamTrackProcessor"},{"refs":[{"id":"ref-for-mediastreamtrackprocessor\u2467"},{"id":"ref-for-mediastreamtrackprocessor\u2468"},{"id":"ref-for-mediastreamtrackprocessor\u2460\u24ea"},{"id":"ref-for-mediastreamtrackprocessor\u2460\u2460"},{"id":"ref-for-mediastreamtrackprocessor\u2460\u2461"}],"title":"2.1.2. Internal slots"},{"refs":[{"id":"ref-for-mediastreamtrackprocessor\u2460\u2462"}],"title":"2.1.3. Constructor"},{"refs":[{"id":"ref-for-mediastreamtrackprocessor\u2460\u2463"},{"id":"ref-for-mediastreamtrackprocessor\u2460\u2464"}],"title":"2.1.5. Handling interaction with the track"},{"refs":[{"id":"ref-for-mediastreamtrackprocessor\u2460\u2465"}],"title":"2.1.6. MediaStreamTrackHandle"},{"refs":[{"id":"ref-for-mediastreamtrackprocessor\u2460\u2466"}],"title":"4.1. Use with multiple consumers"},{"refs":[{"id":"ref-for-mediastreamtrackprocessor\u2460\u2467"},{"id":"ref-for-mediastreamtrackprocessor\u2460\u2468"},{"id":"ref-for-mediastreamtrackprocessor\u2461\u24ea"},{"id":"ref-for-mediastreamtrackprocessor\u2461\u2460"}],"title":"5. Security and Privacy considerations"}],"url":"#mediastreamtrackprocessor"},
 "processorcancel": {"dfnID":"processorcancel","dfnText":"processorCancel","external":false,"refSections":[{"refs":[{"id":"ref-for-processorcancel"}],"title":"2.1.4. Attributes"}],"url":"#processorcancel"},
 "processorclose": {"dfnID":"processorclose","dfnText":"processorClose","external":false,"refSections":[{"refs":[{"id":"ref-for-processorclose"}],"title":"2.1.4. Attributes"},{"refs":[{"id":"ref-for-processorclose\u2460"}],"title":"2.1.5. Handling interaction with the track"}],"url":"#processorclose"},
 "processorpull": {"dfnID":"processorpull","dfnText":"processorPull","external":false,"refSections":[{"refs":[{"id":"ref-for-processorpull"}],"title":"2.1.4. Attributes"}],"url":"#processorpull"},
@@ -2571,8 +2604,10 @@ let refsData = {
 "#closewritable": {"displayText":"closewritable","export":true,"for_":[],"level":"","normative":true,"shortname":"mediacapture-transform","spec":"mediacapture-transform","status":"local","text":"closewritable","type":"dfn","url":"#closewritable"},
 "#dictdef-mediastreamtrackprocessorinit": {"displayText":"MediaStreamTrackProcessorInit","export":true,"for_":[],"level":"","normative":true,"shortname":"mediacapture-transform","spec":"mediacapture-transform","status":"local","text":"MediaStreamTrackProcessorInit","type":"dictionary","url":"#dictdef-mediastreamtrackprocessorinit"},
 "#dom-mediastreamtrackhandle-mediastreamtrackhandle": {"displayText":"MediaStreamTrackHandle(track)","export":true,"for_":["MediaStreamTrackHandle"],"level":"","normative":true,"shortname":"mediacapture-transform","spec":"mediacapture-transform","status":"local","text":"MediaStreamTrackHandle(track)","type":"constructor","url":"#dom-mediastreamtrackhandle-mediastreamtrackhandle"},
+"#dom-mediastreamtrackprocessor-discardedframes": {"displayText":"discardedFrames","export":true,"for_":["MediaStreamTrackProcessor"],"level":"","normative":true,"shortname":"mediacapture-transform","spec":"mediacapture-transform","status":"local","text":"discardedFrames","type":"attribute","url":"#dom-mediastreamtrackprocessor-discardedframes"},
 "#dom-mediastreamtrackprocessor-mediastreamtrackprocessor": {"displayText":"MediaStreamTrackProcessor(init)","export":true,"for_":["MediaStreamTrackProcessor"],"level":"","normative":true,"shortname":"mediacapture-transform","spec":"mediacapture-transform","status":"local","text":"MediaStreamTrackProcessor(init)","type":"constructor","url":"#dom-mediastreamtrackprocessor-mediastreamtrackprocessor"},
 "#dom-mediastreamtrackprocessor-readable": {"displayText":"readable","export":true,"for_":["MediaStreamTrackProcessor"],"level":"","normative":true,"shortname":"mediacapture-transform","spec":"mediacapture-transform","status":"local","text":"readable","type":"attribute","url":"#dom-mediastreamtrackprocessor-readable"},
+"#dom-mediastreamtrackprocessor-totalframes": {"displayText":"totalFrames","export":true,"for_":["MediaStreamTrackProcessor"],"level":"","normative":true,"shortname":"mediacapture-transform","spec":"mediacapture-transform","status":"local","text":"totalFrames","type":"attribute","url":"#dom-mediastreamtrackprocessor-totalframes"},
 "#dom-mediastreamtrackprocessorinit-maxbuffersize": {"displayText":"maxBufferSize","export":true,"for_":["MediaStreamTrackProcessorInit"],"level":"","normative":true,"shortname":"mediacapture-transform","spec":"mediacapture-transform","status":"local","text":"maxBufferSize","type":"dict-member","url":"#dom-mediastreamtrackprocessorinit-maxbuffersize"},
 "#dom-mediastreamtrackprocessorinit-track": {"displayText":"track","export":true,"for_":["MediaStreamTrackProcessorInit"],"level":"","normative":true,"shortname":"mediacapture-transform","spec":"mediacapture-transform","status":"local","text":"track","type":"dict-member","url":"#dom-mediastreamtrackprocessorinit-track"},
 "#dom-videotrackgenerator-muted": {"displayText":"muted","export":true,"for_":["VideoTrackGenerator"],"level":"","normative":true,"shortname":"mediacapture-transform","spec":"mediacapture-transform","status":"local","text":"muted","type":"attribute","url":"#dom-videotrackgenerator-muted"},
@@ -2641,6 +2676,7 @@ let refsData = {
 "https://webidl.spec.whatwg.org/#datacloneerror": {"displayText":"DataCloneError","export":true,"for_":[],"level":"1","normative":true,"shortname":"webidl","spec":"webidl","status":"current","text":"DataCloneError","type":"exception","url":"https://webidl.spec.whatwg.org/#datacloneerror"},
 "https://webidl.spec.whatwg.org/#exceptiondef-typeerror": {"displayText":"TypeError","export":true,"for_":[],"level":"1","normative":true,"shortname":"webidl","spec":"webidl","status":"current","text":"TypeError","type":"exception","url":"https://webidl.spec.whatwg.org/#exceptiondef-typeerror"},
 "https://webidl.spec.whatwg.org/#idl-boolean": {"displayText":"boolean","export":true,"for_":[],"level":"1","normative":true,"shortname":"webidl","spec":"webidl","status":"current","text":"boolean","type":"interface","url":"https://webidl.spec.whatwg.org/#idl-boolean"},
+"https://webidl.spec.whatwg.org/#idl-unsigned-long-long": {"displayText":"unsigned long long","export":true,"for_":[],"level":"1","normative":true,"shortname":"webidl","spec":"webidl","status":"current","text":"unsigned long long","type":"interface","url":"https://webidl.spec.whatwg.org/#idl-unsigned-long-long"},
 "https://webidl.spec.whatwg.org/#idl-unsigned-short": {"displayText":"unsigned short","export":true,"for_":[],"level":"1","normative":true,"shortname":"webidl","spec":"webidl","status":"current","text":"unsigned short","type":"interface","url":"https://webidl.spec.whatwg.org/#idl-unsigned-short"},
 "https://webidl.spec.whatwg.org/#this": {"displayText":"this","export":true,"for_":[],"level":"1","normative":true,"shortname":"webidl","spec":"webidl","status":"current","text":"this","type":"dfn","url":"https://webidl.spec.whatwg.org/#this"},
 };
