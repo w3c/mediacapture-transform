@@ -99,7 +99,7 @@ the most recent one.
 
 The UA is also free to remove any frames from the queue at any time. The UA
 may remove frames in order to save resources or to improve performance in
-specific situations. In this case,  `[[numDiscardedFrames]]` MUST be incremented
+specific situations. In this case, `[[numDiscardedFrames]]` MUST be incremented
 accordingly. In all cases, frames that are not dropped must be made available
 to the {{ReadableStream}} in the order in which they arrive to the
 {{MediaStreamTrackProcessor}}.
@@ -251,12 +251,13 @@ It is defined by running the following steps:
     1. Run the [=Close VideoFrame=] algorithm with |droppedFrame|.
     1. Increment |processor|.`[[numDiscardedFrames]]` by 1.
 1. Increment |processor|.`[[numTotalFrames]]` by 1.
-1. [=Queue/Enqueue=] the new frame media data in |processor|.`[[queue]]`.
+1. [=queue/Enqueue=] the new frame media data in |processor|.`[[queue]]`.
 1. [=Queue a task=] to run the [=maybeReadFrame=] algorithm with |processor| as parameter.
 
 At any time, the UA MAY [=list/remove=] any frame from |processor|.`[[queue]]`.
 The UA may decide to remove frames from |processor|.`[[queue]]`, for example,
 to prevent resource exhaustion or to improve performance in certain situations.
+In this case, |processor|.`[[numDiscardedFrames]]` MUST be incremented accordingly. 
 
 <p class="note">
 The application may detect that frames have been dropped by noticing that there
