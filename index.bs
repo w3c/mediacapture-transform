@@ -162,7 +162,7 @@ application that have not yet been handled.
 <dt><dfn attribute for=MediaStreamTrackProcessor>`[[numDiscardedFrames]]`</dfn></dt>
 <dd>The number of frames discarded by this {{MediaStreamTrackProcessor}}.</dd>
 <dt><dfn attribute for=MediaStreamTrackProcessor>`[[numTotalFrames]]`</dfn></dt>
-<dd>The number of frames received by this {{MediaStreamTrackProcessor}}.</dd>
+<dd>The number of frames received by this {{MediaStreamTrackProcessor}} including discarded frames.</dd>
 </dl>
 
 ### Constructor ### {#constructor-processor}
