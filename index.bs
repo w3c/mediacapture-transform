@@ -249,8 +249,8 @@ It is defined by running the following steps:
     1. Let |droppedFrame| be the result of [=queue/dequeueing=] |processor|.`[[queue]]`.
     1. Run the [=Close VideoFrame=] algorithm with |droppedFrame|.
     1. Increment |processor|.`[[numDiscardedFrames]]` by 1.
-1. [=Queue/Enqueue=] the new frame media data in |processor|.`[[queue]]`.
 1. Increment |processor|.`[[numTotalFrames]]` by 1.
+1. [=Queue/Enqueue=] the new frame media data in |processor|.`[[queue]]`.
 1. [=Queue a task=] to run the [=maybeReadFrame=] algorithm with |processor| as parameter.
 
 At any time, the UA MAY [=list/remove=] any frame from |processor|.`[[queue]]`.
