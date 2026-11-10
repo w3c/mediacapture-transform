@@ -646,19 +646,24 @@ self.onmessage = async ({data: {track}}) => {
   await sendTrack.applyConstraints({width: 320, height: 200, frameRate: 30});
 
   const wt = new WebTransport("https://webtransport.org:8080/up");
+  await wt.ready;
+  const writable = await wt.createUnidirectionalStream();
 
   const {readable} = new MediaStreamTrackProcessor({track});
+  const {readable: outgoingFrames} = new MediaStreamTrackProcessor({track: sendTrack});
   const transformer = new TransformStream({transform: myRemoveBackgroundFromVideo});
-  await readable.pipeThrough(transformer)
-    .pipeThrough({writable: source.writable, readable: sendTrack.readable}),
-    .pipeThrough(createMyEncodeVideoStream({
-      codec: "vp8",
-      width: 640,
-      height: 480,
-      bitrate: 1000000,
-    }))
-    .pipeThrough(new TransformStream({transform: mySerializer}));
-    .pipeTo(wt.createUnidirectionalStream()); // 30 fps
+  await Promise.all([
+    readable.pipeThrough(transformer).pipeTo(source.writable),
+    outgoingFrames
+      .pipeThrough(createMyEncodeVideoStream({
+        codec: "vp8",
+        width: 640,
+        height: 480,
+        bitrate: 1000000,
+      }))
+      .pipeThrough(new TransformStream({transform: mySerializer}))
+      .pipeTo(writable), // 30 fps
+  ]);
 };
 </pre>
 <div class="note">
