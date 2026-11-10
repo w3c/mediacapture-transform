@@ -559,16 +559,19 @@ videoBefore.srcObject = stream;
 
 const trackHandle = new MediaStreamTrackHandle(stream.getVideoTracks()[0]);
 const worker = new Worker('worker.js');
+const reply = new Promise(resolve =>
+  worker.addEventListener("message", resolve, { once: true })
+);
 worker.postMessage({trackHandle}, [trackHandle]);
 
-const {data} = await new Promise(r => worker.onmessage);
+const {data} = await reply;
 videoAfter.srcObject = new MediaStream([data.track]);
 
 // worker.js
 
 self.onmessage = async ({data: {trackHandle}}) => {
   const source = new VideoTrackGenerator();
-  parent.postMessage({track: source.track}, [source.track]);
+  self.postMessage({track: source.track}, [source.track]);
 
   const {readable} = new MediaStreamTrackProcessor({track: trackHandle});
   const transformer = new TransformStream({
@@ -597,9 +600,12 @@ twice.
 const stream = await navigator.mediaDevices.getUserMedia({video:true});
 const [track] = stream.getVideoTracks();
 const worker = new Worker('worker.js');
+const reply = new Promise(resolve =>
+  worker.addEventListener("message", resolve, { once: true })
+);
 worker.postMessage({track}, [track]);
 
-const {data} = await new Promise(r => worker.onmessage);
+const {data} = await reply;
 const selfView = document.getElementById('video-self');
 selfView.srcObject = new MediaStream([data.track.clone()]); // 60 fps
 
@@ -611,7 +617,7 @@ pc.addTrack(data.track); // 30 fps
 
 self.onmessage = async ({data: {track}}) => {
   const source = new VideoTrackGenerator();
-  parent.postMessage({track: source.track}, [source.track]);
+  self.postMessage({track: source.track}, [source.track]);
 
   const {readable} = new MediaStreamTrackProcessor({track});
   const transformer = new TransformStream({transform: myRemoveBackgroundFromVideo});
@@ -630,9 +636,12 @@ here, except constraints are applied to a track clone in the worker.
 const stream = await navigator.mediaDevices.getUserMedia({video:true});
 const [track] = stream.getVideoTracks();
 const worker = new Worker('worker.js');
+const reply = new Promise(resolve =>
+  worker.addEventListener("message", resolve, { once: true })
+);
 worker.postMessage({track}, [track]);
 
-const {data} = await new Promise(r => worker.onmessage);
+const {data} = await reply;
 const selfView = document.getElementById('video-self');
 selfView.srcObject = new MediaStream([data.track]); // 60 fps
 
@@ -641,7 +650,7 @@ selfView.srcObject = new MediaStream([data.track]); // 60 fps
 self.onmessage = async ({data: {track}}) => {
   const source = new VideoTrackGenerator();
   const sendTrack = source.track.clone();
-  parent.postMessage({track: source.track}, [source.track]);
+  self.postMessage({track: source.track}, [source.track]);
 
   await sendTrack.applyConstraints({width: 320, height: 200, frameRate: 30});
 
