@@ -559,12 +559,8 @@ videoBefore.srcObject = stream;
 
 const trackHandle = new MediaStreamTrackHandle(stream.getVideoTracks()[0]);
 const worker = new Worker('worker.js');
-const reply = new Promise(resolve =>
-  worker.addEventListener("message", resolve, { once: true })
-);
 worker.postMessage({trackHandle}, [trackHandle]);
-
-const {data} = await reply;
+const {data} = await new Promise(resolve => { worker.onmessage = resolve; });
 videoAfter.srcObject = new MediaStream([data.track]);
 
 // worker.js
@@ -600,12 +596,8 @@ twice.
 const stream = await navigator.mediaDevices.getUserMedia({video:true});
 const [track] = stream.getVideoTracks();
 const worker = new Worker('worker.js');
-const reply = new Promise(resolve =>
-  worker.addEventListener("message", resolve, { once: true })
-);
 worker.postMessage({track}, [track]);
-
-const {data} = await reply;
+const {data} = await new Promise(resolve => { worker.onmessage = resolve; });
 const selfView = document.getElementById('video-self');
 selfView.srcObject = new MediaStream([data.track.clone()]); // 60 fps
 
@@ -636,12 +628,8 @@ here, except constraints are applied to a track clone in the worker.
 const stream = await navigator.mediaDevices.getUserMedia({video:true});
 const [track] = stream.getVideoTracks();
 const worker = new Worker('worker.js');
-const reply = new Promise(resolve =>
-  worker.addEventListener("message", resolve, { once: true })
-);
 worker.postMessage({track}, [track]);
-
-const {data} = await reply;
+const {data} = await new Promise(resolve => { worker.onmessage = resolve; });
 const selfView = document.getElementById('video-self');
 selfView.srcObject = new MediaStream([data.track]); // 60 fps
 
