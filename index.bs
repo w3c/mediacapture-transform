@@ -643,18 +643,15 @@ self.onmessage = async ({data: {track}}) => {
   const sendTrack = source.track.clone();
   parent.postMessage({track: source.track}, [source.track]);
 
-  await sendTrack.applyConstraints({width: 320, height: 200, frameRate: 30});
-
-  const wt = new WebTransport("https://webtransport.org:8080/up");
-  await wt.ready;
-  const writable = await wt.createUnidirectionalStream();
-
   const {readable} = new MediaStreamTrackProcessor({track});
-  const {readable: outgoingFrames} = new MediaStreamTrackProcessor({track: sendTrack});
   const transformer = new TransformStream({transform: myRemoveBackgroundFromVideo});
-  await Promise.all([
-    readable.pipeThrough(transformer).pipeTo(source.writable),
-    outgoingFrames
+  const preview = readable.pipeThrough(transformer).pipeTo(source.writable);
+
+  async function sendVideo() {
+    const wt = new WebTransport("https://webtransport.org:8080/up");
+    await sendTrack.applyConstraints({width: 320, height: 200, frameRate: 30});
+    const {readable: sendReadable} = new MediaStreamTrackProcessor({track: sendTrack});
+    return sendReadable
       .pipeThrough(createMyEncodeVideoStream({
         codec: "vp8",
         width: 640,
@@ -662,8 +659,10 @@ self.onmessage = async ({data: {track}}) => {
         bitrate: 1000000,
       }))
       .pipeThrough(new TransformStream({transform: mySerializer}))
-      .pipeTo(writable), // 30 fps
-  ]);
+      .pipeTo(await wt.createUnidirectionalStream()); // 30 fps
+  }
+
+  await Promise.all([preview, sendVideo()]);
 };
 </pre>
 <div class="note">
