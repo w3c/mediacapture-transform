@@ -289,10 +289,11 @@ A {{MediaStreamTrackHandle}} has the following slots:
 The {{MediaStreamTrackHandle}} [=transfer steps=], given |value| and |dataHolder|, are:
 1. If |value|.`[[transferable]]` is false, throw a {{DataCloneError}} DOMException.
 1. Set |value|.`[[transferable]]` to false.
-1. Set |dataHolder|.`[[track]]` to |handle|.`[[track]]`.
+1. Set |dataHolder|.`[[track]]` to |value|.`[[track]]`.
 1. Set |value|.`[[track]]` to null.
 
 The {{MediaStreamTrackHandle}} [=transfer-receiving steps=], given |dataHolder| and |handle|, are:
+1. Set |handle|.`[[transferable]]` to true.
 1. Set |handle|.`[[track]]` to |dataHolder|.`[[track]]`.
 
 The {{MediaStreamTrackHandle}} can increase the lifetime of its proxied {{MediaStreamTrack}}.
