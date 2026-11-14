@@ -351,9 +351,10 @@ There is no WG consensus on whether or not it should be exposed on Window.
   VideoTrackGenerator()
 </dfn>
 1. Let |generator| be a new {{VideoTrackGenerator}} object.
-1. Let |track| be a newly [$create a MediaStreamTrack|created$] {{MediaStreamTrack}} with <var>source</var> set to |generator| and <var>tieSourceToContext</var> set to <code>false</code>.
-1. Initialize |generator|.{{VideoTrackGenerator/track}} to |track|.
-4. Return |generator|.
+1. Initialize |generator|.`[[isMuted]]` to false.
+1. Let |track| be a newly [$create a MediaStreamTrack|created$] {{MediaStreamTrack}} with <var>source</var> set to |generator| and <var>mediaDevicesToTieSourceTo</var> set to null.
+1. Initialize |generator|.`[[track]]` to |track|.
+1. Return |generator|.
 
 ### Attributes ### {#video-generator-attributes}
 <dl>
